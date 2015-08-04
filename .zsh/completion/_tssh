@@ -1,0 +1,13 @@
+#compdef tssh
+
+function _tssh {
+    # プロジェクトっぽいディレクトリを配列に格納
+    local -a hosts
+    hosts=(`cat ~/.ssh/config | egrep  "^Host \w+-\w+" | cut -d " " -f 2`)
+
+    compadd $hosts
+
+    return 1;
+}
+
+compdef _tssh tssh

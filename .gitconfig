@@ -1,0 +1,85 @@
+[user]
+	name = doi_kenji
+	email = doi_kenji@cyberagent.co.jp
+[core]
+	excludesfile = /Users/doi_kenji/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[color]
+	ui = auto
+[alias]
+  bda = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
+  pp = !git push origin `git rev-parse --abbrev-ref HEAD`
+  st = status
+  sh = show
+  so = remote show origin
+  ft = fetch
+  up = pull --rebase       # pull rebase
+  rbm = rebase master      # masterへのrebaseはよく使うのでalias
+  ad = add
+  cl = clean
+  clf = clean -f
+  cla = clean -fd
+  ci = commit
+  cim = commit --amend     # 直前のcommitを修正
+  co = checkout
+  # branch関連
+  b  = branch
+  ba = branch -a           # originも含めた全てのbranchを表示
+  bm = branch --merged     # merge済みのbranchを表示
+  bn = branch --no-merged  # mergeしてないbranchを表示
+  # log関連
+  wc = whatchanged         # logに変更されたファイルも一緒に出す
+  ls = log --stat          # logに変更されたファイルも一緒に出す
+  lp = log -p              # diffも一緒に出す
+  la = log --pretty=\"format:%ad %h (%an): %s\" --date=short  # ざっくりログ出す
+  lr = log origin          # originのlog
+  oneline = log --pretty=oneline
+  ranking = shortlog -s -n --no-merges
+  # stash
+  ss = stash save
+  sl = stash list
+  sa = stash apply
+  sp = stash pop
+  # logをtree表示
+  lg = log --graph --name-status --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lgg = !git log --graph --name-status --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative `git branch | awk '($1==\"*\"){print \"origin/\"$2}'`
+  lga = log --graph --name-status --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  log-graph = log --graph --date=short --pretty=format:'%Cgreen%h %cd %Cblue%cn %Creset%s'
+  log-all = log --graph --all --color --pretty='%x09%h %cn%x09%s %Cred%d%Creset'
+  # reset
+  r   = reset HEAD
+  rr  = reset HEAD~
+  rrr = reset HEAD~~
+  r1  = reset HEAD~
+  r2  = reset HEAD~~
+  r3  = reset HEAD~~~
+  # diff関連
+  dm = diff master           # masterとのdiff
+  dw = diff --color-words    # 単語単位でいろつけてdiff
+  dc = diff --cached         # addされているものとのdiff
+  ds = diff --staged         # 同上(1.6.1移行)
+  df = diff HEAD             # HEADとdiff
+  dff = diff HEAD~           # HEADから1つ前とdiff
+  # mergeの際にconflictが起きたファイルを編集
+  edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
+  # mergeの際にconflictが起きたファイルをadd
+  add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+  # grep関連
+  gr = grep
+  gn = grep -n
+  # pr
+  pr = pull-request
+[merge]
+	ff = false
+	tool = vimdiff
+[gui]
+	encoding = UTF-8
+[pull]
+	rebase = true
+[push]
+	default = matching
