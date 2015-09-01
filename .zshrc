@@ -89,7 +89,7 @@ source $ZSH/oh-my-zsh.sh
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # source ~/.zsh/plugin/*
-source ~/.zsh/completion/*
+fpath=(~/.zsh/completion $fpath)
 
 cdpath=(~/Documents ~)
 path=($HOME/bin/ $PATH)
@@ -104,9 +104,7 @@ fi
 ##
 ## for Docker
 ##
-export DOCKER_HOST=tcp://192.168.59.104:2376
-export DOCKER_CERT_PATH=/Users/a12497/.boot2docker/certs/boot2docker-vm
-export DOCKER_TLS_VERIFY=1
+if which docker-machine > /dev/null; then eval "$(docker-machine env default)"; fi
 
 ##
 ## for Peco
@@ -154,3 +152,8 @@ zle-line-init() {
       zle autosuggest-start
 }
 zle -N zle-line-init
+
+##
+## Init
+##
+autoload -Uz compinit && compinit -i
