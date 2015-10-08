@@ -74,6 +74,7 @@
   gn = grep -n
   # pr
   pr = pull-request
+  rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
 [merge]
 	ff = false
 	tool = vimdiff
