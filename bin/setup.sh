@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cd
+git clone git@github.com:doiken/dotfiles.git
+
 DOT_FILES=( bin .zsh .zshrc .zshenv .gitconfig .gitignore .vimrc .tmux.conf )
 
 for file in ${DOT_FILES[@]}
