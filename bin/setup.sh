@@ -13,7 +13,7 @@ DOT_FILES=( bin .zsh .zshrc .zshenv .gitconfig .gitignore .vimrc .tmux.conf )
 
 for file in ${DOT_FILES[@]}
 do
-    ln -s $HOME/dotfiles/$file $HOME/$file
+    [ ! -s $HOME/$file ] && ln -s $HOME/dotfiles/$file $HOME/$file
 done
 
 ##
@@ -26,7 +26,7 @@ done
 ## Homebrew
 [ ! -x /usr/local/bin/brew ] && ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-BREW_EXECS=( git tmux peco )
+BREW_EXECS=( git tmux peco reattach-to-user-namespace )
 for e in ${BREW_EXECS[@]}
 do
     brew install $e
