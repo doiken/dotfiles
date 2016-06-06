@@ -3,8 +3,7 @@
 ##
 ## Get This Repository
 ##
-cd
-git clone git@github.com:doiken/dotfiles.git
+[ ! -d $HOME/dotfiles ] && git clone git@github.com:doiken/dotfiles.git $HOME/dotfiles
 
 ##
 ## Link
@@ -13,7 +12,7 @@ DOT_FILES=( bin .zsh .zshrc .zshenv .gitconfig .gitignore .vimrc .tmux.conf )
 
 for file in ${DOT_FILES[@]}
 do
-    [ ! -s $HOME/$file ] && ln -s $HOME/dotfiles/$file $HOME/$file
+    [ ! -e $HOME/$file ] && ln -s $HOME/dotfiles/$file $HOME/$file
 done
 
 ##
