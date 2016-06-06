@@ -1,8 +1,9 @@
 [user]
 	name = doiken
-	email = doi_kenji@cyberagent.co.jp
+	email = xnspq208@gmail.com
 [core]
-	excludesfile = /Users/a12497/.gitignore_global
+  editor = vim
+	excludesfile = $HOME/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 

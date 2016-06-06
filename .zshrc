@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/a12497/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/Users/a12497/.nodebrew/current/bin:/Users/a12497/bin/:/Users/a12497/.rbenv/shims:/Users/a12497/.nodebrew/current/bin:/Users/a12497/bin/:/Users/a12497/.rbenv/shims:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/a12497/.nodebrew/current/bin:/Users/a12497/bin/:/Users/a12497/.rbenv/shims"
+export PATH="$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -92,7 +92,7 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 fpath=(~/.zsh/completion $fpath)
 
 cdpath=(~/Documents ~)
-path=($HOME/bin/ $PATH)
+path=($HOME/bin/ $path)
 
 ##
 ## for NodeBrew
@@ -126,32 +126,16 @@ zle -N peco-select-history
 bindkey '^r' peco-select-history
 
 ##
-## for auto-fu
-##
-# この問題が解決できず、断念
-# Cannot rebind delete-char-or-list: completion:.delete-char-or-list:_main_complete
-#if [ -f ~/.zsh/plugin/auto-fu.zsh ]; then
-#    source ~/.zsh/plugin/auto-fu.zsh
-#    function zle-line-init () {
-#        auto-fu-init
-#    }
-#    zle -N zle-line-init
-#    zstyle ':completion:*' completer _oldlist _complete
-#fi
-
-##
 ## for zsh-autosuggestion
 ##
+##
+## Zsh Plugins
+##
+[ ! -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ] && git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Load zsh-autosuggestions.
-source ~/.zsh/zsh-autosuggestions/autosuggestions.zsh
-
-# Enable autosuggestions automatically.
-zle-line-init() {
-      zle autosuggest-start
-}
-zle -N zle-line-init
+plugins=($plugins zsh-autosuggestions)
 
 ##
 ## Init
