@@ -3,7 +3,7 @@
 	email = xnspq208@gmail.com
 [core]
   editor = vim
-	excludesfile = $HOME/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 

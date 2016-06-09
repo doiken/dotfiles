@@ -8,7 +8,7 @@
 ##
 ## Link
 ##
-DOT_FILES=( bin .zsh .zshrc .zshenv .gitconfig .gitignore .vimrc .tmux.conf )
+DOT_FILES=( bin .zsh .zshrc .zshenv .zprofile .gitconfig .gitignore .vimrc .tmux.conf )
 
 for file in ${DOT_FILES[@]}
 do
