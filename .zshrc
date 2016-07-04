@@ -138,6 +138,11 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 plugins=($plugins zsh-autosuggestions)
 
 ##
+## For Git
+##
+export PATH=$PATH:/usr/local/share/git-core/contrib/diff-highlight
+
+##
 ## Init
 ##
 autoload -Uz compinit && compinit -i
