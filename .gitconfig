@@ -26,7 +26,7 @@
   clf = clean -f
   cla = clean -fd
   ci = commit
-  cim = "!f() { git commit -m \"`git branch | awk -F- '$1 ~ /^\\* [0-9]+$/ {printf \"[\"substr($1, 3)\"] \"}'`$1\"; }; f"
+  cim = "!f() { git commit -m \"`git branch | awk -F- '$1 ~ /^\\* [0-9]+$/ {printf \"[#\"substr($1, 3)\"] \"}'`$1\"; }; f"
   cia = commit --amend     # 直前のcommitを修正
   co = checkout
   # branch関連

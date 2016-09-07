@@ -54,6 +54,8 @@ plugins=(git)
 # User configuration
 
 export PATH="$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims"
+export PATH="$HOME/local/bin:$PATH"
+# export MANPATH="/usr/local/man:$MANPATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
