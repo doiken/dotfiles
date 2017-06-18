@@ -7,6 +7,10 @@ export ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell"
 
+if [ $(find ~/.zshrc.d/ -name '*.zsh' | wc -l) -gt 0 ]; then
+  source ~/.zshrc.d/*.zsh
+fi
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -106,7 +110,7 @@ fi
 ##
 ## for Docker
 ##
-if which docker-machine > /dev/null; then eval "$(docker-machine env default)"; fi
+if which docker-machine > /dev/null; then eval "$(docker-machine env default >/dev/null 2>&1)"; fi
 
 ##
 ## for Peco

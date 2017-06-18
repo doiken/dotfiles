@@ -25,7 +25,7 @@ done
 ## Homebrew
 [ ! -x /usr/local/bin/brew ] && ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-BREW_EXECS=( git hub tmux peco reattach-to-user-namespace cask argon/mas/mas)
+BREW_EXECS=( git hub tmux peco reattach-to-user-namespace cask argon/mas/mas terminal-notifier gnupg gnupg2)
 for e in ${BREW_EXECS[@]}
 do
     brew install $e
