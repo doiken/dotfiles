@@ -4,6 +4,11 @@
 alias ll='ls -l'
 
 #
+# Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
+#
+(( $+TMUX )) && unset zle_bracketed_paste
+
+#
 # git
 #
 path=(/usr/local/share/git-core/contrib/diff-highlight/ $path)
@@ -31,7 +36,7 @@ setopt no_list_beep
 setopt magic_equal_subst
 setopt notify
 setopt print_eight_bit
-setopt print_exit_value
+#setopt print_exit_value
 setopt prompt_subst
 setopt pushd_ignore_dups
 setopt rm_star_wait
@@ -44,7 +49,7 @@ setopt transient_rprompt
 export CLICOLOR=true
 export LSCOLORS='exfxcxdxbxGxDxabagacad'
 export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
-export EDITOR=vim
+#export EDITOR=vim
 export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
 export SAVEHIST=1000000
