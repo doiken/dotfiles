@@ -12,10 +12,6 @@ alias ll='ls -l'
 # git
 #
 path=(/usr/local/share/git-core/contrib/diff-highlight/ $path)
-precmd () { vcs_info }
-PS1='%1~ ${vcs_info_msg_0_}%f%# '
-zstyle ':vcs_info:*' actionformats '[%b]% '
-zstyle ':vcs_info:*' formats       '[%b]% '
 
 # General settings
 #

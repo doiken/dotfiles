@@ -1,7 +1,6 @@
-# zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-
+##
+## read all
+##
 for file in ~/.zshrc.d/*.zsh; do
   source "$file"
 done
