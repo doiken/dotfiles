@@ -10,7 +10,7 @@ zplug "peco/peco", as:command, from:gh-r
 
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
-zplug 'zsh-users/zsh-syntax-highlighting', defer:10
+zplug 'zsh-users/zsh-syntax-highlighting', defer:3
 
 if ! zplug check --verbose; then
   printf 'Install? [y/N]: '

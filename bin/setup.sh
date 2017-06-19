@@ -20,14 +20,14 @@ done
 ##
 
 ## install oh-my-zsh
-[ ! -d ~/.oh-my-zsh ] && git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+## [ ! -d ~/.oh-my-zsh ] && git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 
 ## Homebrew
 [ ! -x /usr/local/bin/brew ] && ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-BREW_EXECS=( git hub tmux peco reattach-to-user-namespace cask argon/mas/mas terminal-notifier gnupg gnupg2)
+BREW_EXECS=( git hub tmux peco reattach-to-user-namespace cask argon/mas/mas terminal-notifier gnupg gnupg2 zplug )
 for e in ${BREW_EXECS[@]}
 do
-    brew install $e
+    brew list $e >/dev/null || brew install $e
 done
 

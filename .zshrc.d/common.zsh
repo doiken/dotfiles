@@ -35,7 +35,7 @@ setopt print_exit_value
 setopt prompt_subst
 setopt pushd_ignore_dups
 setopt rm_star_wait
-setopt share_history
+#setopt share_history
 setopt transient_rprompt
 
 #
