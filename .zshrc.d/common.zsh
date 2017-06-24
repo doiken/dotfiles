@@ -4,11 +4,6 @@
 alias ll='ls -l'
 
 #
-# Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
-#
-(( $+TMUX )) && unset zle_bracketed_paste
-
-#
 # git
 #
 path=(/usr/local/share/git-core/contrib/diff-highlight/ $path)

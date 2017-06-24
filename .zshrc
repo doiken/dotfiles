@@ -49,4 +49,9 @@ function peco-select-history() {
 zle -N peco-select-history
 bindkey '^r' peco-select-history
 
+##
+## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
+##
+(( $+TMUX )) && unset zle_bracketed_paste
+
 
