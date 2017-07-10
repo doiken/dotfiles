@@ -27,6 +27,7 @@
   cla = clean -fd
   ci = commit
   cim = "!f() { git commit -m \"`git branch | awk -F- '$1 ~ /^\\* [0-9]+$/ {printf \"[#\"substr($1, 3)\"] \"}'`$1\"; }; f"
+  cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   co = checkout
   # branch関連
@@ -64,9 +65,9 @@
   dm = diff master           # masterとのdiff
   dw = diff --color-words    # 単語単位でいろつけてdiff
   dc = diff --cached         # addされているものとのdiff
-  ds = diff --staged         # 同上(1.6.1移行)
   df = diff HEAD             # HEADとdiff
   dff = diff HEAD~           # HEADから1つ前とdiff
+  dfs = diff --staged        # 同上(1.6.1移行)
   # mergeの際にconflictが起きたファイルを編集
   edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
   # mergeの際にconflictが起きたファイルをadd
@@ -78,6 +79,8 @@
   pr  = pull-request
   pro = pull-request -o
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
+[rebase]
+  autosquash = true
 [merge]
 	ff = false
 	tool = vimdiff
