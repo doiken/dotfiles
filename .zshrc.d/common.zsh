@@ -3,6 +3,11 @@
 #
 alias ll='ls -l'
 
+autoload zmv
+alias zmv="noglob zmv -W"
+alias zcp="zmv -C"
+alias zwild="zmv -p"
+
 #
 # git
 #
