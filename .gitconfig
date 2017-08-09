@@ -80,6 +80,7 @@
   pr  = pull-request
   pro = pull-request -o
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
+  ignore = update-index --assume-unchanged
 [rebase]
   autosquash = true
 [merge]
