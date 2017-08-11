@@ -4,10 +4,10 @@ hosts=("$@")
 session_name="tmux-ssh-$$"
 
 tmux start-server
-
+ssh_cmd=${SSH:-ssh}
 is_first="true"
 for host in ${hosts[@]}; do
-    cmd="ssh $host"
+    cmd="${ssh_cmd} $host"
     # cmd="ssh $SSH_OPTION $USER@$host"
     if [ "${is_first}" == "true" ]; then
         tmux new-session -d -s $session_name "$cmd"

@@ -1,0 +1,12 @@
+my ($s, $e) = map {
+  my @a = split ':', $_;
+  my $r = pop @a;
+  $r += (pop @a // 0) * 60;
+  $r += (pop @a // 0) * 3600;
+  $r
+} qw(10:10:20 11:10:25);
+my $d = $e - $s;
+print int($d / 3600),':' if int($d / 3600);
+print int($d % 3600 / 60),':' if int($d % 3600);
+print int($d % 60);
+

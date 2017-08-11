@@ -8,7 +8,7 @@ done
 ##
 ## User configuration
 ##
-cdpath=(~/Documents ~)
+cdpath=(~/Documents ~ $cdpath)
 path=($HOME/bin/ $path)
 export PATH="$HOME/local/bin:$PATH"
 
