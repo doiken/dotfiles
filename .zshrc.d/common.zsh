@@ -8,6 +8,8 @@ alias zmv="noglob zmv -W"
 alias zcp="zmv -C"
 alias zwild="zmv -p"
 
+alias perld="perl -MData::Dumper -E"
+
 #
 # git
 #
