@@ -8,7 +8,7 @@
 ##
 ## Link
 ##
-DOT_FILES=( .hammerspoon bin .zsh .zshrc .zshenv .zprofile .gitconfig .gitignore_global .vimrc .tmux.conf $(echo $(cd ~/dotfiles/; echo .zshrc.d/*)) )
+DOT_FILES=( .hammerspoon bin .zsh .zshrc .zshenv .zprofile .gitconfig .gitignore_global .vimrc .ideavimrc .tmux.conf $(echo $(cd ~/dotfiles/; echo .zshrc.d/*)) )
 mkdir -p ~/.zshrc.d
 for file in ${DOT_FILES[@]}
 do

@@ -1,9 +1,8 @@
-function keyCode(key, modifiers)
+function keyCode(key, modifiers, delay)
    modifiers = modifiers or {}
+   delay = delay or 1000
    return function()
-      hs.eventtap.event.newKeyEvent(modifiers, string.lower(key), true):post()
-      hs.timer.usleep(1000)
-      hs.eventtap.event.newKeyEvent(modifiers, string.lower(key), false):post()
+      hs.eventtap.keyStroke(modifiers, key, delay)
    end
 end
 
@@ -60,7 +59,7 @@ remapKey({'ctrl'}, '/', keyCode('z', {'cmd'}))
 remapKey({'option'}, 'f', keyCode('right', {'option'}))
 remapKey({'option'}, 'b', keyCode('left', {'option'}))
 remapKey({'option'}, 'd', keyCode('forwarddelete', {'option'}))
-remapKey({'option'}, 'h', keyCode('delete', {'option'}))
+-- remapKey({'option'}, 'h', keyCode('delete', {'option'}))
 -- remapKey({'option', 'shift'}, ',', keyCode('home'))
 -- remapKey({'option', 'shift'}, '.', keyCode('end'))
 

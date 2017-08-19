@@ -67,3 +67,7 @@ set clipboard=unnamed,unnamedplus
 set wildmenu wildmode=list:longest,full
 " コマンドラインの履歴を10000件保存する
 set history=10000
+
+" 選択範囲のインデントを連続して変更
+vnoremap < <gv
+vnoremap > >gv
