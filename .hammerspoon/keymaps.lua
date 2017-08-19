@@ -1,23 +1,11 @@
-function keyCode(key, modifiers, delay)
-   modifiers = modifiers or {}
-   delay = delay or 1000
-   return function()
-      hs.eventtap.keyStroke(modifiers, key, delay)
-   end
-end
-
-local function remapKey(modifiers, key, keyCode)
-   hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
-end
-
-local function disableAllHotkeys()
-   for k, v in pairs(hs.hotkey.getHotkeys()) do
+local function disableHotkeys()
+   for k, v in pairs(getEmacsBinds()) do
       v['_hk']:disable()
    end
 end
 
-local function enableAllHotkeys()
-   for k, v in pairs(hs.hotkey.getHotkeys()) do
+local function enableHotkeys()
+   for k, v in pairs(getEmacsBinds()) do
       v['_hk']:enable()
    end
 end
@@ -26,9 +14,9 @@ local function handleGlobalAppEvent(name, event, app)
    if event == hs.application.watcher.activated then
       -- hs.alert.show(name)
       if (name ~= "iTerm2") and (name ~= "Emacs") then
-         enableAllHotkeys()
+         enableHotkeys()
       else
-         disableAllHotkeys()
+         disableHotkeys()
       end
    end
 end
@@ -39,7 +27,9 @@ appsWatcher:start()
 remapKey({'ctrl'}, 'e', keyCode('right', {'cmd'}))
 remapKey({'ctrl'}, 'a', keyCode('left', {'cmd'}))
 remapKey({'ctrl'}, 'u', keyCode('delete', {'cmd'}))
-remapKey({'ctrl'}, 'k', keyCode('forwarddelete', {'cmd'}))
+-- simple ctrl k not work in chrome searchbar
+-- remapKey({'ctrl'}, 'k', keyCode('forwarddelete', {'cmd'}))
+remapKey({'ctrl'}, 'k', function () keyCode('right', {'shift', 'cmd'})() keyCode('forwarddelete')() end)
 
 remapKey({'ctrl'}, 'f', keyCode('right'))
 remapKey({'ctrl'}, 'b', keyCode('left'))
@@ -51,10 +41,10 @@ remapKey({'ctrl'}, 'm', keyCode('return'))
 remapKey({'ctrl'}, 'w', keyCode('delete', {'option'}))
 remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
 remapKey({'ctrl'}, 'h', keyCode('delete'))
-remapKey({'ctrl'}, 'i', keyCode('tab'))
+-- remapKey({'ctrl'}, 'i', keyCode('tab'))
 
-remapKey({'ctrl'}, 'y', keyCode('v', {'cmd'}))
-remapKey({'ctrl'}, '/', keyCode('z', {'cmd'}))
+-- remapKey({'ctrl'}, 'y', keyCode('v', {'cmd'}))
+-- remapKey({'ctrl'}, '/', keyCode('z', {'cmd'}))
 
 remapKey({'option'}, 'f', keyCode('right', {'option'}))
 remapKey({'option'}, 'b', keyCode('left', {'option'}))
