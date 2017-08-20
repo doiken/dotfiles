@@ -24,5 +24,4 @@ require("monitor")
 require("layout")
 require("keymaps")
 
--- eventを奪ってしまうためうまく行かなかった
---require("lastkeyrepeat")
+require("lastkeyrepeat")

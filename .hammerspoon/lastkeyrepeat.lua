@@ -1,115 +1,109 @@
+-- https://github.com/Hammerspoon/hammerspoon/issues/1128
 --
 -- setting
 --
 local mapping = {
   --    { first = { key = 'g', mods = {'ctrl'} }, second = { { key = 'h' }, { key = 'l' } } },
-  { first = { key = 'g', mods = {'ctrl'} }, second = { { key = 'h' } } },
+  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'h' } },
+  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
 }
 
 --
 -- implement
 --
-local LastKeyRepeat = {}
-LastKeyRepeat.__index = LastKeyRepeat
-LastKeyRepeat.TIMEOUT = 0.5
+local module = {
+  timeout = 0.5, -- when to timeout 2nd stroke
+  debugging = false, -- whether to print status updates
+}
 
-local log = hs.logger.new('lastkeyrepeat','debug')
-function LastKeyRepeat.new(first, second)
-  local self = setmetatable({}, LastKeyRepeat)
-  self.modal = hs.hotkey.modal.new(first["mods"], first["key"])
-  self.first = first
-  self.modal.in_ready = true
-  self:_methodizeModal()
+local eventtap = require "hs.eventtap"
+local event    = eventtap.event
+local inspect  = require "hs.inspect"
+local timer  = require "hs.timer"
 
-  -- bind second stroke
-  hs.fnutils.map(second, function (t)
-    self:bindMultiple(t["mods"], t["key"], self:fn(t["mods"], t["key"], true))
+local startTimer = function ()
+  module.timer = timer.doAfter(module.timeout, function() module.init() end)
+end
+
+local stopTimer = function ()
+  if module.timer then
+    module.timer:stop()
+  end
+end
+
+local continueTimer = function ()
+  stopTimer()
+  startTimer()
+end
+
+local find = function (evt, map, type)
+  local mapSameKeys = hs.fnutils.filter(map, function(elm)
+    return hs.keycodes.map[evt:getKeyCode()] == elm[type].key
   end)
-  -- self.modal:bind('', 'escape')
-  return self
+  if module.debbuging then log.d(inspect(mapSameKeys)) end
+  local target = hs.fnutils.filter(mapSameKeys, function (elm)
+    local mods = elm[type].mods or {}
+    return evt:getFlags():containExactly(mods)
+  end)
+  if module.debbuging then log.d(inspect(target)) end
+  return target
 end
 
-function LastKeyRepeat:_methodizeModal()
-  function self.modal:entered()
-    if self.alertId then
-      log:d("alertId already set")
-      return
-    end
-
-    self.alertId = hs.alert.show("Prefix Mode", 9999)
-    self.timer = hs.timer.doAfter(LastKeyRepeat.TIMEOUT, function() self:exit() end)
-    -- fire original key code
-    if self.in_ready then
-      self.in_ready = false
-      keyCode(lkr.first["key"], lkr.first["modifiers"])()
-    end
-  end
-
-  function self.modal:exited()
-    if self.alertId then
-        hs.alert.closeSpecific(self.alertId)
-        self.alertId = nil
-    end
-
-    self.in_ready = true
-    self:_cancelTimeout()
-  end
-
-  function self.modal:_cancelTimeout()
-    if self.timer then
-        self.timer:stop()
-    end
-  end
-
-  function self.modal:continueTimeout()
-    if self.timer then
-        self.timer:stop()
-        self.timer = hs.timer.doAfter(LastKeyRepeat.TIMEOUT, function() self:exit() end)
-    end
-  end
-
---  function self.modal:bind(mod, key, fn)
---    self:bind(mod, key, nil, function() fn(); self:exit() end)
---  end
-end
-
-function LastKeyRepeat:fn(mods, key, is_first)
-  local lkr = self
-  local switcher
-  if is_first then
-    log:d("is_first: true")
+local strokeFirst = function (evt)
+  if module.debbuging then log.d("1st stroke") end
+  local target = find(evt, mapping, "first")
+  if #target > 0 then
+    module.wait_strokes = target
+    startTimer()
   else
-    log:d("is_first: false")
+    module.wait_strokes = {}
   end
+end
 
-  if is_first then
-    return function()
-      log:d("first switcher")
-      lkr:bindMultiple(mods, key, self:fn(mods, key, false))
-    end
+local strokeSecond = function (evt)
+  if module.debbuging then log.d("2nd stroke") end
+  local target = find(evt, module.wait_strokes, "second")
+  if #target == 1 and (not module.is_burst) then
+    module.is_burst = true
+    continueTimer()
+    return false
+  elseif #target == 1 then
+    local replaceEvent = {
+      event.newKeyEvent(target[1].first.mods, target[1].first.key, true),
+      event.newKeyEvent(target[1].first.mods, target[1].first.key, false),
+      event.newKeyEvent(target[1].second.mods, target[1].second.key, true),
+      event.newKeyEvent(target[1].second.mods, target[1].second.key, false),
+    }
+    continueTimer()
+    return true, replaceEvent
   else
-    return function()
-      log:d("second or later switcher")
-      keyCode(lkr.first["key"], lkr.first["modifiers"])()
-    end
+    module.wait_strokes = {}
+    module.is_burst = false
+    stopTimer()
+    return false
   end
-  -- wait enough for key delay
-  --    hs.timer.usleep(10000)
-  --    self.modal:enter()
 end
 
-function LastKeyRepeat:bindMultiple(mods, key, fn)
-  local lkr = self
-  local f = function ()
-    log:d("fire fn")
-    fn()
-    lkr.modal:continueTimeout()
+local keyHandler = function (event)
+  if #module.wait_strokes > 0 then
+    return strokeSecond(event)
+  else
+    strokeFirst(event)
+    return false
   end
-  self.modal:bind(mods, key, nil, f, nil, f)
 end
 
-return hs.fnutils.map(mapping, function (t)
-  return LastKeyRepeat.new(t["first"], t["second"])
-end)
+module.keyListener = eventtap.new({ event.types.keyDown }, keyHandler)
 
+module.start = function() module.keyListener:start() end
+module.stop  = function() module.keyListener:stop() end
+module.init = function()
+  module.wait_strokes = {}
+  module.is_burst = false
+  stopTimer()
+end
 
+module.init()
+module.start() -- autostart
+
+return module
