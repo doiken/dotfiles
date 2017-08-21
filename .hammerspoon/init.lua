@@ -12,7 +12,7 @@ function keyCode(key, modifiers, delay)
 end
 
 function remapKey(modifiers, key, keyCode)
-  local bind = hs.hotkey.bind(modifiers, key, nil, keyCode, nil, keyCode)
+  local bind = hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
   -- stock emacs binds for enable/disable
   local caller = debug.getinfo(2).short_src:match( "([^/]+).lua$" )
   if caller == "keymaps" then

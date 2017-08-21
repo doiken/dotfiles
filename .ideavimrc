@@ -1,1 +1,3 @@
 source ~/.vimrc
+
+" nnoremap p :action EditorPaste<CR>

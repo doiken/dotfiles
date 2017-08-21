@@ -1,3 +1,4 @@
+duration = 0
 --
 -- suppose only one or two screens
 --
@@ -16,7 +17,7 @@ end
 local function setLayout(rect)
   return function()
     local targetWindow = hs.window.frontmostWindow()
-    targetWindow:moveToUnit(rect)
+    targetWindow:moveToUnit(rect, duration)
   end
 end
 

@@ -1,6 +1,6 @@
 #/bin/bash
 
-init_key_repeat=12 # normal minimum is 15 (225 ms)
+init_key_repeat=14 # normal minimum is 15 (225 ms)
 key_repeat=1 # normal minimum is 2 (30 ms)
 
 boost () {
