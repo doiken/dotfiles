@@ -43,3 +43,5 @@ require("layout")
 require("keymaps")
 
 require("lastkeyrepeat")
+-- require("modmaps")
+
