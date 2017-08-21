@@ -20,6 +20,24 @@ function remapKey(modifiers, key, keyCode)
   end
 end
 
+--
+-- enhance fnutils
+--
+local fnutils = hs.fnutils
+fnutils.foldLeft = function (tbl, func, val)
+  for _, v in pairs(tbl) do
+    val = func(val, v)
+  end
+  return val
+end
+fnutils.keys = function (tbl)
+  local keys = {}
+  for k, _ in pairs(tbl) do
+    table.insert(keys, k)
+  end
+  return keys
+end
+
 require("monitor")
 require("layout")
 require("keymaps")
