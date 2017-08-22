@@ -13,7 +13,7 @@ end
 local function handleGlobalAppEvent(name, event, app)
    if event == hs.application.watcher.activated then
       -- hs.alert.show(name)
-      if (name ~= "iTerm2") and (name ~= "Emacs") then
+      if (name ~= "iTerm2") and (name ~= "Emacs") and (name ~= "IntelliJ IDEA") then
          enableHotkeys()
       else
          disableHotkeys()
@@ -24,6 +24,9 @@ end
 appsWatcher = hs.application.watcher.new(handleGlobalAppEvent)
 appsWatcher:start()
 
+remapKey({'ctrl'}, 'f', keyCode('right'))
+remapKey({'ctrl'}, 'b', keyCode('left'))
+
 remapKey({'ctrl'}, 'e', keyCode('right', {'cmd'}))
 remapKey({'ctrl'}, 'a', keyCode('left', {'cmd'}))
 remapKey({'ctrl'}, 'u', keyCode('delete', {'cmd'}))
@@ -31,16 +34,9 @@ remapKey({'ctrl'}, 'u', keyCode('delete', {'cmd'}))
 -- remapKey({'ctrl'}, 'k', keyCode('forwarddelete', {'cmd'}))
 remapKey({'ctrl'}, 'k', function () keyCode('right', {'shift', 'cmd'})() keyCode('forwarddelete')() end)
 
-remapKey({'ctrl'}, 'f', keyCode('right'))
-remapKey({'ctrl'}, 'b', keyCode('left'))
-remapKey({'ctrl'}, 'n', keyCode('down'))
-remapKey({'ctrl'}, 'p', keyCode('up'))
-
-remapKey({'ctrl'}, 's', keyCode('f', {'cmd'}))
-remapKey({'ctrl'}, 'm', keyCode('return'))
+-- remapKey({'ctrl'}, 's', keyCode('f', {'cmd'}))
+-- remapKey({'ctrl'}, 'm', keyCode('return'))
 remapKey({'ctrl'}, 'w', keyCode('delete', {'option'}))
-remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
-remapKey({'ctrl'}, 'h', keyCode('delete'))
 -- remapKey({'ctrl'}, 'i', keyCode('tab'))
 
 -- remapKey({'ctrl'}, 'y', keyCode('v', {'cmd'}))

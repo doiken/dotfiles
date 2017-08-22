@@ -76,12 +76,10 @@ local strokeSecond = function (evt)
   if module.debbuging then log.d("2nd stroke") end
   local target = find(evt, module.wait_strokes)
   if target and (not module.is_burst) then
-    log.d(inspect(target))
     module.is_burst = true
     continueTimer()
     return false
   elseif target then
-    log.d(inspect(target))
     local replaceEvent = {
       event.newKeyEvent(target.first.mods,  target.first.key, true),
       event.newKeyEvent(target.first.mods,  target.first.key, false),

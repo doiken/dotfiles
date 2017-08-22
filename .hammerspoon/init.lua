@@ -20,6 +20,12 @@ function remapKey(modifiers, key, keyCode)
   end
 end
 
+remapKey({'ctrl'}, 'n', keyCode('down'))
+remapKey({'ctrl'}, 'p', keyCode('up'))
+remapKey({'ctrl'}, 'm', keyCode('return'))
+remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
+remapKey({'ctrl'}, 'h', keyCode('delete'))
+
 --
 -- enhance fnutils
 --
@@ -38,7 +44,7 @@ fnutils.keys = function (tbl)
   return keys
 end
 
-require("monitor")
+monitor = require("monitor")
 require("layout")
 require("keymaps")
 
