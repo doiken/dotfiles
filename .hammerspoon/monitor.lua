@@ -8,14 +8,11 @@ local module = {
 --
 -- implement
 --
-local screen = require "hs.screen"
-local fnutils = require "hs.fnutils"
-local timer = require "hs.timer"
-local brightness = require "hs.brightness"
-local caffeinate = require "hs.caffeinate"
-local logger = require "hs.logger"
-local log = logger.new('lastkeyrepeat', 'debug')
-
+local screen = require("hs.screen")
+local fnutils = require("hs.fnutils")
+local timer = require("hs.timer")
+local brightness = require("hs.brightness")
+local caffeinate = require("hs.caffeinate")
 local darkenWhenTarget = function ()
   local matchScreen = function(name)
     return string.match(screen.primaryScreen():name(), name)
@@ -46,6 +43,5 @@ module.stop = function()
   module.screenWatcher:stop()
   module.caffeinateWatcher:stop()
 end
-module.start() -- auto start
 
 return module

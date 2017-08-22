@@ -1,41 +1,14 @@
 --
--- common functions
---
-local emacsBinds = {}
-function getEmacsBinds() return emacsBinds end
-function keyCode(key, modifiers, delay)
-  local modifiers = modifiers or {}
-  local delay = delay or 1000
-  return function()
-    hs.eventtap.keyStroke(modifiers, key, delay)
-  end
-end
-
-function remapKey(modifiers, key, keyCode)
-  local bind = hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
-  -- stock emacs binds for enable/disable
-  local caller = debug.getinfo(2).short_src:match( "([^/]+).lua$" )
-  if caller == "keymaps" then
-    table.insert(emacsBinds, bind)
-  end
-end
-
-remapKey({'ctrl'}, 'n', keyCode('down'))
-remapKey({'ctrl'}, 'p', keyCode('up'))
-remapKey({'ctrl'}, 'm', keyCode('return'))
-remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
-remapKey({'ctrl'}, 'h', keyCode('delete'))
-
---
 -- enhance fnutils
 --
-local fnutils = hs.fnutils
+fnutils = require("hs.fnutils")
 fnutils.foldLeft = function (tbl, func, val)
   for _, v in pairs(tbl) do
     val = func(val, v)
   end
   return val
 end
+
 fnutils.keys = function (tbl)
   local keys = {}
   for k, _ in pairs(tbl) do
@@ -44,11 +17,12 @@ fnutils.keys = function (tbl)
   return keys
 end
 
+--
+-- require
+--
+keymaps = require("keymaps")
 monitor = require("monitor")
-require("layout")
-require("keymaps")
-
-require("lastkeyrepeat")
+monitor.start()
 
 if hs.keycodes.currentLayout() == "U.S." then
   -- eisuu/kana binds

@@ -5,8 +5,6 @@
 local module = {
   mapping = {
     -- { first = { key = 'g', mods = {'ctrl'} }, second = { { key = 'h' }, { key = 'l' } } },
-    { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'h' } },
-    { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
   },
   timeout = 0.5, -- when to timeout 2nd stroke
   debugging = false, -- whether to print status updates
@@ -15,7 +13,6 @@ local module = {
 --
 -- implement
 --
-
 local eventtap = require "hs.eventtap"
 local event    = eventtap.event
 local inspect  = require "hs.inspect"
@@ -25,18 +22,19 @@ local logger = require "hs.logger"
 local log = logger.new('lastkeyrepeat', 'debug')
 local hash = require "hs.hash"
 local keycodes = require "hs.keycodes"
-
 local doHash = function (t)
   return hash.MD5(t.key .. "::" .. inspect(fnutils.sortByKeyValues(t.mods)) or "")
 end
 
-local invertedMap = fnutils.foldLeft(module.mapping, function (invMaps, map)
-  local firstHash = doHash(map.first)
-  local secondHash = doHash(map.second)
-  invMaps[firstHash] = invMaps[firstHash] or {}
-  invMaps[firstHash][secondHash] = map
-  return invMaps
-end, {})
+local getInvertedMap = function (mapping)
+  return fnutils.foldLeft(mapping, function (invMaps, map)
+    local firstHash = doHash(map.first)
+    local secondHash = doHash(map.second)
+    invMaps[firstHash] = invMaps[firstHash] or {}
+    invMaps[firstHash][secondHash] = map
+    return invMaps
+  end, {})
+end
 
 local startTimer = function ()
   module.timer = timer.doAfter(module.timeout, function() module.init() end)
@@ -63,7 +61,7 @@ end
 
 local strokeFirst = function (evt)
   if module.debbuging then log.d("1st stroke") end
-  local target = find(evt, invertedMap)
+  local target = find(evt, module.invertedMap)
   if target then
     module.wait_strokes = target
     startTimer()
@@ -112,10 +110,10 @@ module.stop  = function() module.keyListener:stop() end
 module.init = function()
   module.wait_strokes = nil
   module.is_burst = false
-  stopTimer()
+  module.invertedMap = getInvertedMap(module.mapping)
+  log.d(module.mapping)
+  log.d(module.invertedMap)
+  return module
 end
-
-module.init()
-module.start() -- autostart
 
 return module
