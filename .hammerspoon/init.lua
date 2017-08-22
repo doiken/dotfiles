@@ -43,5 +43,9 @@ require("layout")
 require("keymaps")
 
 require("lastkeyrepeat")
--- require("modmaps")
 
+if hs.keycodes.currentLayout() == "U.S." then
+  -- eisuu/kana binds
+  modmaps = require("modmaps")
+  modmaps.start()
+end

@@ -18,7 +18,7 @@ local log = logger.new('lastkeyrepeat', 'debug')
 
 local darkenWhenTarget = function ()
   local matchScreen = function(name)
-    string.match(screen.primaryScreen():name(), name)
+    return string.match(screen.primaryScreen():name(), name)
   end
   if fnutils.some(module.names, matchScreen) then
     timer.doAfter(4, function () brightness.set(0) end)

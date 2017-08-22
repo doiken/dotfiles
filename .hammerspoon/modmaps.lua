@@ -37,5 +37,6 @@ end
 
 module.eventListener = eventtap.new({hs.eventtap.event.types.flagsChanged, hs.eventtap.event.types.keyDown, hs.eventtap.event.types.keyUp}, handleEvent)
 module.start = function() module.eventListener:start() end
-module:start()
+module.stop = function() module.eventListener:stop() end
 
+return module
