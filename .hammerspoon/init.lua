@@ -21,11 +21,7 @@ end
 -- require
 --
 keymaps = require("keymaps")
+
 monitor = require("monitor")
 monitor.start()
 
-if hs.keycodes.currentLayout() == "U.S." then
-  -- eisuu/kana binds
-  modmaps = require("modmaps")
-  modmaps.start()
-end

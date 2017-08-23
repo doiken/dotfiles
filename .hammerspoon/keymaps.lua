@@ -1,39 +1,37 @@
 local layout = require("hs.layout")
 local geometry = require("hs.geometry")
+local keycodes = require("hs.keycodes")
+local eventtap = require("hs.eventtap")
+local hotkey = require("hs.hotkey")
+local event    = eventtap.event
+local logger = require("hs.logger")
+local log = logger.new(debug.getinfo(1,'S').source, 'debug')
 
---
--- common functions
---
-local emacsBinds = {}
-function keyCode(key, modifiers, delay)
+local module = {}
+--------------------------------------------------------------------------------
+-- functions
+--------------------------------------------------------------------------------
+local keyCode = function (key, modifiers, delay)
   local modifiers = modifiers or {}
   local delay = delay or 1000
   return function()
-    hs.eventtap.keyStroke(modifiers, key, delay)
+    eventtap.keyStroke(modifiers, key, delay)
   end
 end
 
-function remapKey(modifiers, key, keyCode)
-  local bind = hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
-  -- stock emacs binds for enable/disable
-  local caller = debug.getinfo(2).short_src:match( "([^/]+).lua$" )
-  if caller == "keymaps" then
-    table.insert(emacsBinds, bind)
-  end
+local remapKey = function (modifiers, key, keyCode)
+  hotkey.bind(modifiers, key, keyCode, nil, keyCode)
 end
 
---
+--------------------------------------------------------------------------------
 -- common key bind
---
+--------------------------------------------------------------------------------
 remapKey({'ctrl'}, 'n', keyCode('down'))
 remapKey({'ctrl'}, 'p', keyCode('up'))
 remapKey({'ctrl'}, 'm', keyCode('return'))
 remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
 remapKey({'ctrl'}, 'h', keyCode('delete'))
 
---
--- key bind(watched)
---
 remapKey({'ctrl'}, 'f', keyCode('right'))
 remapKey({'ctrl'}, 'b', keyCode('left'))
 
@@ -62,9 +60,9 @@ remapKey({'option'}, 'd', keyCode('forwarddelete', {'option'}))
 remapKey({'ctrl'}, 'v', keyCode('pagedown'))
 remapKey({'option'}, 'v', keyCode('pageup'))
 
---
+--------------------------------------------------------------------------------
 -- layout bind
---
+--------------------------------------------------------------------------------
 local windowLayout = require("window_layout")
 remapKey({'option', 'ctrl', 'shift'}, 'return', windowLayout.setLayout(geometry.rect(0.10, 0.10, 0.80, 0.80)))
 remapKey({'option', 'ctrl'}, 'return', windowLayout.setLayout(layout.maximized))
@@ -72,11 +70,12 @@ remapKey({'option', 'ctrl'}, 'left', windowLayout.setLayout(layout.left50))
 remapKey({'option', 'ctrl'}, 'right', windowLayout.setLayout(layout.right50))
 remapKey({'option', 'ctrl', 'shift'}, 'left', windowLayout.moveScreen(false))
 remapKey({'option', 'ctrl', 'shift'}, 'right', windowLayout.moveScreen(true))
+module.windowLayout = windowLayout
 
---
+--------------------------------------------------------------------------------
 -- last key repeat
---
-lastKeyRepeat = require("last_key_repeat")
+--------------------------------------------------------------------------------
+local lastKeyRepeat = require("last_key_repeat")
 lastKeyRepeat.mapping = {
   { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'h' } },
   { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
@@ -84,14 +83,30 @@ lastKeyRepeat.mapping = {
   { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
 }
 lastKeyRepeat.init().start()
+-- module.lastKeyRepeat = lastKeyRepeat -- since utility class, no need to hold instance
 
---
+--------------------------------------------------------------------------------
+-- modmaps
+--------------------------------------------------------------------------------
+if keycodes.currentLayout() == "U.S." then
+  local modmaps = require("modmaps")
+  modmaps.standalones = {
+    cmd = {
+      event.newKeyEvent(nil, keycodes.map.eisu, true),
+      event.newKeyEvent(nil, keycodes.map.eisu, false),
+    },
+    rightcmd = {
+      event.newKeyEvent(nil, keycodes.map.kana, true),
+      event.newKeyEvent(nil, keycodes.map.kana, false),
+    },
+  },
+  modmaps.start()
+  module.modmaps = modmaps
+end
+
+--------------------------------------------------------------------------------
 -- hotkey_switcher (must be last)
---
-hotKeySwithcer = require("hotkey_switcher")
-hotKeySwithcer.hotkeys = emacsBinds
+--------------------------------------------------------------------------------
+local hotKeySwithcer = require("hotkey_switcher")
 hotKeySwithcer.start()
-local logger = require "hs.logger"
-local log = logger.new('lastkeyrepeat', 'debug')
-log:d(hs.inspect(hs.keycodes.map))
-
+module.hotKeySwithcer = hotKeySwithcer

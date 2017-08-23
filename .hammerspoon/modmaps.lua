@@ -22,7 +22,7 @@ local function handleEvent(e)
   local keyCode = keycodes.map[e:getKeyCode()]
 
   local isModKeyUp = e:getFlags():containExactly({}) and e:getType() == event.types.flagsChanged
-  local replaceEvents = module.standalone[module.prev]
+  local replaceEvents = module.standalones[module.prev]
   if isModKeyUp and replaceEvents then
     return true, replaceEvents
   end
