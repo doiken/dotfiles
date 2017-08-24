@@ -8,61 +8,55 @@ local logger = require("hs.logger")
 local log = logger.new(debug.getinfo(1,'S').source, 'debug')
 
 local module = {}
---------------------------------------------------------------------------------
--- functions
---------------------------------------------------------------------------------
-local keyCode = function (key, modifiers, delay)
-  local modifiers = modifiers or {}
-  local delay = delay or 1000
-  return function()
-    eventtap.keyStroke(modifiers, key, delay)
-  end
-end
 
-local remapKey = function (modifiers, key, keyCode)
-  hotkey.bind(modifiers, key, keyCode, nil, keyCode)
-end
+--------------------------------------------------------------------------------
+-- hotkey_switcher (must be last)
+--------------------------------------------------------------------------------
+local hotKeySwithcer = require("hotkey_switcher")
+hotKeySwithcer.start()
+module.hotKeySwithcer = hotKeySwithcer
 
 --------------------------------------------------------------------------------
 -- common key bind
 --------------------------------------------------------------------------------
-remapKey({'ctrl'}, 'n', keyCode('down'))
-remapKey({'ctrl'}, 'p', keyCode('up'))
-remapKey({'ctrl'}, 'm', keyCode('return'))
-remapKey({'ctrl'}, 'd', keyCode('forwarddelete'))
-remapKey({'ctrl'}, 'h', keyCode('delete'))
+hotKeySwithcer.remapKey({'ctrl'}, 'f', {'right'})
+hotKeySwithcer.remapKey({'ctrl'}, 'b', {'left'})
+hotKeySwithcer.remapKey({'ctrl'}, 'n', {'down'})
+hotKeySwithcer.remapKey({'ctrl'}, 'p', {'up'})
 
-remapKey({'ctrl'}, 'f', keyCode('right'))
-remapKey({'ctrl'}, 'b', keyCode('left'))
+hotKeySwithcer.remapKey({'ctrl'}, 'e', {'right', {'cmd'}})
+hotKeySwithcer.remapKey({'ctrl'}, 'a', {'left', {'cmd'}})
 
-remapKey({'ctrl'}, 'e', keyCode('right', {'cmd'}))
-remapKey({'ctrl'}, 'a', keyCode('left', {'cmd'}))
-remapKey({'ctrl'}, 'u', keyCode('delete', {'cmd'}))
--- simple ctrl k not work in chrome searchbar
--- remapKey({'ctrl'}, 'k', keyCode('forwarddelete', {'cmd'}))
-remapKey({'ctrl'}, 'k', function () keyCode('right', {'shift', 'cmd'})() keyCode('forwarddelete')() end)
+hotKeySwithcer.remapKey({'ctrl'}, 'm', {'return'})
+hotKeySwithcer.remapKey({'ctrl'}, 'd', {'forwarddelete'})
+hotKeySwithcer.remapKey({'ctrl'}, 'h', {'delete'})
+hotKeySwithcer.remapKey({'ctrl'}, 'u', {'delete', {'cmd'}})
+hotKeySwithcer.remapKey({'ctrl'}, 'k', {'right', {'shift', 'cmd'}}, {'forwarddelete'})
 
--- remapKey({'ctrl'}, 's', keyCode('f', {'cmd'}))
--- remapKey({'ctrl'}, 'm', keyCode('return'))
-remapKey({'ctrl'}, 'w', keyCode('delete', {'option'}))
--- remapKey({'ctrl'}, 'i', keyCode('tab'))
+-- hotKeySwithcer.remapKey({'ctrl'}, 's', {'f', {'cmd'}))
+-- hotKeySwithcer.remapKey({'ctrl'}, 'm', {'return'))
+hotKeySwithcer.remapKey({'ctrl'}, 'w', {'delete', {'option'}})
+-- hotKeySwithcer.remapKey({'ctrl'}, 'i', {'tab'))
 
--- remapKey({'ctrl'}, 'y', keyCode('v', {'cmd'}))
--- remapKey({'ctrl'}, '/', keyCode('z', {'cmd'}))
+-- hotKeySwithcer.remapKey({'ctrl'}, 'y', {'v', {'cmd'}))
+-- hotKeySwithcer.remapKey({'ctrl'}, '/', {'z', {'cmd'}))
 
-remapKey({'option'}, 'f', keyCode('right', {'option'}))
-remapKey({'option'}, 'b', keyCode('left', {'option'}))
-remapKey({'option'}, 'd', keyCode('forwarddelete', {'option'}))
--- remapKey({'option'}, 'h', keyCode('delete', {'option'}))
--- remapKey({'option', 'shift'}, ',', keyCode('home'))
--- remapKey({'option', 'shift'}, '.', keyCode('end'))
+hotKeySwithcer.remapKey({'option'}, 'f', {'right', {'option'}})
+hotKeySwithcer.remapKey({'option'}, 'b', {'left', {'option'}})
+hotKeySwithcer.remapKey({'option'}, 'd', {'forwarddelete', {'option'}})
+-- hotKeySwithcer.remapKey({'option'}, 'h', {'delete', {'option'}))
+-- hotKeySwithcer.remapKey({'option', 'shift'}, ',', {'home'))
+-- hotKeySwithcer.remapKey({'option', 'shift'}, '.', {'end'))
 
-remapKey({'ctrl'}, 'v', keyCode('pagedown'))
-remapKey({'option'}, 'v', keyCode('pageup'))
+hotKeySwithcer.remapKey({'ctrl'}, 'v', {'pagedown'})
+hotKeySwithcer.remapKey({'option'}, 'v', {'pageup'})
 
 --------------------------------------------------------------------------------
 -- layout bind
 --------------------------------------------------------------------------------
+local remapKey = function (modifiers, key, command)
+  hotkey.bind(modifiers, key, command, nil, command)
+end
 local windowLayout = require("window_layout")
 remapKey({'option', 'ctrl', 'shift'}, 'return', windowLayout.setLayout(geometry.rect(0.10, 0.10, 0.80, 0.80)))
 remapKey({'option', 'ctrl'}, 'return', windowLayout.setLayout(layout.maximized))
@@ -104,9 +98,3 @@ if keycodes.currentLayout() == "U.S." then
   module.modmaps = modmaps
 end
 
---------------------------------------------------------------------------------
--- hotkey_switcher (must be last)
---------------------------------------------------------------------------------
-local hotKeySwithcer = require("hotkey_switcher")
-hotKeySwithcer.start()
-module.hotKeySwithcer = hotKeySwithcer
