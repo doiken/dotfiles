@@ -111,8 +111,6 @@ module.init = function()
   module.wait_strokes = nil
   module.is_burst = false
   module.invertedMap = getInvertedMap(module.mapping)
-  log.d(module.mapping)
-  log.d(module.invertedMap)
   return module
 end
 
