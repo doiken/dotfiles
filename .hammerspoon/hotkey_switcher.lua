@@ -67,12 +67,18 @@ local keyCode = function (key, modifiers, delay)
   end
 end
 
-module.remapKey = function (modifiers, key, ...)
+module.remapKey = function (specs, ...)
   local keyCodes = fnutils.map({...}, function (code)
     return keyCode(code[1], code[2])
   end)
   local fn = function () fnutils.ieach(keyCodes, function (f) f() end) end
-  table.insert(module.binds, hotkey.bind(modifiers, key, fn, nil, fn))
+  if #specs == 2 then
+    table.insert(module.binds, hotkey.bindSpec(specs, fn, nil, fn))
+  else
+    -- now only support single type binding
+    -- local mod2nd, key2nd = (a_and_b())
+    -- hs.hotkey.modal(specs[1], specs[2], ...)
+  end
 end
 
 module.applicationListener = application.watcher.new(handleGlobalAppEvent)

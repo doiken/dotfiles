@@ -19,37 +19,32 @@ module.hotKeySwithcer = hotKeySwithcer
 --------------------------------------------------------------------------------
 -- common key bind
 --------------------------------------------------------------------------------
-hotKeySwithcer.remapKey({'ctrl'}, 'f', {'right'})
-hotKeySwithcer.remapKey({'ctrl'}, 'b', {'left'})
-hotKeySwithcer.remapKey({'ctrl'}, 'n', {'down'})
-hotKeySwithcer.remapKey({'ctrl'}, 'p', {'up'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'f'}, {'right'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'b'}, {'left'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'n'}, {'down'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'p'}, {'up'})
 
-hotKeySwithcer.remapKey({'ctrl'}, 'e', {'right', {'cmd'}})
-hotKeySwithcer.remapKey({'ctrl'}, 'a', {'left', {'cmd'}})
+hotKeySwithcer.remapKey({{'ctrl'}, 'e'}, {'right', {'cmd'}})
+hotKeySwithcer.remapKey({{'ctrl'}, 'a'}, {'left', {'cmd'}})
 
-hotKeySwithcer.remapKey({'ctrl'}, 'm', {'return'})
-hotKeySwithcer.remapKey({'ctrl'}, 'd', {'forwarddelete'})
-hotKeySwithcer.remapKey({'ctrl'}, 'h', {'delete'})
-hotKeySwithcer.remapKey({'ctrl'}, 'u', {'delete', {'cmd'}})
-hotKeySwithcer.remapKey({'ctrl'}, 'k', {'right', {'shift', 'cmd'}}, {'forwarddelete'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'm'}, {'return'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'd'}, {'forwarddelete'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'h'}, {'delete'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'u'}, {'delete', {'cmd'}})
+hotKeySwithcer.remapKey({{'ctrl'}, 'k'}, {'right', {'shift', 'cmd'}}, {'forwarddelete'})
 
--- hotKeySwithcer.remapKey({'ctrl'}, 's', {'f', {'cmd'}))
--- hotKeySwithcer.remapKey({'ctrl'}, 'm', {'return'))
-hotKeySwithcer.remapKey({'ctrl'}, 'w', {'delete', {'option'}})
--- hotKeySwithcer.remapKey({'ctrl'}, 'i', {'tab'))
+hotKeySwithcer.remapKey({{'ctrl'}, 'w'}, {'delete', {'option'}})
 
--- hotKeySwithcer.remapKey({'ctrl'}, 'y', {'v', {'cmd'}))
--- hotKeySwithcer.remapKey({'ctrl'}, '/', {'z', {'cmd'}))
+-- hotKeySwithcer.remapKey({{'ctrl'}, 'y'}, {'v', {'cmd'}))
+-- hotKeySwithcer.remapKey({{'ctrl'}, '/'}, {'z', {'cmd'}))
 
-hotKeySwithcer.remapKey({'option'}, 'f', {'right', {'option'}})
-hotKeySwithcer.remapKey({'option'}, 'b', {'left', {'option'}})
-hotKeySwithcer.remapKey({'option'}, 'd', {'forwarddelete', {'option'}})
--- hotKeySwithcer.remapKey({'option'}, 'h', {'delete', {'option'}))
--- hotKeySwithcer.remapKey({'option', 'shift'}, ',', {'home'))
--- hotKeySwithcer.remapKey({'option', 'shift'}, '.', {'end'))
+hotKeySwithcer.remapKey({{'option'}, 'f'}, {'right', {'option'}})
+hotKeySwithcer.remapKey({{'option'}, 'b'}, {'left', {'option'}})
+hotKeySwithcer.remapKey({{'option'}, 'd'}, {'forwarddelete', {'option'}})
+-- hotKeySwithcer.remapKey({{'option'}, 'h'}, {'delete', {'option'}))
 
-hotKeySwithcer.remapKey({'ctrl'}, 'v', {'pagedown'})
-hotKeySwithcer.remapKey({'option'}, 'v', {'pageup'})
+hotKeySwithcer.remapKey({{'ctrl'}, 'v'}, {'pagedown'})
+hotKeySwithcer.remapKey({{'option'}, 'v'}, {'pageup'})
 
 --------------------------------------------------------------------------------
 -- layout bind
