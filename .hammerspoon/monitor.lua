@@ -27,7 +27,8 @@ local screenHandler = function ()
 end
 
 local caffeinateHandler = function (state)
-  if state == caffeinate.watcher.systemDidWake then
+  local watcher = caffeinate.watcher
+  if fnutils.some({ watcher.systemDidWake, watcher.screensDidWake }, function (s) return s == state end) then
     darkenWhenTarget()
   end
 end
