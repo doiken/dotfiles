@@ -45,6 +45,7 @@ hotKeySwithcer.remapKey({{'option'}, 'd'}, {'forwarddelete', {'option'}})
 
 hotKeySwithcer.remapKey({{'ctrl'}, 'v'}, {'pagedown'})
 hotKeySwithcer.remapKey({{'option'}, 'v'}, {'pageup'})
+--hotKeySwithcer.remapKey({{'option', 'cmd'}, 'r'}, function () hs.reload() end)
 
 --------------------------------------------------------------------------------
 -- layout bind
@@ -59,6 +60,13 @@ remapKey({'option', 'ctrl'}, 'left', windowLayout.setLayout(layout.left50))
 remapKey({'option', 'ctrl'}, 'right', windowLayout.setLayout(layout.right50))
 remapKey({'option', 'ctrl', 'shift'}, 'left', windowLayout.moveScreen(false))
 remapKey({'option', 'ctrl', 'shift'}, 'right', windowLayout.moveScreen(true))
+if keycodes.currentLayout() == "U.S." then
+  remapKey({'cmd'}, '`', windowLayout.focusScreen(true))
+  remapKey({'cmd', 'shift'}, '`', windowLayout.focusScreen(false))
+else
+  remapKey({'cmd'}, '[', windowLayout.focusScreen(true))
+  remapKey({'cmd', 'shift'}, '[', windowLayout.focusScreen(false))
+end
 module.windowLayout = windowLayout
 
 --------------------------------------------------------------------------------

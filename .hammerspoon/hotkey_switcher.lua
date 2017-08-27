@@ -69,7 +69,9 @@ end
 
 module.remapKey = function (specs, ...)
   local keyCodes = fnutils.map({...}, function (code)
-    return keyCode(code[1], code[2])
+    return type(code) == "table"
+      and keyCode(code[1], code[2])
+      or  code
   end)
   local fn = function () fnutils.ieach(keyCodes, function (f) f() end) end
   if #specs == 2 then
