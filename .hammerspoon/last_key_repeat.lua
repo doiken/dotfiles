@@ -23,11 +23,20 @@ local log = logger.new('lastkeyrepeat', 'debug')
 local hash = require "hs.hash"
 local keycodes = require "hs.keycodes"
 local doHash = function (t)
-  return hash.MD5(t.key .. "::" .. inspect(fnutils.sortByKeyValues(t.mods)) or "")
+  fnutils.sortByKeyValues(t.mods)
+  return hash.MD5(t.key .. "::" .. inspect(t.mods))
 end
 
 local getInvertedMap = function (mapping)
   return fnutils.foldLeft(mapping, function (invMaps, map)
+    fnutils.each({"first", "second"}, function (key)
+      if map[key].mods then
+        fnutils.sortByKeyValues(map[key].mods)
+      else
+        map[key].mods = {} -- default is {}
+      end
+    end)
+
     local firstHash = doHash(map.first)
     local secondHash = doHash(map.second)
     invMaps[firstHash] = invMaps[firstHash] or {}
@@ -60,7 +69,7 @@ local find = function (evt, map)
 end
 
 local strokeFirst = function (evt)
-  if module.debbuging then log.d("1st stroke") end
+  if module.debbuging then log:d("1st stroke") end
   local target = find(evt, module.invertedMap)
   if target then
     module.wait_strokes = target
@@ -71,7 +80,7 @@ local strokeFirst = function (evt)
 end
 
 local strokeSecond = function (evt)
-  if module.debbuging then log.d("2nd stroke") end
+  if module.debbuging then log:d("2nd stroke") end
   local target = find(evt, module.wait_strokes)
   if target and (not module.is_burst) then
     module.is_burst = true
