@@ -41,7 +41,7 @@ module.focusScreen = function (isForward)
 
   return function()
     local windowFocused = window.frontmostWindow()
-    local app = window.frontmostWindow():application()
+    local app = windowFocused:application()
     if not app then
       return
     end

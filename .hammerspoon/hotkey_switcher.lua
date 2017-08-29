@@ -3,6 +3,7 @@ local hotkey = require("hs.hotkey")
 local logger = require("hs.logger")
 local log = logger.new(debug.getinfo(1,'S').source, 'debug')
 local eventtap = require("hs.eventtap")
+local window = require("hs.window")
 
 local idx = function (mods, key)
   local dummy_fn = function () end
@@ -47,15 +48,13 @@ local enableHotkeys = function ()
   end)
 end
 
-local handleGlobalAppEvent = function (name, event, app)
-  if event == application.watcher.activated then
-    if module.apps_custom[name] then
-      module.disabled = true
-      disableHotkeys(module.apps_custom[name])
-    elseif module.disabled then
-      enableHotkeys()
-      module.disabled = false
-    end
+local handleGlobalAppEvent = function (name)
+  if module.apps_custom[name] then
+    module.disabled = true
+    disableHotkeys(module.apps_custom[name])
+  elseif module.disabled then
+    enableHotkeys()
+    module.disabled = false
   end
 end
 
@@ -83,6 +82,12 @@ module.remapKey = function (specs, ...)
   end
 end
 
-module.applicationListener = application.watcher.new(handleGlobalAppEvent)
+module.applicationListener = application.watcher.new(function (name, event, app)
+  if event == application.watcher.activated then
+    handleGlobalAppEvent(name)
+  end
+end)
+
 module.start = function () module.applicationListener:start() end
+module.init = function () handleGlobalAppEvent(window.frontmostWindow():application():name()) end
 return module

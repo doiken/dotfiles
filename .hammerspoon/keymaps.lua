@@ -13,12 +13,7 @@ local module = {}
 -- hotkey_switcher (must be last)
 --------------------------------------------------------------------------------
 local hotKeySwithcer = require("hotkey_switcher")
-hotKeySwithcer.start()
 module.hotKeySwithcer = hotKeySwithcer
-
---------------------------------------------------------------------------------
--- common key bind
---------------------------------------------------------------------------------
 hotKeySwithcer.remapKey({{'ctrl'}, 'f'}, {'right'})
 hotKeySwithcer.remapKey({{'ctrl'}, 'b'}, {'left'})
 hotKeySwithcer.remapKey({{'ctrl'}, 'n'}, {'down'})
@@ -46,6 +41,8 @@ hotKeySwithcer.remapKey({{'option'}, 'd'}, {'forwarddelete', {'option'}})
 hotKeySwithcer.remapKey({{'ctrl'}, 'v'}, {'pagedown'})
 hotKeySwithcer.remapKey({{'option'}, 'v'}, {'pageup'})
 --hotKeySwithcer.remapKey({{'option', 'cmd'}, 'r'}, function () hs.reload() end)
+hotKeySwithcer.init()
+hotKeySwithcer.start()
 
 --------------------------------------------------------------------------------
 -- layout bind
