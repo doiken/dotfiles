@@ -13,7 +13,14 @@ local fnutils = require("hs.fnutils")
 local timer = require("hs.timer")
 local brightness = require("hs.brightness")
 local caffeinate = require("hs.caffeinate")
-local darkenWhenTarget = function ()
+local log = require("hs.logger").new(debug.getinfo(1,'S').source, 'debug')
+local darkenWhenTarget
+darkenWhenTarget = function ()
+  if not screen.primaryScreen():name() then
+    log:d("failed to get screen name. retry in a few seconds.")
+    timer.doAfter(4, darkenWhenTarget)
+    return
+  end
   local matchScreen = function(name)
     return string.match(screen.primaryScreen():name(), name)
   end
