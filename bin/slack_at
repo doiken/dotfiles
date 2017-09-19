@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# should be set for at. see man atrun
+# sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist
+
+text=$1
+post_at=${2:-$SLACK_POST_AT}
+channel=${3:-$SLACK_CHANNEL}
+
+if [ "$text" == '' ]; then
+	echo 'text required.' >&2
+	exit 1
+fi
+
+echo "slack '${text}' ${channel}" | at "${post_at}"

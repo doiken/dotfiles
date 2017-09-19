@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+text=$1
+channel=${2:-$SLACK_CHANNEL}
+token=$SLACK_TOKEN
+
+if [ "$text" == '' ]; then
+  echo 'text required.' >&2
+  exit 1
+fi
+
+if [ "$channel" == '' ]; then
+  echo 'channel required.' >&2
+  exit 1
+fi
+
+if [ "$token" == '' ]; then
+  echo 'token required.' >&2
+  exit 1
+fi
+
+curl -XPOST \
+  -d "token=${token}" \
+  -d "channel=${channel}" \
+  -d "text=${text}" \
+  -d 'as_user=true' \
+  -d 'parse=full' \
+  "https://slack.com/api/chat.postMessage" >/dev/null
+
+
