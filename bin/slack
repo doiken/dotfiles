@@ -19,7 +19,7 @@ if [ "$token" == '' ]; then
   exit 1
 fi
 
-curl -XPOST \
+curl -sXPOST \
   -d "token=${token}" \
   -d "channel=${channel}" \
   -d "text=${text}" \
