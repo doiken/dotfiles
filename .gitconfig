@@ -1,6 +1,6 @@
 [user]
 	name = doiken
-	email = doi_kenji@fout.jp
+	email = doiken@users.noreply.github.com
 [core]
   editor = vim
 	excludesfile = ~/.gitignore_global
