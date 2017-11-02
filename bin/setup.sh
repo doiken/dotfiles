@@ -31,6 +31,12 @@ do
     brew list $e >/dev/null || brew install $e
 done
 
+CASK_EXECS=( google-play-music-desktop-player )
+for e in ${CASK_EXECS[@]}
+do
+    brew cask list $e >/dev/null || brew cask install $e
+done
+
 ##
 ## Configure
 ##
