@@ -69,6 +69,7 @@
   df = diff HEAD             # HEADとdiff
   dff = diff HEAD~           # HEADから1つ前とdiff
   dfs = diff --staged        # 同上(1.6.1移行)
+  dfc = "!f() { git diff $1~ $1; }; f" # そのコミットの差分
   # mergeの際にconflictが起きたファイルを編集
   edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
   # mergeの際にconflictが起きたファイルをadd
@@ -81,6 +82,7 @@
   pro = pull-request -o
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   ignore = update-index --assume-unchanged
+  noignore = update-index --no-assume-unchanged
 [rebase]
   autosquash = true
 [merge]
