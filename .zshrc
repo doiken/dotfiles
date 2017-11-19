@@ -15,8 +15,8 @@ export PATH="$HOME/local/bin:$PATH"
 ##
 ## rbenv
 ##
-export PATH="$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.nodebrew/current/bin:$HOME/bin/:$HOME/.rbenv/shims:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+export PATH="$HOME/.rbenv/bin:$PATH"
 
 ##
 ## for NodeBrew
