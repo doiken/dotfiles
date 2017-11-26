@@ -11,6 +11,11 @@ alias zwild="zmv -p"
 alias perld="perl -MData::Dumper -E"
 
 #
+# ruby
+#
+RUBYGEMS_GEMDEPS=-
+
+#
 # git
 #
 path=(/usr/local/share/git-core/contrib/diff-highlight/ $path)
