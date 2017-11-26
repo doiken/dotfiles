@@ -43,7 +43,7 @@ setopt print_eight_bit
 setopt prompt_subst
 setopt pushd_ignore_dups
 setopt rm_star_wait
-#setopt share_history
+setopt share_history
 setopt transient_rprompt
 
 #
