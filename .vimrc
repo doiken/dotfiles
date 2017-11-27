@@ -24,9 +24,10 @@ set whichwrap=b,s,h,l,<,>,[,]  " 行頭行末の左右移動で行をまたぐ
 " set scrolloff=8                " 上下8行の視界を確保
 " set sidescrolloff=16           " 左右スクロール時の視界を確保
 " set sidescroll=1               " 左右スクロールは一文字づつ行う
-autocmd BufWinLeave ?* silent mkview   " 閉じる前の場所を記憶
-autocmd BufWinEnter ?* silent loadview " 閉じた位置を復元
-
+augroup view
+  autocmd BufWinLeave ?* silent mkview   " 閉じる前の場所を記憶
+  autocmd BufWinEnter ?* silent loadview " 閉じた位置を復元
+augroup END
 " ファイル処理関連の設定
 set confirm    " 保存されていないファイルがあるときは終了前に保存確認
 set hidden     " 保存されていないファイルがあるときでも別のファイルを開くことが出来る
