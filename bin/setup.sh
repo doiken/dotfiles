@@ -32,7 +32,7 @@ do
 done
 brew install mysql --client-only
 
-CASK_EXECS=( google-play-music-desktop-player )
+CASK_EXECS=( google-play-music-desktop-player ngrok )
 for e in ${CASK_EXECS[@]}
 do
     brew cask list $e >/dev/null || brew cask install $e
