@@ -51,7 +51,7 @@ end
 local handleGlobalAppEvent = function (name)
   if module.apps_custom[name] then
     module.disabled = true
-    enableHotkeys() # workaround for partial disable settings
+    enableHotkeys() -- workaround for partial disable settings
     disableHotkeys(module.apps_custom[name])
   elseif module.disabled then
     enableHotkeys()
