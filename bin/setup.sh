@@ -60,7 +60,6 @@ brew install mysql --client-only
 CASK_EXECS=(
   google-play-music-desktop-player
   ngrok
-  bitbar
 )
 for e in ${CASK_EXECS[@]}
 do
