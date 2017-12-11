@@ -58,4 +58,8 @@ export HISTSIZE=100000
 export SAVEHIST=1000000
 export LANG=ja_JP.UTF-8
 
+##
+## Docker Machine
+##
+if which docker-machine > /dev/null; then eval "$(docker-machine env default)"; fi
 
