@@ -6,6 +6,7 @@ filetype plugin indent off
 " set selection=exclusive
 
 " 画面表示の設定
+set nowrap         " ソフトラップ無効
 set number         " 行番号を表示する
 " set cursorline     " カーソル行の背景色を変える
 " set cursorcolumn   " カーソル位置のカラムの背景色を変える

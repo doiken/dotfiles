@@ -61,6 +61,7 @@ CASK_EXECS=(
   google-play-music-desktop-player
   ngrok
   airmail-beta
+  bitbar
 )
 for e in ${CASK_EXECS[@]}
 do
