@@ -49,24 +49,30 @@ BREW_EXECS=(
   zplug
   rbenv
   ruby-build
-  rbenv-gemset sqlparse
+  rbenv-gemset
+  sqlparse
+  mysql
 )
-for e in ${BREW_EXECS[@]}
-do
-    brew list $e >/dev/null || brew install $e
-done
-brew install mysql --client-only
-
+{
+  PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${BREW_EXECS[@]}
+  do
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew install $e
+  done
+} &
 CASK_EXECS=(
   google-play-music-desktop-player
   ngrok
   airmail-beta
   bitbar
 )
-for e in ${CASK_EXECS[@]}
-do
-    brew cask list $e >/dev/null || brew cask install $e
-done
+{
+  PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${CASK_EXECS[@]}
+  do
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
+  done
+} &
 
 ##
 ## Configure
@@ -77,3 +83,4 @@ do
     [ -x $script ] && $script
 done
 
+wait
