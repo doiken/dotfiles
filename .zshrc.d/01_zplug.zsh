@@ -4,9 +4,6 @@
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
-# Supports oh-my-zsh plugins and the like
-zplug "plugins/git",   from:oh-my-zsh
-
 # run command after installed
 zplug "peco/peco", as:command, from:gh-r
 
