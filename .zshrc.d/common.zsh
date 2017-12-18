@@ -61,5 +61,6 @@ export LANG=ja_JP.UTF-8
 ##
 ## Docker Machine
 ##
-if which docker-machine > /dev/null; then eval "$(docker-machine env default)"; fi
+## too heavy to load every time
+# if which docker-machine > /dev/null; then docker-machine active 2>/dev/null && eval "$(docker-machine env default)"; fi
 
