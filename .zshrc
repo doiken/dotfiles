@@ -10,13 +10,13 @@ done
 ##
 cdpath=(~/Documents ~ $cdpath)
 path=($HOME/bin/ $path)
-fpath=($fpath ~/.zsh/completion)
-export PATH="$HOME/local/bin:$PATH"
+# fpath=($fpath ~/.zsh/completion)
 
 ##
 ## rbenv
 ##
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# too slow
+# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 export PATH="$HOME/.rbenv/bin:$PATH"
 
 ##
@@ -25,11 +25,6 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 if [[ -f $HOME/.nodebrew/nodebrew ]]; then
     export PATH=$HOME/.nodebrew/current/bin:$PATH
 fi
-
-##
-## for Docker
-##
-if which docker-machine > /dev/null; then eval "$(docker-machine env default >/dev/null 2>&1)"; fi
 
 ##
 ## for Peco
