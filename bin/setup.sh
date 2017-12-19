@@ -19,6 +19,7 @@ DOT_FILES=(
   .gitignore_global
   .vimrc .ideavimrc
   .tmux.conf
+  .ctags
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 
