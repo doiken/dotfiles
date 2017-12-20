@@ -10,7 +10,7 @@ done
 ##
 cdpath=(~/Documents ~ $cdpath)
 path=($HOME/bin/ $path)
-# fpath=($fpath ~/.zsh/completion)
+fpath=(~/.zsh/completion $fpath)
 
 ##
 ## rbenv

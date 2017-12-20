@@ -59,6 +59,11 @@ export SAVEHIST=1000000
 export LANG=ja_JP.UTF-8
 
 ##
+## misc
+##
+export GOPATH=$HOME/.go
+
+##
 ## Docker Machine
 ##
 ## too heavy to load every time

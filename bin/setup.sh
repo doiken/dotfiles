@@ -66,6 +66,7 @@ CASK_EXECS=(
   ngrok
   airmail-beta
   bitbar
+  visual-studio-code
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
@@ -83,5 +84,13 @@ for script in ${SCRIPTS[@]}
 do
     [ -x $script ] && $script
 done
+
+##
+## docker completion
+## https://docs.docker.com/docker-for-mac/
+##
+[ ! -e /usr/local/share/zsh/site-functions/_docker ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
+[ ! -e /usr/local/share/zsh/site-functions/_docker-machine ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.zsh-completion /usr/local/share/zsh/site-functions/_docker-machine
+[ ! -e /usr/local/share/zsh/site-functions/_docker-compose ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
 
 wait
