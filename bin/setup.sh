@@ -66,6 +66,7 @@ CASK_EXECS=(
   airmail-beta
   bitbar
   visual-studio-code
+  keycastr
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
