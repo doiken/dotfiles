@@ -52,4 +52,3 @@ bindkey '^r' history-fzf
 ##
 (( $+TMUX )) && unset zle_bracketed_paste
 
-

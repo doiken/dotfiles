@@ -9,13 +9,23 @@ alias zcp="zmv -C"
 alias zwild="zmv -p"
 
 alias perld="perl -MData::Dumper -E"
+alias v=vagrant
 alias vb='VBoxManage'
 alias d='docker'
 alias dm='docker-machine'
+alias git=hub
+
 function denv {
-  machine=${1:-default}
-  eval `docker-machine env ${machine}`
+  # faster approach
+  # https://github.com/docker/machine/issues/1884#issuecomment-169509429
+  DOCKER_MACHINE_NAME=${1:-default}
+  eval $(docker-machine inspect ${DOCKER_MACHINE_NAME} --format \
+  "export DOCKER_HOST=tcp://{{ .Driver.IPAddress }}:2376
+  export DOCKER_TLS_VERIFY=1
+  export DOCKER_CERT_PATH={{ .HostOptions.AuthOptions.StorePath }}
+  export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
 }
+
 #
 # ruby
 #
@@ -67,11 +77,18 @@ export LANG=ja_JP.UTF-8
 ##
 ## misc
 ##
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export GOPATH=$HOME/.go
 
 ##
 ## Docker Machine
 ##
-## too heavy to load every time
+# too heavy to load every time
+# manually type denv
 # if which docker-machine > /dev/null; then docker-machine active 2>/dev/null && eval "$(docker-machine env default)"; fi
+
+##
+## perl
+##
+eval $(perl -I$HOME/local/lib/perl5 -Mlocal::lib=$HOME/local)
 
