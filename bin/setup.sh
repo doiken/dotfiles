@@ -67,6 +67,7 @@ CASK_EXECS=(
   bitbar
   visual-studio-code
   keycastr
+  licecap
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
