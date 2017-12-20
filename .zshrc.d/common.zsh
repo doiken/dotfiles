@@ -9,7 +9,13 @@ alias zcp="zmv -C"
 alias zwild="zmv -p"
 
 alias perld="perl -MData::Dumper -E"
-
+alias vb='VBoxManage'
+alias d='docker'
+alias dm='docker-machine'
+function denv {
+  machine=${1:-default}
+  eval `docker-machine env ${machine}`
+}
 #
 # ruby
 #

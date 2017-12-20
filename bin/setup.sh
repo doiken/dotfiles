@@ -40,7 +40,6 @@ BREW_EXECS=(
   git
   hub
   tmux
-  peco
   reattach-to-user-namespace
   cask
   argon/mas/mas
