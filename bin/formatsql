@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+input=`cat`
+echo $input | sqlformat -k upper -r --indent_width 4 --comma_first COMMA_FIRST - | sed -e 's/, / ,/g'

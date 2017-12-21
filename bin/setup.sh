@@ -87,16 +87,6 @@ do
 done
 
 ##
-## Configure
-##
-if ! zplug check --verbose; then
-  printf 'Install? [y/N]: '
-  if read -q; then
-    echo; zplug install
-  fi
-fi
-
-##
 ## docker completion
 ## https://docs.docker.com/docker-for-mac/
 ##
