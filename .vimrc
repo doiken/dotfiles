@@ -111,4 +111,5 @@ set history=10000
 ""
 vnoremap < <gv
 vnoremap > >gv
-
+nnoremap <C-w>d :<C-u>vs<CR>
+nnoremap <C-w>D :<C-u>sp<CR>
