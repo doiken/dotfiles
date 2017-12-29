@@ -27,9 +27,9 @@ if [[ -f $HOME/.nodebrew/nodebrew ]]; then
 fi
 
 ##
-## for fzf
+## for peco
 ##
-function history-fzf() {
+function history-peco() {
   local tac
 
   if which tac > /dev/null; then
@@ -38,14 +38,14 @@ function history-fzf() {
     tac="tail -r"
   fi
 
-  BUFFER=$(history -n 1 | eval $tac | fzf --query "$LBUFFER")
+  BUFFER=$(history -n 1 | eval $tac | peco --query "$LBUFFER")
   CURSOR=$#BUFFER
 
   zle reset-prompt
 }
 
-zle -N history-fzf
-bindkey '^r' history-fzf
+zle -N history-peco
+bindkey '^r' history-peco
 
 ##
 ## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell

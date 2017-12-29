@@ -52,6 +52,7 @@ BREW_EXECS=(
   rbenv-gemset
   sqlparse
   mysql
+  peco
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"

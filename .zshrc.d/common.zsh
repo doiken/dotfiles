@@ -25,6 +25,7 @@ function denv {
   export DOCKER_CERT_PATH={{ .HostOptions.AuthOptions.StorePath }}
   export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
 }
+alias renv='eval "$(rbenv init -)"'
 
 #
 # ruby
