@@ -1,4 +1,9 @@
 ##
+## tmux
+##
+[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+
+##
 ## read all
 ##
 for file in ~/.zshrc.d/*.zsh; do
