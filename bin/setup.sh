@@ -69,6 +69,7 @@ CASK_EXECS=(
   visual-studio-code
   keycastr
   licecap
+  skitch
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
