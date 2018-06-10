@@ -83,6 +83,7 @@
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
 [rebase]
   autosquash = true
 [merge]
