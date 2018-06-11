@@ -26,6 +26,7 @@ function denv {
   export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
 }
 alias renv='eval "$(rbenv init -)"'
+alias aenv='denv; renv;' # kick all *env
 
 #
 # ruby

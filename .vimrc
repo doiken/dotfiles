@@ -52,7 +52,7 @@ set helpheight=999 " ヘルプを画面いっぱいに開く
 
 " 不可視文字の表示記号指定
 set nolist           " 不可視文字
-" set listchars=tab:▸\ ,eol:↲,extends:❯,precedes:❮
+set listchars=tab:▸\ ,eol:↲,extends:❯,precedes:❮
 
 " カーソル移動関連の設定
 set backspace=indent,eol,start " Backspaceキーの影響範囲に制限を設けない
