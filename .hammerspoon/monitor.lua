@@ -18,14 +18,14 @@ local darkenWhenTarget
 darkenWhenTarget = function ()
   if not screen.primaryScreen():name() then
     log:d("failed to get screen name. retry in a few seconds.")
-    timer.doAfter(4, darkenWhenTarget)
+    timer.doAfter(6, darkenWhenTarget)
     return
   end
   local matchScreen = function(name)
     return string.match(screen.primaryScreen():name(), name)
   end
   if fnutils.some(module.names, matchScreen) then
-    timer.doAfter(4, function () brightness.set(0) end)
+    timer.doAfter(6, function () brightness.set(0) end)
   end
 end
 
