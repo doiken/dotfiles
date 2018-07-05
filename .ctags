@@ -1,5 +1,97 @@
+--exclude=.bundle/*
+--exclude=.cache/*
+--exclude=.git/*
+--exclude=.vagrant/*
+--exclude=.DS_Store*
+--exclude=bundle/*
+--exclude=dist/*
+--exclude=docs/*
+--exclude=log/*
+--exclude=node_modules/*
+--exclude=*tmp/*
+--exclude=*/vendor/*
+--exclude=jquery*.js
+--exclude=*-min.*
+--exclude=*.bak
+--exclude=*.class
+--exclude=*.csproj
+--exclude=*.csproj.user
+--exclude=*.dll
+--exclude=*.doc*
+--exclude=*.jar
+--exclude=*.json
+--exclude=*.log
+--exclude=*.map
+--exclude=*.md
+--exclude=*.min.*
+--exclude=*.pdb
+--exclude=*.pyc
+--exclude=*.rtf
+--exclude=*.sln
+--exclude=*.sql
+--exclude=*.swp
+--exclude=*.tar.*
+--exclude=*.txt
+--exclude=*.zip
+--exclude=*/blib/*
+--exclude=tags
+--exclude=TAGS
+--exclude=GTAGS
+--exclude=cscope.*
+
+--exclude=extlibs/centos6*
+--exclude=local/lib/*
+--exclude=blib/*
+
+--languages=JavaScript,Lua,Make,Perl,PHP,Ruby,Python,Sh,Vim
+--recurse=yes
+--tag-relative=yes
+
 --langdef=Go
 --langmap=Go:.go
 --regex-Go=/func([ \t]+\([^)]+\))?[ \t]+([a-zA-Z0-9_]+)/\2/d,func/
 --regex-Go=/var[ \t]+([a-zA-Z_][a-zA-Z0-9_]+)/\1/d,var/
 --regex-Go=/type[ \t]+([a-zA-Z_][a-zA-Z0-9_]+)/\1/d,type/
+
+--perl-kinds=pscal
+--regex-perl=/package[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/p,package,packages/
+--regex-perl=/use[ \t]+constant[ \t]+['"]*([A-Za-z_][A-Za-z0-9_]+)['" \t]*/\1/c,constants/
+--regex-perl=/^[ \t]*has[ \t]+['"]*([A-Za-z_+][A-Za-z0-9_]+)['"]*[ \t]+/\1/a,attribute,attributes/
+--regex-perl=/^[ \t]*\*([A-Za-z_][A-Za-z0-9:_]+)[ \t]+=/\1/l,alias,aliases/
+--regex-perl=/COMMENT:with[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/w,role,roles/
+--regex-perl=/COMMENT:extends[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/e,extends/
+--regex-perl=/COMMENT:use[ \t]+base[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/e,extends/
+--regex-perl=/COMMENT:use[ \t]+parent[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/e,extends/
+--regex-perl=/^COMMENT:[ \t]*use[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/u,use,uses/
+--regex-perl=/^COMMENT:[ \t]*require[ \t]+['"]*([A-Za-z][A-Za-z0-9:]+)['" \t]*;/\1/r,require,requires/
+--regex-perl=/^COMMENT:[ \t]*around[ \t]+['"]*([A-Za-z_][A-Za-z0-9_]+)['"]*[ \t]+/\1/x,around/
+--regex-perl=/^COMMENT:[ \t]*our[ \t]+([\$@%][A-Za-z_][A-Za-z0-9_]+)/\1/o,our,ours/
+
+--regex-ruby=/(^|;)[ \t]*(class|module)[ \t]+([A-Z][[:alnum:]_]+(::[A-Z][[:alnum:]_]+)+)/\3/c,class,constant/
+--regex-ruby=/(^|[:;])[ \t]*([A-Z][[:alnum:]_]+) *=/\2/c,class,constant/
+--regex-ruby=/(^|;)[ \t]*(has_many|belongs_to|has_one|has_and_belongs_to_many)\(? *:([[:alnum:]_]+)/\3/f,function,association/
+--regex-ruby=/(^|;)[ \t]*(named_)?scope\(? *:([[:alnum:]_]+)/\3/f,function,named_scope/
+--regex-ruby=/(^|;)[ \t]*expose\(? *:([[:alnum:]_]+)/\2/f,function,exposure/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2/f,function,aasm_event/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2!/f,function,aasm_event/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2?/f,function,aasm_event/
+
+--langdef=js
+--langmap=js:.js
+--regex-js=/[ \t.]([A-Z][A-Z0-9._$]+)[ \t]*=[ \t]*[0-9"'\[\{]/\1/n,constant/
+--regex-js=/([A-Za-z0-9._$]+)[ \t]*=[ \t]*\{/\1/o,object/
+--regex-js=/['"]*([A-Za-z0-9_$]+)['"]*[ \t]*:[ \t]*\{/\1/o,object/
+--regex-js=/([A-Za-z0-9._$]+)\[["']([A-Za-z0-9_$]+)["']\][ \t]*=[ \t]*\{/\1\.\2/o,object/
+--regex-js=/([A-Za-z0-9._$]+)\.prototype[ \t.=]/\1/c,class/
+--regex-js=/([A-Za-z0-9._$]+)[ \t]*=[ \t]*\(function\(\)/\1/c,class/
+--regex-js=/['"]*([A-Za-z0-9_$]+)['"]*:[ \t]*\(function\(\)/\1/c,class/
+--regex-js=/var[ \t]*([A-Za-z$][A-Za-z0-9_$()]+)[ \t]*=[ \t]*function[ \t]*\(/\1/f,function/
+--regex-js=/[ \t]*function[ \t]+([A-Za-z$][A-Za-z0-9_$]+)[ \t]*\(([^)])\)/\1/f,function/
+--regex-js=/[ \t]*function[ \t]* \*([A-Za-z$][A-Za-z0-9_$()]+)[ \t]*\(/\1/f,function/
+--regex-js=/['"]*([A-Za-z$][A-Za-z0-9_$]+)['"]*:[ \t]*function[ \t]*\(/\1/m,method/
+--regex-js=/([A-Za-z$][A-Za-z0-9_$]+)[ \t]*=[ \t]*function[ \t]*\(/\1/m,method/
+--regex-js=/([A-Za-z0-9_$]+)\[["']([A-Za-z0-9_$]+)["']\][ \t]*=[ \t]*function[ \t]*\(/\2/m,method/
+--regex-js=/([A-Za-z0-9._$]+)[ \t]*=[ \t]*\[/\1/a,array/
+--regex-js=/['"]*([A-Za-z$][A-Za-z0-9_$]+)['"]*:[ \t]*\[/\1/a,array/
+--regex-js=/([A-Za-z0-9._$]+)\[["']([A-Za-z0-9_$]+)["']\][ \t]*=[ \t]*\[/\1\.\2/a,array/
+

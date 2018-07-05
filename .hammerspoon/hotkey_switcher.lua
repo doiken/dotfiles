@@ -23,8 +23,6 @@ local module = {
       [idx({'ctrl'}, 'h')] = true,
     },
     ["Code"] = {
-      [idx({'ctrl'}, 'n')] = true,
-      [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
       [idx({'ctrl'}, 'd')] = true,
       [idx({'ctrl'}, 'h')] = true,

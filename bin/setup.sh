@@ -53,6 +53,7 @@ BREW_EXECS=(
   sqlparse
   mysql
   peco
+  ctags
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
@@ -70,6 +71,7 @@ CASK_EXECS=(
   keycastr
   licecap
   skitch
+  slack
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"

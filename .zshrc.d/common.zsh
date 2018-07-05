@@ -14,6 +14,7 @@ alias vb='VBoxManage'
 alias d='docker'
 alias dm='docker-machine'
 alias git=hub
+alias ctags='/usr/local/bin/ctags'
 
 function denv {
   # faster approach
