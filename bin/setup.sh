@@ -54,6 +54,7 @@ BREW_EXECS=(
   mysql
   peco
   ctags
+  slack
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
