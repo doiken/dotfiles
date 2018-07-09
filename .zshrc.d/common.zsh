@@ -4,9 +4,9 @@
 alias ll='ls -l'
 
 autoload zmv
-alias zmv="noglob zmv -W"
+alias zmv="noglob zmv"
 alias zcp="zmv -C"
-alias zwild="zmv -p"
+alias zwild="zmv -p" # any command
 
 alias perld="perl -MData::Dumper -E"
 alias v=vagrant

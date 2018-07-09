@@ -55,6 +55,7 @@ BREW_EXECS=(
   peco
   ctags
   slack
+  jq
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
