@@ -98,3 +98,14 @@ if keycodes.currentLayout() == "U.S." then
   module.modmaps = modmaps
 end
 
+--------------------------------------------------------------------------------
+-- pseudo_num_key
+--------------------------------------------------------------------------------
+local PseudoNumKey = require("pseudo_num_key")
+PseudoNumKey.num_maps = {
+    ["u"] = "7", ["i"] = "8", ["o"] = "9",
+    ["j"] = "4", ["k"] = "5", ["l"] = "6",
+    ["m"] = "1", [","] = "2", ["."] = "3",
+    ["space"] = "0", 
+}
+PseudoNumKey.start()

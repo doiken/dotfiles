@@ -73,7 +73,6 @@ CASK_EXECS=(
   keycastr
   licecap
   skitch
-  slack
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
