@@ -54,8 +54,11 @@ BREW_EXECS=(
   mysql
   peco
   ctags
-  slack
   jq
+  the_silver_searcher
+  python3
+  ndenv
+  pipenv
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
@@ -73,6 +76,7 @@ CASK_EXECS=(
   keycastr
   licecap
   skitch
+  slack
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"

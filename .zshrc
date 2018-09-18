@@ -22,14 +22,17 @@ fpath=(~/.zsh/completion $fpath)
 ##
 # too slow
 # if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-export PATH="$HOME/.rbenv/bin:$PATH"
+if [[ -f $HOME/.rbenv/bin ]]; then
+	export PATH="$HOME/.rbenv/bin:$PATH"
+fi
 
 ##
-## for NodeBrew
+## for ndenv
 ##
-if [[ -f $HOME/.nodebrew/nodebrew ]]; then
-    export PATH=$HOME/.nodebrew/current/bin:$PATH
+if [[ -f $HOME/.ndenv/bin ]]; then
+		export PATH="$HOME/.ndenv/bin:$PATH"
 fi
+
 
 ##
 ## for peco
