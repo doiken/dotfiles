@@ -65,7 +65,7 @@ begin
   issue_total_count = result[:total_count] > 99 ? '99+' : result[:total_count]
   puts issues.empty? ? "✦ | color=#7d7d7d" : "✦ #{issue_total_count}"
   puts "---"
-  puts "Redmine | color=black href=#{redmine_url}"
+  puts "Redmine | href=#{redmine_url}"
   puts "---"
 
   projects.each do | _, project |
@@ -76,7 +76,7 @@ begin
         puts "[#{status.first[:status][:name]}] | color=#58BE89 size=11"
         status.each do | issue |
           prefix = status.last == issue ? "└" : "├"
-          puts "#{prefix} ##{issue[:id]} #{issue[:subject]} | color=black href=#{redmine_url}/issues/#{issue[:id]} size=11"
+          puts "#{prefix} ##{issue[:id]} #{issue[:subject]} | href=#{redmine_url}/issues/#{issue[:id]} size=11"
         end
       end
     end
