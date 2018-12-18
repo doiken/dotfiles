@@ -42,15 +42,12 @@ BREW_EXECS=(
   tmux
   reattach-to-user-namespace
   cask
-  argon/mas/mas
+  argon/mas/mas # brew extension for app store
   terminal-notifier
-  gnupg
-  gnupg2
   zplug
   rbenv
   ruby-build
   rbenv-gemset
-  sqlparse
   mysql
   peco
   ctags
@@ -70,11 +67,10 @@ BREW_EXECS=(
 CASK_EXECS=(
   google-play-music-desktop-player
   ngrok
-  airmail-beta
   bitbar
   visual-studio-code
-  keycastr
-  licecap
+  keycastr # print what you type
+  licecap  # capture as gif
   skitch
   slack
 )
@@ -83,6 +79,18 @@ CASK_EXECS=(
   for e in ${CASK_EXECS[@]}
   do
       [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
+  done
+} &
+MAS_EXECS=(
+  497799835  # Xcode
+  1176895641 # Spark - Email App by Reddle
+  973134470  # Be Focused - Focus Timer
+)
+{
+  PATTERN="$(mas list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${MAS_EXECS[@]}
+  do
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && mas install $e
   done
 } &
 
