@@ -91,10 +91,8 @@ export GOPATH=$HOME/.go
 # manually type denv
 # if which docker-machine > /dev/null; then docker-machine active 2>/dev/null && eval "$(docker-machine env default)"; fi
 
-goinside(){
-      docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash";
-}
-export goinside;
+dexec() { docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash -l"; }
+drun() { docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "$@"; }
 
 ##
 ## perl

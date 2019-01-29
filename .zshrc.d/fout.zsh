@@ -3,7 +3,7 @@
 ##
 export SSH_STEP_SERVER=gw4
 function fsh () {
-  ssh -t ${SSH_STEP_SERVER} "sudo -u nn ssh $1"
+  ssh -t ${SSH_STEP_SERVER} "sudo -u nn ssh $@"
 }
 # alias fsh="ssh -t ${SSH_STEP_SERVER} sudo -u nn ssh "
 export SSH="ssh -t ${SSH_STEP_SERVER} sudo -u nn ssh " # for tssh
