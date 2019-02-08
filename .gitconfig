@@ -27,7 +27,7 @@
   clf = clean -f
   cla = clean -fd
   ci = commit
-  cim = "!f() { git commit -m \"`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/[#$1]/g'` $1\"; }; f"
+  cim = "!f() { git commit -m \"`git branch | perl -ne '/\\* ([0-9]+)-/ and print qq/[#$1] /'`$1\"; }; f"
   cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
