@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+REPO_DIR=${REPO_DIR:-"$HOME/Repositories"}
+cd $REPO_DIR
+repos=(
+  fout/fout
+  fout/fout_logs
+  fout/fout_infra
+  fout/fout_fm
+  fout/fout_hubot
+  fout/fout_sandbox
+  fout/fout_webhook
+  fout/fout_analysis
+  fout/fout_ukigumo
+  doiken/cpp_test
+  doiken/perl
+)
+for r in ${repos[@]}; do
+    git clone "git@github.com:${r}.git"
+done
