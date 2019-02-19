@@ -28,7 +28,8 @@ function denv {
 }
 alias renv='eval "$(rbenv init -)"'
 alias nenv='eval "$(ndenv init -)"'
-alias aenv='denv; renv; nenv;' # kick all *env
+alias penv='eval $(perl -I$HOME/local/lib/perl5 -Mlocal::lib=$HOME/local)'
+alias aenv='denv; renv; nenv; penv' # kick all *env
 
 #
 # ruby
@@ -93,9 +94,3 @@ export GOPATH=$HOME/.go
 
 dexec() { docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash -l"; }
 drun() { docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "$@"; }
-
-##
-## perl
-##
-eval $(perl -I$HOME/local/lib/perl5 -Mlocal::lib=$HOME/local)
-

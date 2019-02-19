@@ -13,7 +13,7 @@ done
 ##
 ## User configuration
 ##
-cdpath=(~/Documents ~ $cdpath)
+cdpath=(~/Documents ~/Repositories ~ $cdpath)
 path=($HOME/bin/ $path)
 fpath=(~/.zsh/completion $fpath)
 
