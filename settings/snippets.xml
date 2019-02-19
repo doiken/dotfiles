@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<folders>
+	<folder>
+		<title>common</title>
+		<snippets>
+			<snippet>
+				<title>github_detail</title>
+				<content>&lt;details&gt;
+
+``` 
+
+```
+&lt;/details&gt;</content>
+			</snippet>
+			<snippet>
+				<title>redmine_collapse</title>
+				<content>{{collapse
+
+&lt;pre&gt;&lt;code class=&quot;&quot;&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+}}</content>
+			</snippet>
+			<snippet>
+				<title>redash_ymd</title>
+				<content>year = {{year}}
+and month = {{month}}
+and day = {{day}}
+and hour = {{hour}}</content>
+			</snippet>
+			<snippet>
+				<title>qiita_detail</title>
+				<content>&lt;details&gt;&lt;summary&gt;&lt;/summary&gt;&lt;div&gt;
+
+```
+```
+&lt;/div&gt;&lt;/details&gt;</content>
+			</snippet>
+			<snippet>
+				<title>redash_unnest</title>
+				<content>CROSS JOIN UNNEST(split(bid_candidates,&apos;,&apos;)) AS c (candidate_bid_id)</content>
+			</snippet>
+			<snippet>
+				<title>redmine_table</title>
+				<content>|_.  |_.  |_.  |
+|  |  |  |
+</content>
+			</snippet>
+		</snippets>
+	</folder>
+</folders>
