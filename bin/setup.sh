@@ -42,7 +42,7 @@ BREW_EXECS=(
   tmux
   reattach-to-user-namespace
   cask
-  argon/mas/mas # brew extension for app store
+  mas # brew extension for app store
   terminal-notifier
   zplug
   rbenv
@@ -65,7 +65,8 @@ BREW_EXECS=(
   done
 } &
 CASK_EXECS=(
-  google-play-music-desktop-player
+  marshallofsound-google-play-music-player
+  iterm2
   ngrok
   bitbar
   visual-studio-code
@@ -73,6 +74,14 @@ CASK_EXECS=(
   licecap  # capture as gif
   skitch
   slack
+  hammerspoon
+  pycharm-ce
+  intellij-idea-ce
+  clipy
+  docker
+  mapture
+  virtualbox
+  vagrant
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
@@ -90,7 +99,9 @@ MAS_EXECS=(
   PATTERN="$(mas list | xargs echo | perl -pe 's/ /|/g')"
   for e in ${MAS_EXECS[@]}
   do
-      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && mas install $e
+      # mas cannnot use in mojave
+      # [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && mas install $e
+      :
   done
 } &
 
