@@ -13,9 +13,12 @@ local module = {
   -- applications disable binds
   apps_custom = {
     -- app name = { idx1, ... }
-    ["iTerm2"] = { },
+    ["iTerm2"] = {
+      [idx({'ctrl'}, ']')] = true,
+    },
     ["Emacs"] = { },
     ["IntelliJ IDEA"] = {
+      [idx({'ctrl'}, ']')] = true,
       [idx({'ctrl'}, 'n')] = true,
       [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
@@ -23,6 +26,7 @@ local module = {
       [idx({'ctrl'}, 'h')] = true,
     },
     ["PyCharm"] = {
+      [idx({'ctrl'}, ']')] = true,
       [idx({'ctrl'}, 'n')] = true,
       [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
@@ -30,6 +34,7 @@ local module = {
       [idx({'ctrl'}, 'h')] = true,
     },
     ["Code"] = {
+      [idx({'ctrl'}, ']')] = true,
       [idx({'ctrl'}, 'm')] = true,
       [idx({'ctrl'}, 'd')] = true,
       [idx({'ctrl'}, 'h')] = true,

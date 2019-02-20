@@ -14,6 +14,7 @@ local module = {}
 --------------------------------------------------------------------------------
 local hotKeySwithcer = require("hotkey_switcher")
 module.hotKeySwithcer = hotKeySwithcer
+hotKeySwithcer.remapKey({{'ctrl'}, ']'}, {'escape'})
 hotKeySwithcer.remapKey({{'ctrl'}, 'f'}, {'right'})
 hotKeySwithcer.remapKey({{'ctrl'}, 'b'}, {'left'})
 hotKeySwithcer.remapKey({{'ctrl'}, 'n'}, {'down'})
