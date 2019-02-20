@@ -78,7 +78,7 @@ lastKeyRepeat.mapping = {
   { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
 }
 lastKeyRepeat.init().start()
--- module.lastKeyRepeat = lastKeyRepeat -- since utility class, no need to hold instance
+module.lastKeyRepeat = lastKeyRepeat
 
 --------------------------------------------------------------------------------
 -- modmaps

@@ -8,11 +8,15 @@ local module = {
   },
   timeout = 0.5, -- when to timeout 2nd stroke
   debugging = false, -- whether to print status updates
+  app_disable = {
+    ["iTerm2"] = true,
+  },
 }
 
 --
 -- implement
 --
+local application = require "hs.application"
 local eventtap = require "hs.eventtap"
 local event    = eventtap.event
 local inspect  = require "hs.inspect"
@@ -112,11 +116,24 @@ local keyHandler = function (event)
   end
 end
 
+module.applicationListener = application.watcher.new(function (name, event, app)
+  if event == application.watcher.activated then
+    if module.app_disable[name] then
+      module.disabled = true
+      module.stop()
+    elseif module.disabled then
+      module.start()
+      module.disabled = false
+    end
+  end
+end)
+
 module.keyListener = eventtap.new({ event.types.keyDown }, keyHandler)
 
 module.start = function() module.keyListener:start() end
 module.stop  = function() module.keyListener:stop() end
 module.init = function()
+  module.applicationListener:start()
   module.wait_strokes = nil
   module.is_burst = false
   module.invertedMap = getInvertedMap(module.mapping)
