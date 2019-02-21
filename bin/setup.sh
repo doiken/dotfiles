@@ -17,7 +17,8 @@ DOT_FILES=(
   .zprofile
   .gitconfig
   .gitignore_global
-  .vimrc .ideavimrc
+  .vimrc
+  .ideavimrc
   .tmux.conf
   .ctags
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
@@ -42,7 +43,6 @@ BREW_EXECS=(
   tmux
   reattach-to-user-namespace
   cask
-  mas # brew extension for app store
   terminal-notifier
   zplug
   rbenv
@@ -50,12 +50,12 @@ BREW_EXECS=(
   rbenv-gemset
   mysql
   peco
-  ctags
   jq
   the_silver_searcher
   python3
   ndenv
   pipenv
+  ctags
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
@@ -80,28 +80,14 @@ CASK_EXECS=(
   clipy
   docker
   mapture
-  virtualbox
   vagrant
+  java
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
   for e in ${CASK_EXECS[@]}
   do
       [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
-  done
-} &
-MAS_EXECS=(
-  497799835  # Xcode
-  1176895641 # Spark - Email App by Reddle
-  973134470  # Be Focused - Focus Timer
-)
-{
-  PATTERN="$(mas list | xargs echo | perl -pe 's/ /|/g')"
-  for e in ${MAS_EXECS[@]}
-  do
-      # mas cannnot use in mojave
-      # [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && mas install $e
-      :
   done
 } &
 
