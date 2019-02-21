@@ -8,10 +8,10 @@ repos=(
   fout/fout_infra
   fout/fout_fm
   fout/fout_hubot
-  fout/fout_sandbox
   fout/fout_webhook
   fout/fout_analysis
   fout/fout_ukigumo
+  doiken/fout_sandbox
   doiken/cpp_test
   doiken/perl
 )
