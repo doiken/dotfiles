@@ -19,6 +19,7 @@ local module = {
     ["Emacs"] = { },
     ["IntelliJ IDEA"] = {
       [idx({'ctrl'}, ']')] = true,
+      [idx({'ctrl'}, 'c')] = true,
       [idx({'ctrl'}, 'n')] = true,
       [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
@@ -27,6 +28,7 @@ local module = {
     },
     ["PyCharm"] = {
       [idx({'ctrl'}, ']')] = true,
+      [idx({'ctrl'}, 'c')] = true,
       [idx({'ctrl'}, 'n')] = true,
       [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
@@ -35,6 +37,7 @@ local module = {
     },
     ["Code"] = {
       [idx({'ctrl'}, ']')] = true,
+      [idx({'ctrl'}, 'c')] = true,
       [idx({'ctrl'}, 'm')] = true,
       [idx({'ctrl'}, 'd')] = true,
       [idx({'ctrl'}, 'h')] = true,
