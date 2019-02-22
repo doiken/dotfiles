@@ -82,6 +82,7 @@ CASK_EXECS=(
   mapture
   vagrant
   java
+  virtualbox
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
