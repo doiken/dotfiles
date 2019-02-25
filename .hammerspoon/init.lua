@@ -22,6 +22,6 @@ end
 --
 keymaps = require("keymaps")
 
--- monitor = require("monitor")
--- monitor.start()
+monitor = require("monitor")
+monitor.start()
 
