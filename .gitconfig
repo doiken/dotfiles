@@ -31,7 +31,7 @@
   cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
-  co = checkout
+  co = checkout --no-guess
   # branch関連
   b  = branch
   ba = branch -a           # originも含めた全てのbranchを表示
