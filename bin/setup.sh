@@ -21,6 +21,7 @@ DOT_FILES=(
   .ideavimrc
   .tmux.conf
   .ctags
+  .tmpl
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 
