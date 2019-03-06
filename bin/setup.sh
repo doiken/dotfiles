@@ -62,7 +62,7 @@ BREW_EXECS=(
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
   for e in ${BREW_EXECS[@]}
   do
-      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew install $e
+      [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
   done
 } &
 CASK_EXECS=(
@@ -84,6 +84,8 @@ CASK_EXECS=(
   vagrant
   java
   virtualbox
+  google-japanese-ime
+  google-chrome
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
