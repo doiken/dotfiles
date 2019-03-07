@@ -13,5 +13,6 @@ mkdir -p $REPO_DIR
 ##
 brew cask install \
     vlc \
-    the-unarchiver
+    the-unarchiver \
+    simple-comic
 
