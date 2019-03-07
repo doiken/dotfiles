@@ -84,7 +84,7 @@ module.lastKeyRepeat = lastKeyRepeat
 --------------------------------------------------------------------------------
 -- modmaps
 --------------------------------------------------------------------------------
-if keycodes.currentLayout() == "U.S." then
+-- if keycodes.currentLayout() == "U.S." then
   local modmaps = require("modmaps")
   modmaps.standalones = {
     cmd = {
@@ -98,7 +98,7 @@ if keycodes.currentLayout() == "U.S." then
   },
   modmaps.start()
   module.modmaps = modmaps
-end
+-- end
 
 --------------------------------------------------------------------------------
 -- pseudo_num_key
