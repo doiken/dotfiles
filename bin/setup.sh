@@ -46,10 +46,6 @@ BREW_EXECS=(
   cask
   terminal-notifier
   zplug
-  rbenv
-  ruby-build
-  rbenv-gemset
-  mysql
   peco
   jq
   the_silver_searcher
@@ -57,6 +53,10 @@ BREW_EXECS=(
   ndenv
   pipenv
   ctags
+  # heavy app had better to be last
+  rbenv
+  ruby-build
+  mysql
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
@@ -66,8 +66,12 @@ BREW_EXECS=(
   done
 } &
 CASK_EXECS=(
-  marshallofsound-google-play-music-player
+  google-chrome
+  google-japanese-ime
   iterm2
+  hammerspoon
+  clipy
+  marshallofsound-google-play-music-player
   ngrok
   bitbar
   visual-studio-code
@@ -75,17 +79,14 @@ CASK_EXECS=(
   licecap  # capture as gif
   skitch
   slack
-  hammerspoon
   pycharm-ce
   intellij-idea-ce
-  clipy
-  docker
   mapture
+  # heavy app had better to be last
   vagrant
   java
   virtualbox
-  google-japanese-ime
-  google-chrome
+  docker
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
