@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+##
+## clone
+##
+
+# for fout box
+REPO_DIR=${REPO_DIR:-"$HOME/Repositories"}
+mkdir -p $REPO_DIR
+
+##
+## apps
+##
+brew cask install \
+    vlc \
+    the-unarchiver
+
