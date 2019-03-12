@@ -19,7 +19,7 @@ alias ctags='/usr/local/bin/ctags'
 function denv {
   # faster approach
   # https://github.com/docker/machine/issues/1884#issuecomment-169509429
-  DOCKER_MACHINE_NAME=${1:-default}
+  DOCKER_MACHINE_NAME=${1:-${DOCKER_MACHINE_NAME:-default}}
   eval $(docker-machine inspect ${DOCKER_MACHINE_NAME} --format \
   "export DOCKER_HOST=tcp://{{ .Driver.IPAddress }}:2376
   export DOCKER_TLS_VERIFY=1
@@ -28,8 +28,7 @@ function denv {
 }
 alias renv='eval "$(rbenv init -)"'
 alias nenv='eval "$(ndenv init -)"'
-alias penv='eval $(perl -I$HOME/local/lib/perl5 -Mlocal::lib=$HOME/local)'
-alias aenv='denv; renv; nenv; penv' # kick all *env
+alias aenv='denv; renv; nenv' # kick all *env
 
 #
 # ruby
