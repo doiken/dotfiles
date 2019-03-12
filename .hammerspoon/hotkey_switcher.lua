@@ -28,7 +28,6 @@ local module = {
     },
     ["PyCharm"] = {
       [idx({'ctrl'}, ']')] = true,
-      [idx({'ctrl'}, 'c')] = true,
       [idx({'ctrl'}, 'n')] = true,
       [idx({'ctrl'}, 'p')] = true,
       [idx({'ctrl'}, 'm')] = true,
