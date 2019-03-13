@@ -6,7 +6,7 @@
 -- ref: https://support.apple.com/kb/PH25444?locale=en_US
 local module = {
   names = { "DELL" },
-  delay = 2
+  delay = 4
 }
 
 --
