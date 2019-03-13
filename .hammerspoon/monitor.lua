@@ -1,8 +1,12 @@
 --
 -- setting
 --
+
+-- be sure to disable 'Automatically adjust brightness'
+-- ref: https://support.apple.com/kb/PH25444?locale=en_US
 local module = {
-  names = { "DELL" }
+  names = { "DELL" },
+  delay = 2
 }
 
 --
@@ -18,14 +22,15 @@ local darkenWhenTarget
 darkenWhenTarget = function ()
   if not screen.primaryScreen():name() then
     log:d("failed to get screen name. retry in a few seconds.")
-    timer.doAfter(6, darkenWhenTarget)
+    timer.doAfter(module.delay, darkenWhenTarget)
     return
   end
   local matchScreen = function(name)
     return string.match(screen.primaryScreen():name(), name)
   end
+
   if fnutils.some(module.names, matchScreen) then
-    timer.doAfter(6, function () brightness.set(0) end)
+    timer.doAfter(module.delay, function () brightness.set(0) end)
   end
 end
 
