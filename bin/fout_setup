@@ -20,6 +20,25 @@ for r in ${repos[@]}; do
     git clone "git@github.com:${r}.git"
 done
 
+##
+## for fout perl
+##
+brew install plenv
+# brew install perl-build broken for now
+# https://qiita.com/narita_cpp/items/03e55b9acf4b3fbed99c
+git clone git://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
+
+cd $REPO_DIR/fout
+
+# build 5.24.3 ~> carton install
+# http://tweeeety.hateblo.jp/entry/2015/06/21/203144
+plenv install 5.24.3
+plenv local 5.24.3
+plenv install-cpanm
+plenv exec cpanm Module::Install
+plenv exec cpanm Carton
+plenv exec carton install
+
 # for fout box
 vagrant box add http://downloads.fout.local/vagrant/localdev-c7
 vagrant box add http://downloads.fout.local/vagrant/localdev
