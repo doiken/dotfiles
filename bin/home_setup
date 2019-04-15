@@ -14,5 +14,7 @@ mkdir -p $REPO_DIR
 brew cask install \
     vlc \
     the-unarchiver \
-    simple-comic
+    simple-comic \
+    android-file-transfer \
+    music-manager
 
