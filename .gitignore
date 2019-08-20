@@ -7,3 +7,4 @@ tags
 .vstags
 .gdb_history
 ignore
+.hammerspoon/Spoons/*

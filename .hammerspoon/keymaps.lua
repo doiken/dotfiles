@@ -10,43 +10,6 @@ local log = logger.new(debug.getinfo(1,'S').source, 'debug')
 local module = {}
 
 --------------------------------------------------------------------------------
--- hotkey_switcher (must be last)
---------------------------------------------------------------------------------
-local hotKeySwithcer = require("hotkey_switcher")
-module.hotKeySwithcer = hotKeySwithcer
-hotKeySwithcer.remapKey({{'ctrl'}, ']'}, {'escape'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'c'}, {'escape'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'f'}, {'right'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'b'}, {'left'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'n'}, {'down'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'p'}, {'up'})
-
-hotKeySwithcer.remapKey({{'ctrl'}, 'e'}, {'right', {'cmd'}})
-hotKeySwithcer.remapKey({{'ctrl'}, 'a'}, {'left', {'cmd'}})
-
-hotKeySwithcer.remapKey({{'ctrl'}, 'm'}, {'return'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'd'}, {'forwarddelete'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'h'}, {'delete'})
-hotKeySwithcer.remapKey({{'ctrl'}, 'u'}, {'delete', {'cmd'}})
-hotKeySwithcer.remapKey({{'ctrl'}, 'k'}, {'right', {'shift', 'cmd'}}, {'forwarddelete'})
-
-hotKeySwithcer.remapKey({{'ctrl'}, 'w'}, {'delete', {'option'}})
-
--- hotKeySwithcer.remapKey({{'ctrl'}, 'y'}, {'v', {'cmd'}))
--- hotKeySwithcer.remapKey({{'ctrl'}, '/'}, {'z', {'cmd'}))
-
-hotKeySwithcer.remapKey({{'option'}, 'f'}, {'right', {'option'}})
-hotKeySwithcer.remapKey({{'option'}, 'b'}, {'left', {'option'}})
-hotKeySwithcer.remapKey({{'option'}, 'd'}, {'forwarddelete', {'option'}})
--- hotKeySwithcer.remapKey({{'option'}, 'h'}, {'delete', {'option'}))
-
-hotKeySwithcer.remapKey({{'ctrl'}, 'v'}, {'pagedown'})
-hotKeySwithcer.remapKey({{'option'}, 'v'}, {'pageup'})
---hotKeySwithcer.remapKey({{'option', 'cmd'}, 'r'}, function () hs.reload() end)
-hotKeySwithcer.init()
-hotKeySwithcer.start()
-
---------------------------------------------------------------------------------
 -- layout bind
 --------------------------------------------------------------------------------
 local remapKey = function (modifiers, key, command)
@@ -68,18 +31,6 @@ else
 end
 module.windowLayout = windowLayout
 
---------------------------------------------------------------------------------
--- last key repeat
---------------------------------------------------------------------------------
-local lastKeyRepeat = require("last_key_repeat")
-lastKeyRepeat.mapping = {
-  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'h' } },
-  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
-  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'k' } },
-  { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
-}
-lastKeyRepeat.init().start()
-module.lastKeyRepeat = lastKeyRepeat
 
 --------------------------------------------------------------------------------
 -- modmaps
@@ -100,14 +51,3 @@ module.lastKeyRepeat = lastKeyRepeat
   module.modmaps = modmaps
 -- end
 
---------------------------------------------------------------------------------
--- pseudo_num_key
---------------------------------------------------------------------------------
-local PseudoNumKey = require("pseudo_num_key")
-PseudoNumKey.num_maps = {
-    ["u"] = "7", ["i"] = "8", ["o"] = "9",
-    ["j"] = "4", ["k"] = "5", ["l"] = "6",
-    ["m"] = "1", [","] = "2", ["."] = "3",
-    ["space"] = "0", 
-}
-PseudoNumKey.start()
