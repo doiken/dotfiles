@@ -21,6 +21,11 @@ for r in ${repos[@]}; do
 done
 
 ##
+## App
+##
+brew cask install trailer
+
+##
 ## for fout perl
 ##
 brew install plenv
