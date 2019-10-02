@@ -23,19 +23,33 @@ token = ENV["REDMINE_ACCESS_TOKEN"] || 'd7f0f0482424b6925986e0fe679792e7944964ae
 # launchctl setenv REDMINE_URL https://redmine.xxxx.com
 redmine_url = ENV["REDMINE_URL"] || 'https://redmine.fout.jp'
 
-uri = URI.parse("#{redmine_url}/issues.json?key=#{token}&limit=100&status_id=open&assigned_to_id=me")
+uri_assigned = URI.parse("#{redmine_url}/issues.json?key=#{token}&limit=100&status_id=open&assigned_to_id=me")
+uri_watch = URI.parse("#{redmine_url}/issues.json?key=#{token}&limit=5&status_id=open&watcher_id=me&sort=updated_on:desc")
 
 begin
-  http = Net::HTTP.new(uri.host, uri.port)
-  http.use_ssl = true if(uri.scheme == 'https')
+  http = Net::HTTP.new(uri_assigned.host, uri_assigned.port)
+  http.use_ssl = true if(uri_assigned.scheme == 'https')
   res = http.start {
-    http.get(uri.request_uri)
+    http.get(uri_assigned.request_uri)
   }
 
   raise "error #{res.code} #{res.message}" if res.code != '200'
 
   result = JSON.parse(res.body, symbolize_names: true)
+  issue_total_count = result[:total_count] > 99 ? '99+' : result[:total_count]
   issues = result[:issues]
+
+  http = Net::HTTP.new(uri_watch.host, uri_watch.port)
+  http.use_ssl = true if(uri_watch.scheme == 'https')
+  res = http.start {
+    http.get(uri_watch.request_uri)
+  }
+
+  raise "error #{res.code} #{res.message}" if res.code != '200'
+
+  result = JSON.parse(res.body, symbolize_names: true)
+  issue_total_count += result[:total_count]
+  issues += result[:issues]
 
   projects = Hash.new do | h, k |
     h[k] = {
@@ -62,7 +76,6 @@ begin
     projects[project_id][:trackers][tracker_id][:issues][status_id].push(v)
   end
 
-  issue_total_count = result[:total_count] > 99 ? '99+' : result[:total_count]
   puts issues.empty? ? "✦ | color=#7d7d7d" : "✦ #{issue_total_count}"
   puts "---"
   puts "Redmine | href=#{redmine_url}"
