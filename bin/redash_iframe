@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# replace redash "embeded code" into textile iframe code on redmine.
+
+iframe=${1:-`pbpaste`}
+echo $iframe | perl -pe 's/.*src="(.+?)" width="([0-9]+?)" height="([0-9]+?)".*/{{iframe($1, $2, $3, yes)}}/g'
+
