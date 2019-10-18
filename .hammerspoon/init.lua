@@ -47,6 +47,8 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
       ["Code"] = {
         {{'ctrl'}, ']'},
         {{'ctrl'}, 'c'},
+        {{'ctrl'}, 'n'},
+        {{'ctrl'}, 'p'},
         {{'ctrl'}, 'm'},
         {{'ctrl'}, 'd'},
         {{'ctrl'}, 'h'},
