@@ -5,3 +5,4 @@ augroup view
   autocmd!
 augroup END
 
+vnoremap gx :action Tool_External Tools_open in browser<CR>
