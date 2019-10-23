@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# filter and return redmine user ids
+
+: ${REDMINE_ACCESS_TOKEN:?'$REDMINE_ACCESS_TOKEN required for querying membership ids to redmine rest api'}
+limit=${LIMIT:-200}
+
+user_id=`curl -s "https://redmine.fout.jp/projects/fout-dev/memberships.json?key=${REDMINE_ACCESS_TOKEN}&limit=${limit}" | \
+    jq '.memberships[] | select(.user!= null) | (.user.id|tostring) + ":" + .user.name' | \
+    peco | \
+    perl -pe 's/"(.*):.*"/user#$1/g'`
+
+# you can select with ctrl + space for multiple selection
+# (in my case, to avoid launching lanchbar, I use ctrl + shift + space)
+echo $user_id
