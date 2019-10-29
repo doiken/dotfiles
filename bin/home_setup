@@ -16,5 +16,6 @@ brew cask install \
     the-unarchiver \
     simple-comic \
     android-file-transfer \
-    music-manager
+    music-manager \
+    a-better-finder-rename
 
