@@ -1,4 +1,11 @@
 hs.loadSpoon("SpoonInstall")
+
+-- Load lua files in spoon directory(not version controled)
+-- for customization purpose
+for file in hs.fs.dir(hs.configdir .. "/" .. "Spoons") do
+    if (string.match(file, "%.lua$") and file ~= "init.lua") then require("Spoons/" .. string.sub(file, 1, -5)) end
+end
+
 spoon.SpoonInstall.repos.doiken = {
    url = "https://github.com/doiken/Spoons",
    desc = "doiken's spoon repository",
@@ -80,25 +87,6 @@ spoon.SwitchableHotkey:bindSpec({{'option'}, 'd'}, {'forwarddelete', {'option'}}
 -- SwitchableHotkey:bindSpec({{'option'}, 'h'}, {'delete', {'option'}))
 --SwitchableHotkey:bindSpec({{'option', 'cmd'}, 'r'}, function () hs.reload() end)
 spoon.SwitchableHotkey:init():start()
-
---
--- enhance fnutils
---
-fnutils = require("hs.fnutils")
-fnutils.foldLeft = function (tbl, func, val)
-  for _, v in pairs(tbl) do
-    val = func(val, v)
-  end
-  return val
-end
-
-fnutils.keys = function (tbl)
-  local keys = {}
-  for k, _ in pairs(tbl) do
-    table.insert(keys, k)
-  end
-  return keys
-end
 
 --
 -- require
