@@ -6,6 +6,91 @@ for file in hs.fs.dir(hs.configdir .. "/" .. "Spoons") do
     if (string.match(file, "%.lua$") and file ~= "init.lua") then require("Spoons/" .. string.sub(file, 1, -5)) end
 end
 
+--
+--
+-- 3rd party Spoons
+--
+spoon.SpoonInstall:andUse("TextClipboardHistory", {
+  config = {
+    paste_on_select = true,
+    show_in_menubar = false,
+  },
+  hotkeys = {
+    toggle_clipboard = { { "cmd", "shift" }, "v" } },
+  start = true,
+})
+spoon.SpoonInstall:andUse("Snippet", {
+  repo = 'doiken',
+  hotkeys = { toggle_snippet = { { "cmd", "shift" }, "b" } },
+  config = {
+    snippets = {
+      {
+        text = "github details",
+        action = "text",
+        contents = [[<details>
+``` 
+
+```
+</details>]],
+      },
+      {
+        text = "redmine collapse(short)",
+        action = "text",
+        contents = [[{{collapse(表示)
+
+}}]],
+      },
+      {
+        text = "redmine collapse(long)",
+        action = "text",
+        contents = [[{{collapse(表示)
+<pre><code class="">
+
+</code></pre>
+}}]],
+      },
+      {
+        text = "redash ymd",
+        action = "text",
+        contents = [[year = {{year}}
+and month = {{month}}
+and day = {{day}}
+and hour = {{hour}}]],
+      },
+      {
+        text = "qiita detail",
+        action = "text",
+        contents = [[<details><summary></summary><div>
+```
+```
+</div></details>]],
+      },
+      {
+        text = "redmine table",
+        action = "text",
+        contents = [[|_.  |_.  |_.  |
+|  |  |  |]],
+      },
+      {
+        text = "redash unnest",
+        action = "text",
+        contents = [[CROSS JOIN UNNEST(split(bid_candidates,',')) AS c (candidate_bid_id)]],
+      },
+      {
+        text = "IAM ROLE",
+        action = "text",
+        contents = [[arn:aws:iam::723941195937:role/AmazonSageMaker-ExecutionRole]],
+      },
+      {
+        text = "long shell",
+        action = "shell",
+        contents = [[hoge=123
+        "echo" "-n" "$hoge"]],
+      },
+    }
+  }
+})
+
 spoon.SpoonInstall.repos.doiken = {
    url = "https://github.com/doiken/Spoons",
    desc = "doiken's spoon repository",
@@ -87,6 +172,28 @@ spoon.SwitchableHotkey:bindSpec({{'option'}, 'd'}, {'forwarddelete', {'option'}}
 -- SwitchableHotkey:bindSpec({{'option'}, 'h'}, {'delete', {'option'}))
 --SwitchableHotkey:bindSpec({{'option', 'cmd'}, 'r'}, function () hs.reload() end)
 spoon.SwitchableHotkey:init():start()
+
+--
+-- hs.chooser が持つデフォルトのキーバインドによってSwitchableHotkeyのUp, Downが効かない
+-- そのため chooser 立ち上げ時のglobalCallbackにて立ち上げ/終了時に
+-- キーバインドの衝突を避ける
+--
+local returnFn = function () hs.eventtap.keyStroke({}, "return", 1000) end
+local escapeFn = function () hs.eventtap.keyStroke({}, "escape", 1000) end
+hotkeys = {
+  hs.hotkey.new({"ctrl"}, "m", returnFn, nil, returnFn),
+  hs.hotkey.new({"ctrl"}, "c", escapeFn, nil, escapeFn),
+}
+hs.chooser.globalCallback = function(whichChooser, state)
+  if state == "willOpen" then
+    spoon.SwitchableHotkey:stop()
+    hs.fnutils.each(hotkeys, function(key) key:enable() end)
+  elseif state == "didClose" then
+    hs.fnutils.each(hotkeys, function(key) key:disable() end)
+    spoon.SwitchableHotkey:start()
+  end
+  hs.chooser._defaultGlobalCallback(whichChooser, state)
+end
 
 --
 -- require
