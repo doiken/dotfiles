@@ -19,6 +19,10 @@ spoon.SpoonInstall:andUse("TextClipboardHistory", {
     toggle_clipboard = { { "cmd", "shift" }, "v" } },
   start = true,
 })
+spoon.SpoonInstall.repos.doiken = {
+   url = "https://github.com/doiken/Spoons",
+   desc = "doiken's spoon repository",
+}
 spoon.SpoonInstall:andUse("Snippet", {
   repo = 'doiken',
   hotkeys = { toggle_snippet = { { "cmd", "shift" }, "b" } },
@@ -90,11 +94,8 @@ and hour = {{hour}}]],
     }
   }
 })
+spoon.Snippet:init()
 
-spoon.SpoonInstall.repos.doiken = {
-   url = "https://github.com/doiken/Spoons",
-   desc = "doiken's spoon repository",
-}
 spoon.SpoonInstall:andUse("PseudoNumKey", { repo = 'doiken', start = true })
 spoon.SpoonInstall:andUse("LastKeyRepeat", {
   repo = 'doiken',
