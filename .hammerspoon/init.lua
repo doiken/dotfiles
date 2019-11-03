@@ -7,7 +7,6 @@ for file in hs.fs.dir(hs.configdir .. "/" .. "Spoons") do
 end
 
 --
---
 -- 3rd party Spoons
 --
 spoon.SpoonInstall:andUse("TextClipboardHistory", {
@@ -16,9 +15,14 @@ spoon.SpoonInstall:andUse("TextClipboardHistory", {
     show_in_menubar = false,
   },
   hotkeys = {
-    toggle_clipboard = { { "cmd", "shift" }, "v" } },
+    toggle_clipboard = { { "cmd", "shift" }, "v" }
+  },
   start = true,
 })
+
+--
+-- my Spoons
+--
 spoon.SpoonInstall.repos.doiken = {
    url = "https://github.com/doiken/Spoons",
    desc = "doiken's spoon repository",
@@ -92,9 +96,9 @@ and hour = {{hour}}]],
         "echo" "-n" "$hoge"]],
       },
     }
-  }
+  },
+  fn = function (mod) mod:init() end,
 })
-spoon.Snippet:init()
 
 spoon.SpoonInstall:andUse("PseudoNumKey", { repo = 'doiken', start = true })
 spoon.SpoonInstall:andUse("LastKeyRepeat", {
@@ -107,9 +111,10 @@ spoon.SpoonInstall:andUse("LastKeyRepeat", {
       { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'j' } },
     },
     appsDisable = { "iTerm2" }
-  }
+  },
+  fn = function (mod) mod:init() end,
+  start = true,
 })
-spoon.LastKeyRepeat:init():start()
 
 spoon.SpoonInstall:andUse("SwitchableHotkey", {
   repo = 'doiken',
