@@ -33,15 +33,6 @@ spoon.SpoonInstall:andUse("Snippet", {
   config = {
     snippets = {
       {
-        text = "github details",
-        action = "text",
-        contents = [[<details>
-``` 
-
-```
-</details>]],
-      },
-      {
         text = "redmine collapse(short)",
         action = "text",
         contents = [[{{collapse(表示)
@@ -66,6 +57,15 @@ and day = {{day}}
 and hour = {{hour}}]],
       },
       {
+        text = "github details",
+        action = "text",
+        contents = [[<details>
+``` 
+
+```
+</details>]],
+      },
+      {
         text = "qiita detail",
         action = "text",
         contents = [[<details><summary></summary><div>
@@ -74,26 +74,26 @@ and hour = {{hour}}]],
 </div></details>]],
       },
       {
-        text = "redmine table",
-        action = "text",
-        contents = [[|_.  |_.  |_.  |
-|  |  |  |]],
-      },
-      {
-        text = "redash unnest",
-        action = "text",
-        contents = [[CROSS JOIN UNNEST(split(bid_candidates,',')) AS c (candidate_bid_id)]],
-      },
-      {
-        text = "IAM ROLE",
-        action = "text",
-        contents = [[arn:aws:iam::723941195937:role/AmazonSageMaker-ExecutionRole]],
-      },
-      {
-        text = "long shell",
-        action = "shell",
-        contents = [[hoge=123
-        "echo" "-n" "$hoge"]],
+        text = "other",
+        action = "nest",
+        contents = {
+          {
+            text = "redmine table",
+            action = "text",
+            contents = [[|_.  |_.  |_.  |
+    |  |  |  |]],
+          },
+          {
+            text = "redash unnest",
+            action = "text",
+            contents = [[CROSS JOIN UNNEST(split(bid_candidates,',')) AS c (candidate_bid_id)]],
+          },
+          {
+            text = "IAM ROLE",
+            action = "text",
+            contents = [[arn:aws:iam::723941195937:role/AmazonSageMaker-ExecutionRole]],
+          },
+        },
       },
     }
   },
