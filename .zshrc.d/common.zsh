@@ -32,6 +32,10 @@ alias penv='export PATH="$HOME/.plenv/bin:$PATH"; eval "$(plenv init -)"'
 alias aenv='denv; renv; nenv' # kick all *env
 
 #
+# hammerspoon
+#
+alias hs="/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/ipc/bin/hs"
+#
 # ruby
 #
 RUBYGEMS_GEMDEPS=-
