@@ -1,4 +1,8 @@
 hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.repos.doiken = {
+   url = "https://github.com/doiken/Spoons",
+   desc = "doiken's spoon repository",
+}
 
 -- Load lua files in spoon directory(not version controled)
 -- for customization purpose
@@ -23,10 +27,6 @@ spoon.SpoonInstall:andUse("TextClipboardHistory", {
 --
 -- my Spoons
 --
-spoon.SpoonInstall.repos.doiken = {
-   url = "https://github.com/doiken/Spoons",
-   desc = "doiken's spoon repository",
-}
 spoon.SpoonInstall:andUse("Snippet", {
   repo = 'doiken',
   hotkeys = { toggle_snippet = { { "cmd", "shift" }, "b" } },
@@ -38,6 +38,16 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = [[{{collapse(表示)
 
 }}]],
+      },
+      {
+        text = "task status slack",
+        action = "shell",
+        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb slack",
+      },
+      {
+        text = "task status qiita",
+        action = "shell",
+        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb qiita",
       },
       {
         text = "redmine collapse(long)",
@@ -72,6 +82,11 @@ and hour = {{hour}}]],
 ```
 ```
 </div></details>]],
+      },
+      {
+        text = "toggle attendance",
+        action = "hs",
+        contents = function () spoon.FoAttendance:toggle() end,
       },
       {
         text = "other",
