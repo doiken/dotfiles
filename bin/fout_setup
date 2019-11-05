@@ -47,3 +47,15 @@ plenv exec carton install
 # for fout box
 vagrant box add http://downloads.fout.local/vagrant/localdev-c7
 vagrant box add http://downloads.fout.local/vagrant/localdev
+
+# hammerspoon
+cat >~/.hammerspoon/Spoons/fo_attendance.lua <<EOL
+spoon.SpoonInstall:andUse("FoAttendance", {
+  repo = 'doiken',
+  loglevel = "info",
+  fn = function (self)
+    -- keep variable not to gabage collect timer
+    self._timer = hs.timer.doAt("19:00", "1d", function () spoon.FoAttendance:start() end)
+  end
+})
+EOL
