@@ -16,6 +16,8 @@ token = ENV["REDMINE_ACCESS_TOKEN"]
 $redmine_url = ENV["REDMINE_URL"] || 'https://redmine.fout.jp'
 display = ARGV[0] # qiita/slack
 limit = ARGV[1] || 5
+# user_id は自分のみ.me はグループ指定を含む
+assigned_id = ENV["REDMINE_USER_ID"] || 'me'
 
 def disp_qiita(issue)
   puts <<~EOS.strip
@@ -31,7 +33,7 @@ def disp_slack(issue)
   EOS
 end
 
-uri = URI.parse("#{$redmine_url}/issues.json?key=#{token}&limit=#{limit}&category=Science&sort=updated_on:desc&assigned_to_id=me")
+uri = URI.parse("#{$redmine_url}/issues.json?key=#{token}&limit=#{limit}&sort=updated_on:desc&assigned_to_id=#{assigned_id}")
 
 begin
   http = Net::HTTP.new(uri.host, uri.port)
