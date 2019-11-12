@@ -55,7 +55,13 @@ spoon.SpoonInstall:andUse("FoAttendance", {
   loglevel = "info",
   fn = function (self)
     -- keep variable not to gabage collect timer
-    self._timer = hs.timer.doAt("19:00", "1d", function () spoon.FoAttendance:start() end)
+    self._originalStop = spoon.FoAttendance.stop
+    spoon.FoAttendance.stop = function (self)
+      self:_originalStop(self)
+      -- 実行時にPCが停止状態(週末など)だとintervalが向こうとなるため、
+      -- autoStopAtAttend 発火時にtimerを埋め込むように変更
+      self._timer = hs.timer.doAt("19:00", "1d", function () spoon.FoAttendance:start() end)
+    end
   end
 })
 EOL
