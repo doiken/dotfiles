@@ -57,6 +57,7 @@ BREW_EXECS=(
   rbenv
   ruby-build
   mysql
+  fswatch
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
