@@ -46,21 +46,23 @@ my %funcs = (
         # TODO: moduleの複数定義
         my $head = $lines->[0];
         my $last_sub = "";
-        for (my $i = $line_end - 1; $i > 0; $i--) {
+        for (my $i = $line_start - 1; $i > 0; $i--) {
             if ($lines->[$i] =~ /^ *sub/) {
-                # TODO: 関数定義が複数行
-                $last_sub = $lines->[$i];
+                # そもそも先頭行が関数であれば関数名の引用は不要
+                if ($i != $line_start - 1) {
+                  # TODO: 関数定義が複数行
+                  $last_sub = $lines->[$i] . "\n    ...";
+                }
                 last;
             }
         }
         my $selected_lines = join "\n", @$selection;
+        $selected_lines .= "\n...\n}" unless $selection->[scalar @$selection - 1] =~ /^}/;
         my $ret = <<EOS;
 ${head}
 ...
 ${last_sub}
-    ...
 ${selected_lines}
-}
 EOS
         return $ret;
     },
