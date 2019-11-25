@@ -93,6 +93,11 @@ and hour = {{hour}}]],
         action = "nest",
         contents = {
           {
+            text = "redash iframe",
+            action = "shell",
+            contents = "/Users/doi_kenji/bin/redash_iframe",
+          },
+          {
             text = "redmine table",
             action = "text",
             contents = [[|_.  |_.  |_.  |
