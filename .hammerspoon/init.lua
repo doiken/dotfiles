@@ -98,6 +98,11 @@ and hour = {{hour}}]],
             contents = "/Users/doi_kenji/bin/redash_iframe",
           },
           {
+            text = "redmine short link",
+            action = "shell",
+            contents = "pbpaste | perl -pe 's/.*issues\\//#/g'",
+          },
+          {
             text = "redmine table",
             action = "text",
             contents = [[|_.  |_.  |_.  |
