@@ -14,10 +14,17 @@ require 'net/http'
 require 'uri'
 require 'json'
 
+# read REDMINE_XXX env var from zsh
+envs = `source ~/.zshrc.d/work.zsh; set | grep [R]EDMINE`
+envs.split("\n").each do |line|
+  values = line.split("=")
+  ENV[values[0]] = values[1]
+end
+
 # a6140cbf6e84a0bAffb0cX49138fc5687310b518
 #   or
 # launchctl setenv REDMINE_ACCESS_TOKEN a6140cbf6e84a0bAffb0cX49138fc5687310b518
-token = ENV["REDMINE_ACCESS_TOKEN"] || 'd7f0f0482424b6925986e0fe679792e7944964ae'
+token = ENV["REDMINE_ACCESS_TOKEN"] || ''
 # https://redmine.xxxx.com
 #   or
 # launchctl setenv REDMINE_URL https://redmine.xxxx.com
