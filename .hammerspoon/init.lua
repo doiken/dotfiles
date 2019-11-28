@@ -40,14 +40,14 @@ spoon.SpoonInstall:andUse("Snippet", {
 }}]],
       },
       {
-        text = "task status slack",
+        text = "redash iframe",
         action = "shell",
-        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb slack",
+        contents = "/Users/doi_kenji/bin/redash_iframe",
       },
       {
-        text = "task status qiita",
+        text = "redmine short link",
         action = "shell",
-        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb qiita",
+        contents = "pbpaste | perl -pe 's/.*issues\\//#/g'",
       },
       {
         text = "redmine collapse(long)",
@@ -79,14 +79,6 @@ and hour = %H]], os.time()-24*60*60)
 </details>]],
       },
       {
-        text = "qiita detail",
-        action = "text",
-        contents = [[<details><summary></summary><div>
-```
-```
-</div></details>]],
-      },
-      {
         text = "toggle attendance",
         action = "hs",
         contents = function () spoon.FoAttendance:toggle() end,
@@ -96,14 +88,22 @@ and hour = %H]], os.time()-24*60*60)
         action = "nest",
         contents = {
           {
-            text = "redash iframe",
+            text = "task status slack",
             action = "shell",
-            contents = "/Users/doi_kenji/bin/redash_iframe",
+            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb slack",
           },
           {
-            text = "redmine short link",
+            text = "task status qiita",
             action = "shell",
-            contents = "pbpaste | perl -pe 's/.*issues\\//#/g'",
+            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb qiita",
+          },
+          {
+            text = "qiita detail",
+            action = "text",
+            contents = [[<details><summary></summary><div>
+```
+```
+</div></details>]],
           },
           {
             text = "redash ymd query",
