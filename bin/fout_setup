@@ -62,6 +62,7 @@ spoon.SpoonInstall:andUse("FoAttendance", {
       -- autoStopAtAttend 発火時にtimerを埋め込むように変更
       self._timer = hs.timer.doAt("19:00", "1d", function () spoon.FoAttendance:start() end)
     end
+    spoon.FoAttendance:stop()
   end
 })
 EOL
