@@ -35,9 +35,9 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "redmine collapse(short)",
         action = "text",
-        contents = [[{{collapse(表示)
-
-}}]],
+        contents = string.gsub([[{{collapse(表示)
+            |
+        |}}]], " +|", ""),
       },
       {
         text = "redash iframe",
@@ -62,26 +62,34 @@ spoon.SpoonInstall:andUse("Snippet", {
         text = "redash ymd",
         action = "hs",
         contents = function ()
-          return os.date([[where
-    year = %Y
-and month = %m
-and day = %d
-and hour = %H]], os.time()-24*60*60)
+          local format = string.gsub([[where
+            |    year = %Y
+            |and month = %m
+            |and day = %d
+            |and hour = %H
+          |]], " +|", "")
+          return os.date(format, os.time()-24*60*60)
         end,
       },
       {
         text = "github details",
         action = "text",
-        contents = [[<details>
-``` 
-
-```
-</details>]],
+        contents = string.gsub([[<details>
+          |``` 
+          |
+          |```
+          |</details>
+        |]], " +|", ""),
       },
       {
         text = "toggle attendance",
         action = "hs",
         contents = function () spoon.FoAttendance:toggle() end,
+      },
+      {
+        text = "reload config",
+        action = "hs",
+        contents = function () hs.reload() end,
       },
       {
         text = "other",
@@ -100,25 +108,26 @@ and hour = %H]], os.time()-24*60*60)
           {
             text = "qiita detail",
             action = "text",
-            contents = [[<details><summary></summary><div>
-```
-```
-</div></details>]],
+            contents = string.gsub([[<details><summary></summary><div>
+              |``` 
+              |```
+              |</div></details>
+            |]], " +|", ""),
           },
           {
             text = "redash ymd query",
             action = "text",
-            contents = [[where
-    year = {{year}}
-and month = {{month}}
-and day = {{day}}
-and hour = {{hour}}]],
+            contents = string.gsub([[where
+              |    year = {{year}}
+              |and month = {{month}}
+              |and day = {{day}}
+              |and hour = {{hour}}]], " +|", ""
+            ),
           },
           {
             text = "redmine table",
             action = "text",
-            contents = [[|_.  |_.  |_.  |
-    |  |  |  |]],
+            contents = "|_.  |_.  |_.  |\n|  |  |  |",
           },
           {
             text = "redash unnest",
