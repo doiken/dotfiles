@@ -60,11 +60,14 @@ spoon.SpoonInstall:andUse("Snippet", {
       },
       {
         text = "redash ymd",
-        action = "text",
-        contents = [[year = {{year}}
-and month = {{month}}
-and day = {{day}}
-and hour = {{hour}}]],
+        action = "hs",
+        contents = function ()
+          return os.date([[where
+    year = %Y
+and month = %m
+and day = %d
+and hour = %H]], os.time()-24*60*60)
+        end,
       },
       {
         text = "github details",
@@ -101,6 +104,15 @@ and hour = {{hour}}]],
             text = "redmine short link",
             action = "shell",
             contents = "pbpaste | perl -pe 's/.*issues\\//#/g'",
+          },
+          {
+            text = "redash ymd query",
+            action = "text",
+            contents = [[where
+    year = {{year}}
+and month = {{month}}
+and day = {{day}}
+and hour = {{hour}}]],
           },
           {
             text = "redmine table",
