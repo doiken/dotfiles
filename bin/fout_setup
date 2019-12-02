@@ -66,3 +66,8 @@ spoon.SpoonInstall:andUse("FoAttendance", {
   end
 })
 EOL
+cat >~/.hammerspoon/Spoons/github_watcher.lua <<EOL
+gw = require("../GithubWatcher")
+gw.envFile = '/Users/doi_kenji/.zshrc.d/work.zsh'
+gw:start()
+EOL
