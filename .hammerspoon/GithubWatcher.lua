@@ -49,38 +49,47 @@ local function buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
         obj.logger:e("task failed " .. stdErr)
         return {}
     end
-    local pulls = {}
+    local pulls = {
+        review_count = 0,
+        is_updated = false,
+        repos = {},
+    }
     local json = hs.json.decode(stdOut)
 
     for _,pull in ipairs(json) do
         local repo_name = pull['url']:match("repos%/(.+)%/issues")
         local id = pull['url']:match("issues%/([0-9]+)$")
         -- initialize
-        pulls[repo_name] = pulls[repo_name] or {
+        pulls["repos"][repo_name] = pulls["repos"][repo_name] or {
             review_count = 0,
             reviews = {},
         }
-        if (pulls[repo_name]["reviews"][id] == nil) then
-            pulls[repo_name]["review_count"] = pulls[repo_name]["review_count"] + 1
+        if (pulls["repos"][repo_name]["reviews"][id] == nil) then
+            pulls["review_count"] = pulls["review_count"] + 1
+            pulls["repos"][repo_name]["review_count"] = pulls["repos"][repo_name]["review_count"] + 1
             local y, m, d, h, i = pull["updated_at"]:match("^(%d+)-0?(%d+)-0?(%d+)T0?(%d+):0?(%d+)")
-            local updated_at = os.time({year=y, month=m, day=d, hour=h, min=i})
-            pulls[repo_name]["reviews"][id] = {
+            local updated_at = os.time({year=y, month=m, day=d, hour=h, min=i}) + 3600 * 9 -- + 9 hour for time zone
+            is_update = updated_at >= (prevPullUpdates[id] or 0)
+            pulls["is_updated"] = pulls["is_updated"] or is_update
+            pulls["repos"][repo_name]["reviews"][id] = {
                 title = pull["title"],
                 updated_at = updated_at,
                 url = pull["url"]:gsub("issues", "pull"):gsub("api.", ""):gsub("repos/", ""),
                 id = id,
-                is_updated = updated_at > (prevPullUpdates[id] or 0),
+                is_updated = is_update,
             }
         end
     end
     return pulls
 end
 
-local function buildPullUpdates(pulls)
+local function buildPullUpdates(pulls, prevPullUpdates)
     local pullUpdates = {}
-    for _,repo in pairs(pulls) do
+    for _,repo in pairs(pulls["repos"]) do
         for id,review in pairs(repo["reviews"]) do
-            pullUpdates[id] = review["updated_at"]
+            pullUpdates[id] = review["updated_at"] > (prevPullUpdates[id] or 0)
+                and review["updated_at"]
+                or (prevPullUpdates[id] or 0)
         end
     end
 
@@ -89,9 +98,7 @@ end
 
 local function buildMenu(pulls)
     local menu = {}
-    local total = 0
-    for repo_name,repo in pairs(pulls) do
-        local total = total + repo["review_count"]
+    for repo_name,repo in pairs(pulls["repos"]) do
         table.insert(menu, { title = ("➠ %s: %s"):format(repo_name, repo["review_count"]), disabled = true })
         table.insert(menu, { title = "-", disabled = true })
 
@@ -116,19 +123,20 @@ local function buildMenu(pulls)
 end
 
 function fetchCallback(exitCode, stdOut, stdErr)
-    local pulls = buildPull(exitCode, stdOut, stdErr, obj._pullUpdates)
+    local prevPullUpdates = obj._pullUpdates
+    local pulls = buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
     obj.logger:d("pulls: " .. hs.inspect(pulls))
     local menu = buildMenu(pulls)
     obj.logger:d("menu: " .. hs.inspect(menu))
 
-    local total = 0
-    for _, r in pairs(pulls) do total = total + r["review_count"] end
-
+    local title = pulls["is_updated"]
+        and ("\27[31m%d\27[0m"):format(pulls["review_count"])
+        or pulls["review_count"]
     obj._menuBar
-        :setTitle(("〓 %d"):format(total))
+        :setTitle(hs.styledtext.ansi(("〓 %s"):format(title)))
         :setMenu(menu)
 
-    obj._pullUpdates = buildPullUpdates(pulls)
+    obj._pullUpdates = buildPullUpdates(pulls, prevPullUpdates)
     _persistPulls()
 end
 
