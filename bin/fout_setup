@@ -17,36 +17,64 @@ repos=(
   doiken/perl
 )
 for r in ${repos[@]}; do
-    git clone "git@github.com:${r}.git"
+    git clone "git@github.com:${r}.git" 2>&1 | grep -v 'already exists'
 done
 
 ##
 ## App
 ##
-brew cask install trailer
+BREW_EXECS=(
+  plenv
+)
+{
+  PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${BREW_EXECS[@]}
+  do
+      [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
+  done
+} &
+CASK_EXECS=(
+  trailer
+)
+{
+  PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${CASK_EXECS[@]}
+  do
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
+  done
+} &
 
 ##
 ## for fout perl
 ##
-brew install plenv
 # brew install perl-build broken for now
 # https://qiita.com/narita_cpp/items/03e55b9acf4b3fbed99c
-git clone git://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
+git clone git://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ 2>&1 | grep -v 'already exists'
 
 cd $REPO_DIR/fout
 
 # build 5.24.3 ~> carton install
 # http://tweeeety.hateblo.jp/entry/2015/06/21/203144
-plenv install 5.24.3
-plenv local 5.24.3
-plenv install-cpanm
-plenv exec cpanm Module::Install
-plenv exec cpanm Carton
-plenv exec carton install
+PATTERN=`plenv versions | cut -d' ' -f 2 | xargs echo | perl -pe 's/ /|/g'`
+if [ "$(egrep -v $PATTERN <(echo 5.24.3))" != "" ]; then
+	plenv install 5.24.3 
+	plenv local 5.24.3
+	plenv install-cpanm
+	plenv exec cpanm Module::Install
+	plenv exec cpanm Carton
+  # not required so far
+  # plenv exec carton install
+fi
 
 # for fout box
-vagrant box add http://downloads.fout.local/vagrant/localdev-c7
-vagrant box add http://downloads.fout.local/vagrant/localdev
+boxes=(
+  localdev-c7
+  localdev
+)
+for box in ${boxes[@]}; do
+		PATTERN=`vagrant box list | grep "$box " | cut -d' ' -f 1`
+		[ "$PATTERN" != "$box" ] && vagrant box add "http://downloads.fout.local/vagrant/${box}"
+done
 
 # hammerspoon
 cat >~/.hammerspoon/Spoons/fo_attendance.lua <<EOL
