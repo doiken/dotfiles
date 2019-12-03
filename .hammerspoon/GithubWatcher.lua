@@ -102,7 +102,7 @@ local function buildMenu(pulls)
         table.insert(menu, { title = ("➠ %s: %s"):format(repo_name, repo["review_count"]), disabled = true })
         table.insert(menu, { title = "-", disabled = true })
 
-        table.sort(repo["reviews"], function(a,b) return (a["updated_at"] > b["updated_at"]) end)
+        table.sort(repo["reviews"], function(a,b) return (a["id"] > b["id"]) end)
         local i = 0
         for id,review in pairs(repo["reviews"]) do
             i = i + 1
