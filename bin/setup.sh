@@ -61,9 +61,8 @@ BREW_EXECS=(
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
-  for e in ${BREW_EXECS[@]}
-  do
-      [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
+  for e in ${BREW_EXECS[@]}; do
+    [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
   done
 } &
 CASK_EXECS=(
@@ -91,8 +90,7 @@ CASK_EXECS=(
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
-  for e in ${CASK_EXECS[@]}
-  do
+  for e in ${CASK_EXECS[@]}; do
       [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
   done
 } &
@@ -101,8 +99,7 @@ CASK_EXECS=(
 ## Configure
 ##
 SCRIPTS=( ~/bin/key_repeat.sh )
-for script in ${SCRIPTS[@]}
-do
+for script in ${SCRIPTS[@]}; do
     [ -x $script ] && $script
 done
 
