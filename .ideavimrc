@@ -6,3 +6,4 @@ augroup view
 augroup END
 
 vnoremap gx :action Tool_External Tools_open in browser<CR>
+vnoremap !r :action Tool_External Tools_copy for redmine<CR>
