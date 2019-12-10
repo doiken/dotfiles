@@ -107,6 +107,19 @@ spoon.SpoonInstall:andUse("Snippet", {
             contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/bin/task_status.rb qiita",
           },
           {
+            text = "fo_attendance status",
+            action = "hs",
+            contents = function ()
+              local isStarted = (spoon.FoAttendance._isStarted or false) and 1 or 0
+              local timer = spoon.FoAttendance._timer
+              local next = timer ~= nil
+                and math.floor(timer:nextTrigger() / 3600) .. "時間後"
+                or "none"
+              local info = ("isStarted: %d nextTrigger: %s"):format(isStarted, next)
+              hs.notify.show("FoAttendance", "", info)
+            end
+          },
+          {
             text = "qiita detail",
             action = "text",
             contents = string.gsub([[<details><summary></summary><div>
