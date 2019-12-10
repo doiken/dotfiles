@@ -42,7 +42,7 @@ end
 local function fetchApis()
     local issues = {}
     local sh = debug.getinfo(2, "S").source:sub(2):gsub(".lua$", ".sh")
-    obj._task = hs.task.new(sh, fetchCallback, {obj.envFile}):start()
+    obj._task = hs.task.new(sh, obj.fetchCallback, {obj.envFile}):start()
 end
 
 local function buildIssues(exitCode, stdOut, stdErr, prevIssueUpdates)
@@ -70,7 +70,7 @@ local function buildIssues(exitCode, stdOut, stdErr, prevIssueUpdates)
             issues["types"][type]["issue_count"] = issues["types"][type]["issue_count"] + 1
             local y, m, d, h, i = issue["updated_at"]:match("^(%d+)-0?(%d+)-0?(%d+)T0?(%d+):0?(%d+)")
             local updated_at = os.time({year=y, month=m, day=d, hour=h, min=i}) + 3600 * 9 -- + 9 hour for time zone
-            is_update = updated_at >= (prevIssueUpdates[id] or 0)
+            local is_update = updated_at >= (prevIssueUpdates[id] or 0)
             issues["is_updated"] = issues["is_updated"] or is_update
             issues["types"][type]["issues"][id] = {
                 title = issue["title"],
@@ -123,7 +123,7 @@ local function buildMenu(issues)
     return menu
 end
 
-function fetchCallback(exitCode, stdOut, stdErr)
+function obj.fetchCallback(exitCode, stdOut, stdErr)
     local prevIssueUpdates = obj._issueUpdates
     local issues = buildIssues(exitCode, stdOut, stdErr, prevIssueUpdates)
     obj.logger:d("issues: " .. hs.inspect(issues))
