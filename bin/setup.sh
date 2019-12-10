@@ -22,6 +22,7 @@ DOT_FILES=(
   .tmux.conf
   .ctags
   .tmpl
+  .editrc
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 

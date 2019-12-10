@@ -1,0 +1,8 @@
+# .editrc
+mysql:bind '^W' ed-delete-prev-word
+mysql:bind '^R' em-inc-search-prev
+
+mysql:bind -s "^xb" "select u.name, u.id, cpn_id, adgrp_id, b.id bid_id, b.price, c.name from bids b join adgrps g on b.adgrp_id = g.id join cpns c on g.cpn_id = c.id join users u on c.user_id = u.id where b.id in ()"
+mysql:bind -s "^xc" "select u.name, u.id, cpn_id, adgrp_id, b.id bid_id, b.price, c.name from bids b join adgrps g on b.adgrp_id = g.id join cpns c on g.cpn_id = c.id join users u on c.user_id = u.id where c.id in ()"
+mysql:bind -s "^xg" "select u.name, u.id, cpn_id, adgrp_id, b.id bid_id, b.price, c.name from bids b join adgrps g on b.adgrp_id = g.id join cpns c on g.cpn_id = c.id join users u on c.user_id = u.id where g.id in ()"
+
