@@ -71,10 +71,8 @@ CASK_EXECS=(
   google-japanese-ime
   iterm2
   hammerspoon
-  clipy
   marshallofsound-google-play-music-player
   ngrok
-  bitbar
   visual-studio-code
   keycastr # print what you type
   licecap  # capture as gif
