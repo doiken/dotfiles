@@ -76,7 +76,9 @@ spoon.SpoonInstall:andUse("Snippet", {
         text = "github details",
         action = "text",
         contents = string.gsub([[<details>
-          |``` 
+          |<summary>詳細</summary>
+          |
+          |```
           |
           |```
           |</details>
