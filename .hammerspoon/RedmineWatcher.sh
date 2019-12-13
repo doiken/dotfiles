@@ -11,9 +11,10 @@
 #     - REDMINE_USER_ID
 #   jq command required
 source $1
+since=`date -v-7d "+%Y-%m-%d"`
 commands=(
-    "'${REDMINE_URL}/issues.json?key=${REDMINE_ACCESS_TOKEN}&limit=100&status_id=open&assigned_to_id=${REDMINE_USER_ID}'| /usr/local/bin/jq '.issues[] | {id:.id|tostring, title:.subject, url: ("\""${REDMINE_URL}/issues/"\"" + (.id|tostring)), updated_at: .updated_on, type: "\""mine"\""}'"
-    "'${REDMINE_URL}/issues.json?key=${REDMINE_ACCESS_TOKEN}&limit=10&status_id=open&watcher_id=${REDMINE_USER_ID}&sort=updated_on:desc'| /usr/local/bin/jq '.issues[] | {id:.id|tostring, title:.subject, url: ("\""${REDMINE_URL}/issues/"\"" + (.id|tostring)), updated_at: .updated_on, type: "\""watch"\""}'"
+    "'${REDMINE_URL}/issues.json?key=${REDMINE_ACCESS_TOKEN}&limit=20&status_id=open&assigned_to_id=${REDMINE_USER_ID}&updated_on=%3E%3D${since}'| /usr/local/bin/jq '.issues[] | {id:.id|tostring, title:.subject, url: ("\""${REDMINE_URL}/issues/"\"" + (.id|tostring)), updated_at: .updated_on, type: "\""mine"\""}'"
+    "'${REDMINE_URL}/issues.json?key=${REDMINE_ACCESS_TOKEN}&limit=20&status_id=open&watcher_id=${REDMINE_USER_ID}&updated_on=%3E%3D${since}'| /usr/local/bin/jq '.issues[] | {id:.id|tostring, title:.subject, url: ("\""${REDMINE_URL}/issues/"\"" + (.id|tostring)), updated_at: .updated_on, type: "\""watch"\""}'"
 )
 
 stdout=""

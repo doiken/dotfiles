@@ -99,13 +99,12 @@ end
 
 local function buildMenu(issues)
     local menu = {}
-    for type,repo in pairs(issues["types"]) do
+    for type,repo in hs.fnutils.sortByKeys(issues["types"]) do
         table.insert(menu, { title = ("➠ %s: %s"):format(type, repo["issue_count"]), disabled = true })
         table.insert(menu, { title = "-", disabled = true })
 
-        table.sort(repo["issues"], function(a,b) return (a["id"] > b["id"]) end)
         local i = 0
-        for id,review in pairs(repo["issues"]) do
+        for id,review in hs.fnutils.sortByKeys(repo["issues"], function(a, b) return a > b end) do
             i = i + 1
             local prefix = i == repo["issue_count"] and "└" or "├"
             local comming = review["is_updated"] and '✧' or ''
