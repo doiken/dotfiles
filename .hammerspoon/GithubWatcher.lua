@@ -59,8 +59,8 @@ local function buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
     local json = hs.json.decode(stdOut)
 
     for _,pull in ipairs(json) do
-        local repo_name = pull['url']:match("repos%/(.+)%/issues")
-        local id = pull['url']:match("issues%/([0-9]+)$")
+        local repo_name = pull['url']:match("repos%/([^/]+%/[^/]+)%/")
+        local id = pull['url']:match("%/([0-9]+)$")
         -- initialize
         pulls["repos"][repo_name] = pulls["repos"][repo_name] or {
             review_count = 0,
@@ -76,7 +76,7 @@ local function buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
             pulls["repos"][repo_name]["reviews"][id] = {
                 title = pull["title"],
                 updated_at = updated_at,
-                url = pull["url"]:gsub("issues", "pull"):gsub("api.", ""):gsub("repos/", ""),
+                url = ("https://github.com/%s/pull/%d"):format(repo_name, id),
                 id = id,
                 is_updated = is_update,
             }
