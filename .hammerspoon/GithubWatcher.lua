@@ -100,13 +100,12 @@ end
 
 local function buildMenu(pulls)
     local menu = {}
-    for repo_name,repo in pairs(pulls["repos"]) do
+    for repo_name,repo in hs.fnutils.sortByKeys(pulls["repos"]) do
         table.insert(menu, { title = ("➠ %s: %s"):format(repo_name, repo["review_count"]), disabled = true })
         table.insert(menu, { title = "-", disabled = true })
 
-        table.sort(repo["reviews"], function(a,b) return (a["id"] > b["id"]) end)
         local i = 0
-        for id,review in pairs(repo["reviews"]) do
+        for id,review in hs.fnutils.sortByKeys(repo["reviews"], function(a, b) return a > b end) do
             i = i + 1
             local prefix = i == repo["review_count"] and "└" or "├"
             local comming = review["is_updated"] and '✧' or ''
