@@ -71,7 +71,7 @@ local function buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
             pulls["repos"][repo_name]["review_count"] = pulls["repos"][repo_name]["review_count"] + 1
             local y, m, d, h, i = pull["updated_at"]:match("^(%d+)-0?(%d+)-0?(%d+)T0?(%d+):0?(%d+)")
             local updated_at = os.time({year=y, month=m, day=d, hour=h, min=i}) + 3600 * 9 -- + 9 hour for time zone
-            local is_update = updated_at >= (prevPullUpdates[id] or 0)
+            local is_update = pull["updated_by"] ~= "me" and updated_at >= (prevPullUpdates[id] or 0)
             pulls["is_updated"] = pulls["is_updated"] or is_update
             pulls["repos"][repo_name]["reviews"][id] = {
                 title = pull["title"],
