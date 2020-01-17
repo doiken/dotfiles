@@ -18,7 +18,9 @@
   st = status
   sh = show
   so = remote show origin
+  # https://qiita.com/awakia/items/f14dc6310e469964a8f7
   showpr = "!f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #'; }; f"
+	openpr = "!f() { hub browse -- `git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1 | cut -f5 -d' ' | sed -e 's%#%pull/%'`; }; f"
   ft = fetch
   up = pull --rebase       # pull rebase
   rbm = rebase master      # masterへのrebaseはよく使うのでalias
@@ -26,6 +28,7 @@
   cl = clean
   clf = clean -f
   cla = clean -fd
+  clo = clone --single-branch --depth 1
   ci = commit
   cim = "!f() { git commit -m \"`git branch | perl -ne '/\\* ([0-9]+)-/ and print qq/[#$1] /'`$*\"; }; f"
   cif = commit --fixup
@@ -81,8 +84,8 @@
   # pr
   pr = pull-request
   # to use process substitution, call via bash -c "" https://stackoverflow.com/questions/31827146/how-to-use-a-parenthesis-character-inside-a-command-substitution-inside-a-bash-s
-  pro = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(cat ~/.tmpl/PULL_REQUEST_TEMPLATE.md | sed -e 's/XXXXX/$NUM/g') --edit $@\"}; f"
-  pre = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(cat ~/.tmpl/PULL_REQUEST_TEMPLATE.md | sed -e 's/XXXXX/$NUM/g') --edit $@\"}; f"
+  pro = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md) --edit $@\"; }; f"
+  pre = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md) --edit $@\"; }; f"
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
