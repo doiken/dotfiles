@@ -70,7 +70,7 @@ local function buildIssues(exitCode, stdOut, stdErr, prevIssueUpdates)
             issues["types"][type]["issue_count"] = issues["types"][type]["issue_count"] + 1
             local y, m, d, h, i = issue["updated_at"]:match("^(%d+)-0?(%d+)-0?(%d+)T0?(%d+):0?(%d+)")
             local updated_at = os.time({year=y, month=m, day=d, hour=h, min=i}) + 3600 * 9 -- + 9 hour for time zone
-            local is_update = updated_at >= (prevIssueUpdates[id] or 0)
+            local is_update = issue["updated_by"] ~= "me" and updated_at >= (prevIssueUpdates[id] or 0)
             issues["is_updated"] = issues["is_updated"] or is_update
             issues["types"][type]["issues"][id] = {
                 title = issue["title"],
