@@ -34,6 +34,7 @@ BREW_EXECS=(
 } &
 CASK_EXECS=(
   trailer
+	mathpix-snipping-tool
 )
 {
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
