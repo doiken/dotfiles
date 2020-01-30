@@ -113,7 +113,6 @@ local function buildMenu(issues)
                 fn = function ()
                     obj._issueUpdates[id] = os.time()
                     hs.urlevent.openURL(review["url"])
-                    fetchApis()
                 end,
             })
         end

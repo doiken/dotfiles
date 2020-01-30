@@ -114,7 +114,6 @@ local function buildMenu(pulls)
                 fn = function ()
                     obj._pullUpdates[id] = os.time()
                     hs.urlevent.openURL(review["url"])
-                    fetchPulls()
                 end,
             })
         end
