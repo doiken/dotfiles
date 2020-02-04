@@ -25,6 +25,7 @@ curl -sXPOST \
   -d "text=${text}" \
   -d 'as_user=true' \
   -d 'parse=full' \
+  -d "blocks= [{\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\",\"text\":\"${text}\"}}]" \
   "https://slack.com/api/chat.postMessage" >/dev/null
 
 
