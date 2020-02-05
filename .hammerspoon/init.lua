@@ -18,6 +18,7 @@ spoon.SpoonInstall:andUse("TextClipboardHistory", {
     paste_on_select = true,
     show_in_menubar = false,
     frequency = 0.5,
+    hist_size = 500,
   },
   hotkeys = {
     toggle_clipboard = { { "cmd", "shift" }, "v" }
