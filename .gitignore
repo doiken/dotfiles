@@ -8,3 +8,4 @@ tags
 .gdb_history
 ignore
 .hammerspoon/Spoons/*
+.history
