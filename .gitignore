@@ -1,11 +1,1 @@
-.idea
-*.iml
-.DS_Store
-local
-tags
-.vscode
-.vstags
-.gdb_history
-ignore
 .hammerspoon/Spoons/*
-.history

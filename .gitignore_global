@@ -1,1 +1,18 @@
-/Users/doi_kenji/dotfiles/.gitignore
+# misc
+.DS_Store
+tags
+.gdb_history
+
+# cpanm
+local
+
+# IDEA
+.idea
+*.iml
+
+# vscode
+.vscode
+.vstags
+.history
+
+
