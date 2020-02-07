@@ -183,11 +183,13 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>435 363 620 392 0 0 1440 877 </string>
+	<string>675 588 620 392 0 0 1920 1177 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>269 168 958 470 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>51 0 1389 877 0 0 1440 877 </string>
+	<string>51 0 1869 1177 0 0 1920 1177 </string>
+	<key>NSWindow Frame iTerm Window 1</key>
+	<string>176 70 570 475 0 0 1920 1177 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -784,8 +786,9 @@
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.2.7</string>
 		<string>3.3.4</string>
+		<string>3.3.7</string>
+		<string>3.2.7</string>
 		<string>3.3.6</string>
 	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
@@ -802,9 +805,9 @@
 	<key>NoSyncInstallationId</key>
 	<string>0BE8F10C-F0BB-48A3-AB4C-94759B29BAAB</string>
 	<key>NoSyncLastTipTime</key>
-	<real>593583150.929932</real>
+	<real>601364058.16600502</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>5</integer>
+	<integer>16</integer>
 	<key>NoSyncNextAnnoyanceTime</key>
 	<real>591335188.868981</real>
 	<key>NoSyncOnboardingWindowHasBeenShown</key>
@@ -1159,6 +1162,14 @@
 			</dict>
 			<dict>
 				<key>isTerminal</key>
+				<true/>
+				<key>name</key>
+				<string>currentTab.currentSession.terminalIconName</string>
+				<key>nonterminalContext</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>isTerminal</key>
 				<false/>
 				<key>name</key>
 				<string>currentTab</string>
@@ -1503,56 +1514,105 @@
 	</dict>
 	<key>NoSyncSearchHistory2</key>
 	<array>
-		<string>hara</string>
-		<string>member</string>
-		<string>user</string>
-		<string>limit</string>
-		<string>http</string>
-		<string>611‘kkkkkk</string>
-		<string>‘kkkkkkjj</string>
-		<string>fout</string>
-		<string>sysstat</string>
-		<string>sadc</string>
+		<string>docu</string>
+		<string>json</string>
+		<string>tags</string>
+		<string>recei˙</string>
+		<string>died</string>
+		<string>null</string>
+		<string>title</string>
+		<string>X-Forwarded-For</string>
+		<string>pcvr_per</string>
+		<string>moni</string>
 	</array>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
 	<real>572234761.90531898</real>
 	<key>NoSyncTipsToNotShow</key>
 	<array>
-		<string>0010</string>
-		<string>0026</string>
-		<string>0015</string>
-		<string>0004</string>
-		<string>0009</string>
-		<string>0024</string>
-		<string>0013</string>
-		<string>0002</string>
-		<string>0029</string>
-		<string>0018</string>
-		<string>0007</string>
-		<string>0022</string>
-		<string>0011</string>
-		<string>0000</string>
-		<string>0027</string>
-		<string>0016</string>
-		<string>0005</string>
-		<string>0020</string>
-		<string>0025</string>
-		<string>0014</string>
-		<string>0003</string>
-		<string>0019</string>
-		<string>0008</string>
+		<string>0030</string>
 		<string>0023</string>
-		<string>0012</string>
-		<string>0001</string>
-		<string>000</string>
+		<string>0016</string>
+		<string>0009</string>
+		<string>0059</string>
+		<string>0066</string>
+		<string>0073</string>
+		<string>0002</string>
+		<string>0045</string>
+		<string>0038</string>
+		<string>0052</string>
 		<string>0017</string>
+		<string>0031</string>
+		<string>0024</string>
+		<string>0067</string>
+		<string>0074</string>
+		<string>0010</string>
+		<string>0046</string>
+		<string>0003</string>
+		<string>0039</string>
+		<string>0053</string>
+		<string>0060</string>
+		<string>0025</string>
+		<string>0018</string>
+		<string>0032</string>
+		<string>0068</string>
+		<string>0011</string>
+		<string>0047</string>
+		<string>0004</string>
+		<string>0054</string>
+		<string>0061</string>
+		<string>0033</string>
+		<string>0026</string>
+		<string>0019</string>
+		<string>0040</string>
+		<string>0069</string>
+		<string>0076</string>
+		<string>0012</string>
+		<string>0048</string>
+		<string>0005</string>
+		<string>0055</string>
+		<string>0062</string>
+		<string>0041</string>
+		<string>0034</string>
+		<string>0027</string>
+		<string>0077</string>
+		<string>0013</string>
+		<string>0049</string>
 		<string>0006</string>
+		<string>0020</string>
+		<string>0056</string>
+		<string>0063</string>
+		<string>0070</string>
+		<string>0042</string>
+		<string>0035</string>
 		<string>0028</string>
 		<string>0021</string>
-		<string>0030</string>
+		<string>0014</string>
+		<string>0007</string>
+		<string>0057</string>
+		<string>0064</string>
+		<string>0071</string>
+		<string>0000</string>
+		<string>0029</string>
+		<string>0050</string>
+		<string>0043</string>
+		<string>0036</string>
+		<string>0022</string>
+		<string>0015</string>
+		<string>0008</string>
+		<string>0058</string>
+		<string>0065</string>
+		<string>0072</string>
+		<string>0001</string>
+		<string>0037</string>
+		<string>000</string>
+		<string>0044</string>
+		<string>0051</string>
+		<string>0078</string>
 	</array>
 	<key>OnlyWhenMoreTabs</key>
 	<false/>
+	<key>PasteTabToStringTabStopSize</key>
+	<integer>4</integer>
 	<key>PointerActions</key>
 	<dict>
 		<key>Button,1,1,,</key>
@@ -1599,11 +1659,11 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-10-24T05:08:02Z</date>
+	<date>2020-02-05T04:20:19Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
-	<false/>
+	<true/>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>VisualIndicatorForEsc</key>
@@ -1613,6 +1673,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.6</string>
+	<string>3.3.7</string>
 </dict>
 </plist>
