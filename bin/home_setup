@@ -19,3 +19,5 @@ brew cask install \
     music-manager \
     a-better-finder-rename
 
+# enter standby mode in 1 hour
+~/bin/pmset.sh 1

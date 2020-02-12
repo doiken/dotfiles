@@ -99,4 +99,7 @@ gw.envFile = '/Users/doi_kenji/.zshrc.d/work.zsh'
 gw:start()
 EOL
 
+# enter standby mode in 2.5 day
+~/bin/pmset.sh 60
+
 wait
