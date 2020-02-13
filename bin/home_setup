@@ -11,13 +11,20 @@ mkdir -p $REPO_DIR
 ##
 ## apps
 ##
-brew cask install \
-    vlc \
-    the-unarchiver \
-    simple-comic \
-    android-file-transfer \
-    music-manager \
-    a-better-finder-rename
+CASK_EXECS=(
+	vlc
+	the-unarchiver
+	simple-comic
+	android-file-transfer
+	music-manager
+	a-better-finder-rename
+)
+{
+  PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
+  for e in ${CASK_EXECS[@]}; do
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
+  done
+}
 
 # enter standby mode in 1 hour
-~/bin/pmset.sh 1
+~/bin/pmset.sh 25 0
