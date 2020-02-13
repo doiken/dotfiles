@@ -2,6 +2,7 @@
 .DS_Store
 tags
 .gdb_history
+node_modules
 
 # cpanm
 local
