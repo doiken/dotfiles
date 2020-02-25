@@ -33,7 +33,6 @@ BREW_EXECS=(
   done
 } &
 CASK_EXECS=(
-  trailer
 	mathpix-snipping-tool
 )
 {
@@ -99,7 +98,7 @@ gw.envFile = '/Users/doi_kenji/.zshrc.d/work.zsh'
 gw:start()
 EOL
 
-# enter standby mode in 2.5 day
-~/bin/pmset.sh 3 60
+# enter standby mode in 3 day
+~/bin/pmset.sh 72
 
 wait
