@@ -63,7 +63,7 @@ BREW_EXECS=(
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
   for e in ${BREW_EXECS[@]}; do
-    [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
+    [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew install $e
   done
 } &
 CASK_EXECS=(
@@ -86,8 +86,11 @@ CASK_EXECS=(
   java
   virtualbox
   docker
+  font-jetbrains-mono
+  font-ricty-diminished
 )
 {
+  brew tap homebrew/cask-fonts
   PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
   for e in ${CASK_EXECS[@]}; do
       [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
@@ -111,3 +114,11 @@ done
 [ ! -e /usr/local/share/zsh/site-functions/_docker-compose ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
 
 wait
+
+##
+## node-build
+##
+if [ ! -d "$(ndenv root)/plugins/node-build" ]; then
+  mkdir -p "$(ndenv root)"/plugins
+  git clone https://github.com/riywo/node-build.git $(ndenv root)/plugins/node-build
+fi
