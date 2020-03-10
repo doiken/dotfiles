@@ -24,4 +24,4 @@ for cmd in "${commands[@]}" ; do
 done
 
 # url で unique したいが pulls/issues に分かれているため title で妥協
-echo $stdout | /usr/local/bin/jq . --slurp | /usr/local/bin/jq 'unique_by(.title)'
+echo $stdout | /usr/local/bin/jq . --slurp | /usr/local/bin/jq 'unique_by(.url)'
