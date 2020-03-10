@@ -184,12 +184,14 @@
 		<key>TB Is Shown</key>
 		<integer>1</integer>
 	</dict>
+	<key>NSWindow Frame NSColorPanel</key>
+	<string>51 83 224 275 0 0 1440 877 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>675 588 620 392 0 0 1920 1177 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>269 168 958 470 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>51 0 1869 1177 0 0 1920 1177 </string>
+	<string>51 0 1389 877 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>176 70 570 475 0 0 1920 1177 </string>
 	<key>New Bookmarks</key>
@@ -721,7 +723,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>Monaco 12</string>
+			<string>JetBrainsMono-Regular 13</string>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Prompt Before Closing 2</key>
@@ -777,7 +779,7 @@
 			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
-			<real>1</real>
+			<real>1.2</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
@@ -788,18 +790,23 @@
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
+		<string>3.3.9</string>
 		<string>3.3.8</string>
 		<string>3.3.4</string>
 		<string>3.3.7</string>
 		<string>3.2.7</string>
 		<string>3.3.6</string>
 	</array>
+	<key>NoSyncBFPRecents</key>
+	<array>
+		<string>JetBrains Mono</string>
+	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
 		<key>screenFrame</key>
-		<string>{{0, 0}, {1440, 900}}</string>
+		<string>{{0, 0}, {1920, 1200}}</string>
 		<key>topLeft</key>
-		<string>{423, 710}</string>
+		<string>{269, 595}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
 	<true/>
@@ -810,7 +817,7 @@
 	<key>NoSyncLastTipTime</key>
 	<real>601364058.16600502</real>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>17</integer>
+	<integer>18</integer>
 	<key>NoSyncNextAnnoyanceTime</key>
 	<real>591335188.868981</real>
 	<key>NoSyncOnboardingWindowHasBeenShown</key>
@@ -1649,13 +1656,13 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-02-14T05:11:41Z</date>
+	<date>2020-02-27T02:07:15Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateGroupIdentifier</key>
 	<integer>3813664688</integer>
 	<key>SUUpdateRelaunchingMarker</key>
-	<true/>
+	<false/>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>VisualIndicatorForEsc</key>
@@ -1665,6 +1672,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.8</string>
+	<string>3.3.9</string>
 </dict>
 </plist>
