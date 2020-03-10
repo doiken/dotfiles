@@ -99,6 +99,6 @@ gw:start()
 EOL
 
 # enter standby mode in 3 day
-~/bin/pmset.sh 72
+~/bin/pmset.sh 0 72
 
 wait
