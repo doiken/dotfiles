@@ -102,12 +102,12 @@ spoon.SpoonInstall:andUse("Snippet", {
           {
             text = "task status slack",
             action = "shell",
-            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb slack",
+            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb slack 10",
           },
           {
             text = "task status qiita",
             action = "shell",
-            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita",
+            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10",
           },
           {
             text = "fo_attendance status",
