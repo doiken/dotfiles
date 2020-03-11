@@ -11,14 +11,15 @@
 # ok to keep default
 # lidwake              0
 # powernap             0
-# hibernatemode        3
 hibernatemode=$1
 standby_delay_hour=$2
 
 sudo pmset -a \
   hibernatemode $hibernatemode \
   sleep 60 \
+  displaysleep 60 \
+  disksleep 60 \
   powernap 0 \
   standbydelaylow $((1 + $standby_delay_hour * 60 * 60)) \
-  standbydelayhigh $((1 + $standby_delay_hour * 60 * 60))
-
+  standbydelayhigh $((1 + $standby_delay_hour * 60 * 60)) \
+  destroyfvkeyonstandby 0
