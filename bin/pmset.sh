@@ -22,4 +22,5 @@ sudo pmset -a \
   powernap 0 \
   standbydelaylow $((1 + $standby_delay_hour * 60 * 60)) \
   standbydelayhigh $((1 + $standby_delay_hour * 60 * 60)) \
+  autopoweroffdelay $((1 + $standby_delay_hour * 60 * 60)) \
   destroyfvkeyonstandby 0
