@@ -1,4 +1,5 @@
 hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.use_syncinstall = true
 spoon.SpoonInstall.repos.doiken = {
    url = "https://github.com/doiken/Spoons",
    desc = "doiken's spoon repository",
