@@ -48,18 +48,13 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = "/Users/doi_kenji/bin/redash_iframe",
       },
       {
-        text = "redmine short link",
-        action = "shell",
-        contents = "pbpaste | perl -pe 's/.*issues\\//#/g'",
-      },
-      {
         text = "redmine collapse(long)",
         action = "text",
-        contents = [[{{collapse(表示)
-<pre><code class="">
-
-</code></pre>
-}}]],
+        contents = string.gsub([[{{collapse(表示)
+          |<pre><code class="">
+          |
+          |</code></pre>
+          |}}]], " +|", "")
       },
       {
         text = "redash ymd",
@@ -75,7 +70,7 @@ spoon.SpoonInstall:andUse("Snippet", {
         end,
       },
       {
-        text = "github details",
+        text = "markdown details",
         action = "text",
         contents = string.gsub([[<details>
           |<summary>詳細</summary>
@@ -97,40 +92,23 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = function () hs.reload() end,
       },
       {
+        text = "task status slack",
+        action = "shell",
+        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb slack",
+      },
+      {
+        text = "task status qiita",
+        action = "shell",
+        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita",
+      },
+      {
         text = "other",
         action = "nest",
         contents = {
           {
-            text = "task status slack",
-            action = "shell",
-            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb slack 10",
-          },
-          {
-            text = "task status qiita",
-            action = "shell",
-            contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10",
-          },
-          {
             text = "fo_attendance status",
             action = "hs",
-            contents = function ()
-              local isStarted = (spoon.FoAttendance._isStarted or false) and 1 or 0
-              local timer = spoon.FoAttendance._timer
-              local next = timer ~= nil
-                and math.floor(timer:nextTrigger() / 3600) .. "時間後"
-                or "none"
-              local info = ("isStarted: %d nextTrigger: %s"):format(isStarted, next)
-              hs.notify.show("FoAttendance", "", info)
-            end
-          },
-          {
-            text = "qiita detail",
-            action = "text",
-            contents = string.gsub([[<details><summary></summary><div>
-              |``` 
-              |```
-              |</div></details>
-            |]], " +|", ""),
+            contents = function () spoon.FoAttendance:status() end
           },
           {
             text = "redash ymd query",
@@ -146,16 +124,6 @@ spoon.SpoonInstall:andUse("Snippet", {
             text = "redmine table",
             action = "text",
             contents = "|_.  |_.  |_.  |\n|  |  |  |",
-          },
-          {
-            text = "redash unnest",
-            action = "text",
-            contents = [[CROSS JOIN UNNEST(split(bid_candidates,',')) AS c (candidate_bid_id)]],
-          },
-          {
-            text = "IAM ROLE",
-            action = "text",
-            contents = [[arn:aws:iam::723941195937:role/AmazonSageMaker-ExecutionRole]],
           },
         },
       },
