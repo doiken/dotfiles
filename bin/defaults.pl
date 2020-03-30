@@ -38,6 +38,7 @@ for my $app (keys %app_keys) {
 
 # screen swiching
 `defaults write com.apple.universalaccess "reduceMotion" 1`;
+`defaults write com.apple.dock "mru-spaces" 0`;
 
 # key repeat
 `defaults write -g InitialKeyRepeat -int 14`; # normal minimum is 15 (225 ms)
