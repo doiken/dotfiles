@@ -5,5 +5,8 @@ augroup view
   autocmd!
 augroup END
 
+" action id は keymap の設定から確認可能
+" https://github.com/doiken/idea_settings/blob/master/keymaps/Mac%20OS%20X%2010_5_%20copy.xml
 vnoremap gx :action Tool_External Tools_open in browser<CR>
 vnoremap !r :action Tool_External Tools_copy for redmine<CR>
+vnoremap K :action QuickJavaDoc<CR>
