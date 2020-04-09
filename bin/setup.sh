@@ -88,6 +88,7 @@ CASK_EXECS=(
   docker
   font-jetbrains-mono
   font-ricty-diminished
+  station
 )
 {
   brew tap homebrew/cask-fonts
