@@ -82,6 +82,11 @@ spoon.SpoonInstall:andUse("Snippet", {
         |]], " +|", ""),
       },
       {
+        text = "hs: attend",
+        action = "hs",
+        contents = function () spoon.FoAttendance.regist("attend") end,
+      },
+      {
         text = "toggle attendance",
         action = "hs",
         contents = function () spoon.FoAttendance:toggle() end,
