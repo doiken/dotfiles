@@ -15,5 +15,10 @@ local
 .vscode
 .vstags
 .history
+tempCodeRunnerFile.*
 
+# python
+.venv
 
+# spark
+derby.log
