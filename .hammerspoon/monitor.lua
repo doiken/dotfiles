@@ -5,7 +5,7 @@
 -- be sure to disable 'Automatically adjust brightness'
 -- ref: https://support.apple.com/kb/PH25444?locale=en_US
 local module = {
-  names = { "DELL" },
+  names = { "DELL", "BenQ" },
   delay = 4
 }
 

@@ -36,13 +36,6 @@ spoon.SpoonInstall:andUse("Snippet", {
   config = {
     snippets = {
       {
-        text = "redmine collapse(short)",
-        action = "text",
-        contents = string.gsub([[{{collapse(表示)
-            |
-        |}}]], " +|", ""),
-      },
-      {
         text = "redash iframe",
         action = "shell",
         contents = "/Users/doi_kenji/bin/redash_iframe",
@@ -92,19 +85,9 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = function () spoon.FoAttendance:toggle() end,
       },
       {
-        text = "reload config",
-        action = "hs",
-        contents = function () hs.reload() end,
-      },
-      {
-        text = "task status slack",
+        text = "task status",
         action = "shell",
-        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb slack",
-      },
-      {
-        text = "task status qiita",
-        action = "shell",
-        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita",
+        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10",
       },
       {
         text = "other",
@@ -129,6 +112,16 @@ spoon.SpoonInstall:andUse("Snippet", {
             text = "redmine table",
             action = "text",
             contents = "|_.  |_.  |_.  |\n|  |  |  |",
+          },
+          {
+            text = "space2table textile",
+            action = "shell",
+            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
+          },
+          {
+            text = "space2table markdown",
+            action = "shell",
+            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
           },
         },
       },
