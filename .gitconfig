@@ -70,8 +70,8 @@
   dm = diff master           # masterとのdiff
   dw = diff --color-words    # 単語単位でいろつけてdiff
   dc = diff --cached         # addされているものとのdiff
-  df = diff HEAD             # HEADとdiff
-  dff = diff HEAD~           # HEADから1つ前とdiff
+  df = "!f() { git diff $1 HEAD; }; f"
+  dff = "!f() { git diff $1 HEAD~; }; f"
   dfs = diff --staged        # 同上(1.6.1移行)
   dfc = "!f() { git diff $1~ $1; }; f" # そのコミットの差分
   # mergeの際にconflictが起きたファイルを編集
@@ -84,8 +84,7 @@
   # pr
   pr = pull-request
   # to use process substitution, call via bash -c "" https://stackoverflow.com/questions/31827146/how-to-use-a-parenthesis-character-inside-a-command-substitution-inside-a-bash-s
-  pro = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md) --edit $@\"; }; f"
-  pre = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md) --edit $@\"; }; f"
+  pro = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null) --edit $@\"; }; f"
   rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
