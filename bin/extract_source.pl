@@ -16,6 +16,7 @@ my ($ext) = $path =~ /\.([^.]+)$/;
 my %map = (
     pl => 'perl',
     pm => 'perl',
+    scala => 'scala',
 );
 
 sub read_file {
@@ -34,42 +35,97 @@ sub extract_lines {
         # 配列は0開始、行は1開始のため調整
         push(@selection, $lines->[$i]);
     }
-    return \@selection;
+    my $selected_lines = join "\n", @selection;
+    $selected_lines .= "\n...\n}" unless @selection[scalar @selection - 1] =~ /^}/;
+    return $selected_lines;
 }
 
 my %funcs = (
-    perl => sub {
-        my ($path, $line_start, $line_end) = @_;
-        my $lines = read_file($path);
-        my $selection = extract_lines($lines, $line_start, $line_end);
+    scala => {
+        extract_module => sub {
+            my ($lines, $line_start) = @_;
+            my $ret = "";
+            for (my $i = $line_start - 1; $i >= 0; $i--) {
+                next if $lines->[$i] !~ /^.*class /;
+                last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
 
-        # TODO: moduleの複数定義
-        my $head = $lines->[0];
-        my $last_sub = "";
-        for (my $i = $line_start - 1; $i > 0; $i--) {
-            if ($lines->[$i] =~ /^ *sub/) {
-                # そもそも先頭行が関数であれば関数名の引用は不要
-                if ($i != $line_start - 1) {
-                  # TODO: 関数定義が複数行
-                  $last_sub = $lines->[$i] . "\n    ...";
+                # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
+                for(;$i < $line_start; $i++) {
+                    $ret .= $lines->[$i] . "\n";
+                    last if $lines->[$i] =~ /.*[{]/;
                 }
+                $ret .= "  ...";
                 last;
             }
-        }
-        my $selected_lines = join "\n", @$selection;
-        $selected_lines .= "\n...\n}" unless $selection->[scalar @$selection - 1] =~ /^}/;
-        my $ret = <<EOS;
-${head}
-...
-${last_sub}
-${selected_lines}
-EOS
-        return $ret;
+            return $ret;
+        },
+        extract_function => sub {
+            my ($lines, $line_start) = @_;
+            my $ret = "";
+            for (my $i = $line_start - 1; $i >= 0; $i--) {
+                next if $lines->[$i] !~ /^ *[(public|protected|private)].*def /;
+                last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
+
+                # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
+                for(; $i < $line_start; $i++) {
+                    $ret .= $lines->[$i] . "\n";
+                    last if $lines->[$i] =~ /.*[\)}]/;
+                }
+                $ret .= "    ...";
+                last;
+            }
+            return $ret;
+        },
+    },
+    perl => {
+        extract_module => sub {
+            my ($lines, $line_start) = @_;
+            my $ret = "";
+            for (my $i = $line_start - 1; $i >= 0; $i--) {
+                next if $lines->[$i] !~ /^package/;
+                $ret = $lines->[$i];
+                $ret .= "\n...";
+                last;
+            }
+            return $ret;
+        },
+        extract_function => sub {
+            my ($lines, $line_start) = @_;
+            my $ret = "";
+            for (my $i = $line_start - 1; $i >= 0; $i--) {
+                next if $lines->[$i] !~ /^ *sub/;
+                last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
+
+                # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
+                for(;$i < $line_start; $i++) {
+                    $ret .= $lines->[$i] . "\n";
+                    last if $lines->[$i] =~ /.*[\)}]/;
+                }
+                $ret .= "    ...";
+                last;
+            }
+            return $ret;
+        },
     },
 );
 
+sub main {
+    my ($lines, $line_start, $line_end, $fn) = @_;
+    my $current_module = $fn->{extract_module}($lines, $line_start);
+    my $current_func = $fn->{extract_function}($lines, $line_start);
+    my $selection = extract_lines($lines, $line_start, $line_end);
+    # print $funcs{$lang}->($path, $line_start, $line_end);
+    my $ret = <<EOS;
+${current_module}
+${current_func}
+${selection}
+EOS
+    return $ret;
+}
+
 if (my $lang = $map{$ext}) {
-    print $funcs{$lang}->($path, $line_start, $line_end);
+    my $lines = read_file($path);
+    print main($lines, $line_start, $line_end, $funcs{$lang});
 } else {
     warn "extract function for ${ext} is not implemented.";
 }
