@@ -3,6 +3,7 @@ spoon.SpoonInstall.use_syncinstall = true
 spoon.SpoonInstall.repos.doiken = {
    url = "https://github.com/doiken/Spoons",
    desc = "doiken's spoon repository",
+   branch = "master",
 }
 
 -- Load lua files in spoon directory(not version controled)
@@ -41,7 +42,7 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = "/Users/doi_kenji/bin/redash_iframe",
       },
       {
-        text = "redmine collapse(long)",
+        text = "redmine collapse(long)(;collapse)",
         action = "text",
         contents = string.gsub([[{{collapse(表示)
           |<pre><code class="">
@@ -50,7 +51,7 @@ spoon.SpoonInstall:andUse("Snippet", {
           |}}]], " +|", "")
       },
       {
-        text = "redash ymd",
+        text = "redash ymd(;ymd)",
         action = "hs",
         contents = function ()
           local format = string.gsub([[where
@@ -63,7 +64,7 @@ spoon.SpoonInstall:andUse("Snippet", {
         end,
       },
       {
-        text = "markdown details",
+        text = "markdown details(;details)",
         action = "text",
         contents = string.gsub([[<details>
           |<summary>詳細</summary>
@@ -85,7 +86,7 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = function () spoon.FoAttendance:toggle() end,
       },
       {
-        text = "task status",
+        text = "task status(;task)",
         action = "shell",
         contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10",
       },
@@ -243,3 +244,35 @@ monitor.start()
 -- for cli use
 require("hs.ipc")
 
+spoon.SpoonInstall:andUse("TextExpansion", {
+  repo = 'doiken',
+  loglevel = "warning",
+  config = {
+    keywords = {
+      mtg = function ()
+        local meetings = {
+          ["2"] = "- Science 定例\n- 粗利率自動調整",
+          ["4"] = "- core定例\n- tech weekly",
+          ["5"] = "- tech weekly",
+        }
+        local week = hs.execute("date +%w"):gsub("%s+", "")
+        return meetings[week]
+          and ('MTG\n\n' .. meetings[week])
+          or ""
+      end,
+      ymd = function ()
+        local format = string.gsub([[where
+          |    year = %Y
+          |and month = %m
+          |and day = %d
+          |and hour = %H
+        |]], " +|", "")
+        return os.date(format, os.time()-24*60*60)
+      end,
+      collapse = '{{collapse(表示)\n}}',
+      details = '<details>\n<summary>詳細</summary>\n\n</details>',
+      task = function () return hs.execute('. ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10') end
+    },
+  },
+  start = true
+})
