@@ -98,6 +98,7 @@
 	encoding = UTF-8
 [pull]
 	rebase = true
+  autostash = true
 [push]
 	default = matching
 [diff]
