@@ -1,0 +1,80 @@
+{
+  "id": "699d6fb9-d81d-48f1-a396-e85c6effc656",
+  "version": "2.0",
+  "name": "Automation",
+  "url": "https://accounts.google.com",
+  "tests": [{
+    "id": "87ff4160-b353-42bf-812b-51e56aba4aaa",
+    "name": "AWS Login",
+    "commands": [{
+      "id": "4b4ceac6-a31a-4a80-a7fc-35be8d26af8c",
+      "comment": "",
+      "command": "open",
+      "target": "/AccountChooser?continue=https://accounts.google.com/o/saml2/initsso?idpid%3DC02pn75sw%26spid%3D55984878285%26forceauthn%3Dfalse%26from_login%3D1%26as%3DyFJYSbv4HA0NQrDTc_PS-g&ltmpl=popup&btmpl=authsub&scc=1&oauth=1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f4c54766-f738-4f9a-9903-831b163fc268",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1866x1057",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7c2326f0-b0ff-4944-b65c-5796b67cb77f",
+      "comment": "",
+      "command": "click",
+      "target": "id=choose-account-0",
+      "targets": [
+        ["id=choose-account-0", "id"],
+        ["name=Email", "name"],
+        ["css=#choose-account-0", "css:finder"],
+        ["xpath=//button[@id='choose-account-0']", "xpath:attributes"],
+        ["xpath=//li[@id='account-doi_kenji@fout.jp']/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ee333cb8-cedb-414e-b712-bef1c0001217",
+      "comment": "",
+      "command": "click",
+      "target": "id=arn:aws:iam::723941195937:role/Developer",
+      "targets": [
+        ["id=arn:aws:iam::723941195937:role/Developer", "id"],
+        ["name=roleIndex", "name"],
+        ["css=#arn\\3A aws\\3Aiam\\3A\\3A 723941195937\\3Arole\\/Developer", "css:finder"],
+        ["xpath=//input[@id='arn:aws:iam::723941195937:role/Developer']", "xpath:attributes"],
+        ["xpath=//div[@id='0']/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a8c03716-b97b-4b7f-bdb7-7341bf7c704d",
+      "comment": "",
+      "command": "click",
+      "target": "id=signin_button",
+      "targets": [
+        ["id=signin_button", "id"],
+        ["linkText=サインイン", "linkText"],
+        ["css=#signin_button", "css:finder"],
+        ["xpath=//a[contains(text(),'サインイン')]", "xpath:link"],
+        ["xpath=//a[@id='signin_button']", "xpath:attributes"],
+        ["xpath=//div[@id='input_signin_button']/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '#')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'サインイン')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "9864fd45-3660-482b-8851-a5cfa1923094",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["87ff4160-b353-42bf-812b-51e56aba4aaa"]
+  }],
+  "urls": ["https://accounts.google.com/"],
+  "plugins": []
+}
