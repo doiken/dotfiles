@@ -54,3 +54,6 @@ bindkey '^r' history-peco
 ## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
 ##
 [[ -n "$TMUX" ]] && unset zle_bracketed_paste
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
