@@ -260,6 +260,7 @@ spoon.SpoonInstall:andUse("TextExpansion", {
     keywords = {
       mtg = function ()
         local meetings = {
+          ["1"] = "- weekly朝会",
           ["2"] = "- Science 定例\n- 粗利率自動調整",
           ["4"] = "- core定例\n- tech weekly",
           ["5"] = "- tech weekly",
