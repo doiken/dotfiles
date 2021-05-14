@@ -244,6 +244,16 @@ monitor.start()
 -- for cli use
 require("hs.ipc")
 
+-- snippet の contents を other から取得
+--   GetContents('some_text', )
+GetContents = function (text, isHs) 
+  local snippet = spoon.Snippet
+  local e = hs.fnutils.find(snippet.snippets, function (e) return e.text == text end)
+  return isHs
+    and spoon.Snippet._contentsMap[e.contents]
+    or  e.contents
+end
+
 spoon.SpoonInstall:andUse("TextExpansion", {
   repo = 'doiken',
   loglevel = "warning",
@@ -260,18 +270,15 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           and ('MTG\n\n' .. meetings[week])
           or ""
       end,
-      ymd = function ()
-        local format = string.gsub([[where
-          |    year = %Y
-          |and month = %m
-          |and day = %d
-          |and hour = %H
-        |]], " +|", "")
-        return os.date(format, os.time()-24*60*60)
-      end,
+      ymd = GetContents("redash ymd(;ymd)", true),
       collapse = '{{collapse(表示)\n}}',
+      ["+collapse"] = function ()
+        local txt = hs.pasteboard.getContents()
+        return '{{collapse(表示)\n<pre><code class="text">\n' .. txt .. '\n</code></pre>\n}}'
+      end,
       details = '<details>\n<summary>詳細</summary>\n\n</details>',
-      task = function () return hs.execute('. ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10') end
+      task = function () return hs.execute(GetContents("task status(;task)")) end,
+      aligned = "\\begin{aligned}\n\\end{aligned}",
     },
   },
   start = true
