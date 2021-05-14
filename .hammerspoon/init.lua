@@ -44,36 +44,36 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "redmine collapse(long)(;collapse)",
         action = "text",
-        contents = string.gsub([[{{collapse(表示)
+        contents = ([[{{collapse(表示)
           |<pre><code class="">
           |
           |</code></pre>
-          |}}]], " +|", "")
+          |}}]]):gsub(" +|", "")
       },
       {
         text = "redash ymd(;ymd)",
         action = "hs",
         contents = function ()
-          local format = string.gsub([[where
+          local format = ([[where
             |    year = %Y
             |and month = %m
             |and day = %d
             |and hour = %H
-          |]], " +|", "")
+          |]]):gsub(" +|", "")
           return os.date(format, os.time()-24*60*60)
         end,
       },
       {
         text = "markdown details(;details)",
         action = "text",
-        contents = string.gsub([[<details>
+        contents = ([[<details>
           |<summary>詳細</summary>
           |
           |```
           |
           |```
           |</details>
-        |]], " +|", ""),
+        |]]):gsub(" +|", ""),
       },
       {
         text = "hs: attend",
@@ -102,12 +102,11 @@ spoon.SpoonInstall:andUse("Snippet", {
           {
             text = "redash ymd query",
             action = "text",
-            contents = string.gsub([[where
+            contents = ([[where
               |    year = {{year}}
               |and month = {{month}}
               |and day = {{day}}
-              |and hour = {{hour}}]], " +|", ""
-            ),
+              |and hour = {{hour}}]]):gsub(" +|", ""),
           },
           {
             text = "redmine table",
