@@ -235,10 +235,10 @@ end
 --
 -- require
 --
-keymaps = require("keymaps")
+Keymaps = require("keymaps")
 
-monitor = require("monitor")
-monitor.start()
+Monitor = require("monitor")
+Monitor.start()
 
 -- for cli use
 require("hs.ipc")
