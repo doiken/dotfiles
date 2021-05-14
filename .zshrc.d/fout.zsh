@@ -1,7 +1,7 @@
 ##
 ## Alias
 ##
-export SSH_STEP_SERVER=gw4
+export SSH_STEP_SERVER=gw
 function fsh () {
   ssh -t ${SSH_STEP_SERVER} "sudo -u nn ssh $@"
 }
