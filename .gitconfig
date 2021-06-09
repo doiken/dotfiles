@@ -15,6 +15,7 @@
 [alias]
   bda = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   pp = !git push origin `git rev-parse --abbrev-ref HEAD`
+  ppf = !git push origin `git rev-parse --abbrev-ref HEAD` ---force-with-lease
   st = status
   sh = show
   so = remote show origin
@@ -35,6 +36,7 @@
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
+  cot = !git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED
   # branch関連
   b  = branch
   ba = branch -a           # originも含めた全てのbranchを表示
@@ -91,6 +93,9 @@
   ignored = !git ls-files -v | grep "^[[:lower:]]"
 [rebase]
   autosquash = true
+  autostash = true
+[fetch]
+  prune = true
 [merge]
 	ff = false
 	tool = vimdiff
@@ -98,7 +103,6 @@
 	encoding = UTF-8
 [pull]
 	rebase = true
-  autostash = true
 [push]
 	default = matching
 [diff]
