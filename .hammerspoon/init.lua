@@ -42,40 +42,6 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = "/Users/doi_kenji/bin/redash_iframe",
       },
       {
-        text = "redmine collapse(long)(;collapse)",
-        action = "text",
-        contents = ([[{{collapse(表示)
-          |<pre><code class="">
-          |
-          |</code></pre>
-          |}}]]):gsub(" +|", "")
-      },
-      {
-        text = "redash ymd(;ymd)",
-        action = "hs",
-        contents = function ()
-          local format = ([[where
-            |    year = %Y
-            |and month = %m
-            |and day = %d
-            |and hour = %H
-          |]]):gsub(" +|", "")
-          return os.date(format, os.time()-24*60*60)
-        end,
-      },
-      {
-        text = "markdown details(;details)",
-        action = "text",
-        contents = ([[<details>
-          |<summary>詳細</summary>
-          |
-          |```
-          |
-          |```
-          |</details>
-        |]]):gsub(" +|", ""),
-      },
-      {
         text = "hs: attend",
         action = "hs",
         contents = function () spoon.FoAttendance.regist("attend") end,
@@ -84,11 +50,6 @@ spoon.SpoonInstall:andUse("Snippet", {
         text = "toggle attendance",
         action = "hs",
         contents = function () spoon.FoAttendance:toggle() end,
-      },
-      {
-        text = "task status(;task)",
-        action = "shell",
-        contents = ". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10",
       },
       {
         text = "other",
@@ -242,44 +203,3 @@ Monitor.start()
 
 -- for cli use
 require("hs.ipc")
-
--- snippet の contents を other から取得
---   GetContents('some_text', )
-GetContents = function (text, isHs) 
-  local snippet = spoon.Snippet
-  local e = hs.fnutils.find(snippet.snippets, function (e) return e.text == text end)
-  return isHs
-    and spoon.Snippet._contentsMap[e.contents]
-    or  e.contents
-end
-
-spoon.SpoonInstall:andUse("TextExpansion", {
-  repo = 'doiken',
-  loglevel = "warning",
-  config = {
-    keywords = {
-      mtg = function ()
-        local meetings = {
-          ["1"] = "- weekly朝会",
-          ["2"] = "- Science 定例\n- 粗利率自動調整",
-          ["4"] = "- core定例\n- tech weekly",
-          ["5"] = "- tech weekly",
-        }
-        local week = hs.execute("date +%w"):gsub("%s+", "")
-        return meetings[week]
-          and ('MTG\n\n' .. meetings[week])
-          or ""
-      end,
-      ymd = GetContents("redash ymd(;ymd)", true),
-      collapse = '{{collapse(表示)\n}}',
-      ["+collapse"] = function ()
-        local txt = hs.pasteboard.getContents()
-        return '{{collapse(表示)\n<pre><code class="text">\n' .. txt .. '\n</code></pre>\n}}'
-      end,
-      details = '<details>\n<summary>詳細</summary>\n\n</details>',
-      task = function () return hs.execute(GetContents("task status(;task)")) end,
-      aligned = "\\begin{aligned}\n\\end{aligned}",
-    },
-  },
-  start = true
-})
