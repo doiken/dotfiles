@@ -31,6 +31,7 @@ alias renv='eval "$(rbenv init -)"'
 alias nenv='eval "$(ndenv init -)"'
 alias penv='export PATH="$HOME/.plenv/bin:$PATH"; eval "$(plenv init -)"'
 alias aenv='denv; renv; nenv' # kick all *env
+alias mode_op='export PROMPT="\$ "'
 
 #
 # hammerspoon
