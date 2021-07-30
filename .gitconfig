@@ -30,6 +30,7 @@
   clf = clean -f
   cla = clean -fd
   clo = clone --single-branch --depth 1
+  clb = clone --filter=blob:none
   ci = commit
   cim = "!f() { git commit -m \"`git branch | perl -ne '/\\* ([0-9]+)-/ and print qq/[#$1] /'`$*\"; }; f"
   cif = commit --fixup
