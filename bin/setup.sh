@@ -71,7 +71,6 @@ CASK_EXECS=(
   google-japanese-ime
   iterm2
   hammerspoon
-  marshallofsound-google-play-music-player
   ngrok
   visual-studio-code
   keycastr # print what you type
@@ -88,7 +87,7 @@ CASK_EXECS=(
   docker
   font-jetbrains-mono
   font-ricty-diminished
-  station
+  biscuit
 )
 {
   brew tap homebrew/cask-fonts
