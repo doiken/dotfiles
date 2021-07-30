@@ -116,6 +116,15 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
         {{'ctrl'}, ']'},
       },
       ["Emacs"] = {},
+      ["Android Studio"] = {
+        {{'ctrl'}, ']'},
+        {{'ctrl'}, 'c'},
+        {{'ctrl'}, 'n'},
+        {{'ctrl'}, 'p'},
+        {{'ctrl'}, 'm'},
+        {{'ctrl'}, 'd'},
+        {{'ctrl'}, 'h'},
+      },
       ["IntelliJ IDEA"] = {
         {{'ctrl'}, ']'},
         {{'ctrl'}, 'c'},
