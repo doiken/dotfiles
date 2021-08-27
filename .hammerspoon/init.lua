@@ -206,8 +206,8 @@ end
 --
 Keymaps = require("keymaps")
 
-Monitor = require("monitor")
-Monitor.start()
+-- Monitor = require("monitor")
+-- Monitor.start()
 
 -- for cli use
 require("hs.ipc")
