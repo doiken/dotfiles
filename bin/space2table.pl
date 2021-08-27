@@ -24,17 +24,32 @@ my %parse_1st_line_func = (
 
 my $i = 0;
 my $type = $ARGV[0];
-my $separator, $line;
+my $separator, $line, $column_num;
 while (<STDIN>){
-    chomp;
+    ($line .= $_) =~ s/^\s*(.*?)\s*$/$1/;
     if ($i++ == 0) {
-        $line = $_;
         # 区切り文字の判定は先頭行のtab区切りの有無
         $separator = ($line =~ /\t/) ? "\t" : " {2,}";
+        $column_num = scalar split($separator, $line);
         $line = $parse_1st_line_func{$type}($separator, $line);
+    } elsif (scalar split($separator, $line) < $column_num) {
+        # redash にてカラムが改行されるため区切り文字に整形
+        # tobe
+        #   ad_is_charged  cnt
+        #   0  1,639,177
+        #   1  226,692
+        # asis
+        #   ad_is_charged  cnt
+        #   0
+        #   1,639,177
+        #   1
+        #   226,692
+        $line .= $separator;
+        next;
     } else {
-        ($line = $_) =~ s/$separator/ | /g;
+        $line =~ s/$separator/ | /g;
         $line = "| $line |\n";
     }
     print $line;
+    $line = '';
 }
