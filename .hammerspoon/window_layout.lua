@@ -10,15 +10,11 @@ local window = require("hs.window")
 local log = require("hs.logger").new(debug.getinfo(1,'S').source, 'debug')
 local fnutils = require "hs.fnutils"
 
-local mainScreen = function ()
-  return screen.mainScreen()
-end
-
 local subScreen = function (isForward)
   if isForward then
-    mainScreen().next()
+    return screen.mainScreen():next()
   else
-    mainScreen().previous()
+    return screen.mainScreen():previous()
   end
 end
 
