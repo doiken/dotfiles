@@ -32,6 +32,9 @@ alias nenv='eval "$(ndenv init -)"'
 alias penv='export PATH="$HOME/.plenv/bin:$PATH"; eval "$(plenv init -)"'
 alias aenv='denv; renv; nenv' # kick all *env
 alias mode_op='export PROMPT="\$ "'
+# see: https://zenn.dev/kumamoto/articles/d536ac6df8a544
+alias man='env LANG=C man'
+alias jman='env LANG=ja_JP.UTF-8 man'
 
 #
 # hammerspoon
