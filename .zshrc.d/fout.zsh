@@ -19,3 +19,7 @@ function fcp () {
 ## Env
 ##
 export FOUT_HOME=/fout/fout/
+funciton bsh () {
+  ssh-add ~/.ssh/id_rsa_bastion
+  ssh -At gw "ssh bastion $@" # since ip changes soso, treat as an argument
+}
