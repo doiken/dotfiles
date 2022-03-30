@@ -31,15 +31,22 @@ alias renv='eval "$(rbenv init -)"'
 alias nenv='eval "$(ndenv init -)"'
 alias penv='export PATH="$HOME/.plenv/bin:$PATH"; eval "$(plenv init -)"'
 alias aenv='denv; renv; nenv' # kick all *env
-alias mode_op='export PROMPT="\$ "'
+alias ppenv='eval "$(pyenv init -)"'
+function mode_op {
+  # トグルしたい prompt
+  p="\$ "
+  if [ "$PROMPT_BACK" != "" ]; then
+    export PROMPT=$PROMPT_BACK
+    export PROMPT_BACK=""
+  else
+    export PROMPT_BACK=$PROMPT
+    export PROMPT=$p
+  fi
+}
 # see: https://zenn.dev/kumamoto/articles/d536ac6df8a544
 alias man='env LANG=C man'
 alias jman='env LANG=ja_JP.UTF-8 man'
 
-#
-# hammerspoon
-#
-alias hs="/Applications/Hammerspoon.app/Contents/Resources/extensions/hs/ipc/bin/hs"
 #
 # ruby
 #
