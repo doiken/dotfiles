@@ -49,7 +49,6 @@ BREW_EXECS=(
   zplug
   peco
   jq
-  the_silver_searcher
   python3
   ndenv
   pipenv
@@ -91,9 +90,9 @@ CASK_EXECS=(
 )
 {
   brew tap homebrew/cask-fonts
-  PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
+  PATTERN="$(brew list --cask | xargs echo | perl -pe 's/ /|/g')"
   for e in ${CASK_EXECS[@]}; do
-      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
+      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew install $e --cask
   done
 } &
 
