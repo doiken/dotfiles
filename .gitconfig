@@ -29,15 +29,16 @@
   cl = clean
   clf = clean -f
   cla = clean -fd
-  clo = clone --single-branch --depth 1
-  clb = clone --filter=blob:none
+  # https://github.blog/jp/2021-01-13-get-up-to-speed-with-partial-clone-and-shallow-clone/
+  clo = clone --single-branch --depth 1 # shallow clone: for nearly download purpose
+  clb = clone --filter=blob:none # blobless clone: for quick and effective clone
   ci = commit
   cim = "!f() { git commit -m \"`git branch | perl -ne '/\\* ([0-9]+)-/ and print qq/[#$1] /'`$*\"; }; f"
   cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
-  cot = !git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED
+  cot = "!f() { git branch -D tmp/`git rev-parse --abbrev-ref HEAD`-MERGED 2>/dev/null; git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED; git fetch; git merge origin/master; }; f"
   # branch関連
   b  = branch
   ba = branch -a           # originも含めた全てのbranchを表示
@@ -73,10 +74,10 @@
   dm = diff master           # masterとのdiff
   dw = diff --color-words    # 単語単位でいろつけてdiff
   dc = diff --cached         # addされているものとのdiff
-  df = "!f() { git diff $1 HEAD; }; f"
-  dff = "!f() { git diff $1 HEAD~; }; f"
+  df = "!f() { git diff $1 HEAD "${@:2}"; }; f"
+  dff = "!f() { git diff $1 HEAD~ "${@:2}"; }; f"
   dfs = diff --staged        # 同上(1.6.1移行)
-  dfc = "!f() { git diff $1~ $1; }; f" # そのコミットの差分
+  dfc = "!f() { t=$1; shift; git diff $t~ $t "$@"; }; f" # そのコミットの差分
   # mergeの際にconflictが起きたファイルを編集
   edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
   # mergeの際にconflictが起きたファイルをadd
