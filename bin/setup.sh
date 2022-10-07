@@ -44,7 +44,6 @@ BREW_EXECS=(
   hub
   tmux
   reattach-to-user-namespace
-  cask
   terminal-notifier
   zplug
   peco
@@ -57,7 +56,6 @@ BREW_EXECS=(
   rbenv
   ruby-build
   mysql
-  fswatch
 )
 {
   PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
