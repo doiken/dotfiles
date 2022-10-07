@@ -21,5 +21,9 @@ function fcp () {
 export FOUT_HOME=/fout/fout/
 funciton bsh () {
   ssh-add ~/.ssh/id_rsa_bastion
-  ssh -At gw "ssh bastion $@" # since ip changes soso, treat as an argument
+  ssh -At gw "ssh bastion $@"
+}
+funciton bshl () {
+  ssh-add ~/.ssh/id_rsa_bastion
+  ssh -AL 8157:localhost:8157 gw "ssh -ND 8157 bastion"
 }

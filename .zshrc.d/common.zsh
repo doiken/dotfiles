@@ -16,6 +16,9 @@ alias dm='docker-machine'
 alias dc='docker-compose'
 alias git=hub
 alias ctags='/usr/local/bin/ctags'
+if [[ -x `which colordiff` ]]; then
+  alias diff='colordiff'
+fi
 
 function denv {
   # faster approach
