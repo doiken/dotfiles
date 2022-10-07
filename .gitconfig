@@ -29,6 +29,7 @@
   cl = clean
   clf = clean -f
   cla = clean -fd
+  clear = "!f() { git branch --merged | egrep -v \"(^\\*|master|main)\" | xargs git branch -d; git branch --list 'tmp/REVIEW*' 'tmp/MERGED*' | xargs git branch -D;  }; f"
   # https://github.blog/jp/2021-01-13-get-up-to-speed-with-partial-clone-and-shallow-clone/
   clo = clone --single-branch --depth 1 # shallow clone: for nearly download purpose
   clb = clone --filter=blob:none # blobless clone: for quick and effective clone
@@ -38,7 +39,7 @@
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
-  cot = "!f() { git branch -D tmp/`git rev-parse --abbrev-ref HEAD`-MERGED 2>/dev/null; git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED; git fetch; git merge origin/master; }; f"
+  cot = "!f() { git branch -D tmp/MERGED-`git rev-parse --abbrev-ref HEAD` 2>/dev/null; git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED; git fetch; git merge origin/master; }; f"
   # branch関連
   b  = branch
   ba = branch -a           # originも含めた全てのbranchを表示
@@ -93,6 +94,7 @@
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
+  review = "!f() { b=tmp/REVIEW-${1}; git branch -D $b; git checkout -b ${b}; git fetch; git merge --no-edit --no-ff origin/${1}; git reset HEAD~; }; f"
 [rebase]
   autosquash = true
   autostash = true
