@@ -64,7 +64,7 @@ my %funcs = (
             my ($lines, $line_start) = @_;
             my $ret = "";
             for (my $i = $line_start - 1; $i >= 0; $i--) {
-                next if $lines->[$i] !~ /^ *[(public|protected|private)].*def /;
+                next if $lines->[$i] !~ /^\s*[(public|protected|private)].*def /;
                 last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
 
                 # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
@@ -94,7 +94,7 @@ my %funcs = (
             my ($lines, $line_start) = @_;
             my $ret = "";
             for (my $i = $line_start - 1; $i >= 0; $i--) {
-                next if $lines->[$i] !~ /^ *sub/;
+                next if $lines->[$i] !~ /^\s*sub/;
                 last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
 
                 # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
@@ -111,13 +111,26 @@ my %funcs = (
     python => {
         extract_module => sub {
             my ($lines, $line_start) = @_;
-            return '';
+            my $ret = "";
+            for (my $i = $line_start - 1; $i >= 0; $i--) {
+                next if $lines->[$i] !~ /^\s*class /;
+                last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
+
+                # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
+                for(;$i < $line_start; $i++) {
+                    $ret .= $lines->[$i] . "\n";
+                    last if $lines->[$i] =~ /.*[:]/;
+                }
+                $ret .= "  ...";
+                last;
+            }
+            return $ret;
         },
         extract_function => sub {
             my ($lines, $line_start) = @_;
             my $ret = "";
             for (my $i = $line_start - 1; $i >= 0; $i--) {
-                next if $lines->[$i] !~ /^ *def/;
+                next if $lines->[$i] !~ /^\s*def/;
                 last if $i == $line_start - 1; # 定義を含む選択であれば定義の引用は不要
 
                 # 閉じカッコが見つかるまで繋げることで定義の複数行に対応
