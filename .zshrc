@@ -57,3 +57,6 @@ bindkey '^r' history-peco
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
+# Created by `pipx` on 2022-07-29 08:53:15
+export PATH="$PATH:/Users/doi_kenji/.local/bin"
