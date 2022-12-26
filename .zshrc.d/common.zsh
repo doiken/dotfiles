@@ -30,11 +30,23 @@ function denv {
   export DOCKER_CERT_PATH={{ .HostOptions.AuthOptions.StorePath }}
   export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
 }
-alias renv='eval "$(rbenv init -)"'
-alias nenv='eval "$(ndenv init -)"'
-alias penv='export PATH="$HOME/.plenv/bin:$PATH"; eval "$(plenv init -)"'
-alias aenv='denv; renv; nenv' # kick all *env
-alias ppenv='eval "$(pyenv init -)"'
+function xenv {
+	lang=$1
+	case "$lang" in
+		"ruby" | r*) eval "$(rbenv init -)" ;;
+		"node" | n*) eval "$(ndenv init -)" ;;
+		"perl" | pl* )
+			export PATH="$HOME/.plenv/bin:$PATH";
+			eval "$(plenv init -)" ;;
+		"python"| py* ) eval "$(pyenv init -)" ;;
+		* )
+      xenv ruby
+      xenv node
+      xenv perl
+      xenv python
+			;;
+	esac
+}
 function mode_op {
   # トグルしたい prompt
   p="\$ "
