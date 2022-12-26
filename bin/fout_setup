@@ -12,9 +12,13 @@ repos=(
   fout/fout_webhook
   fout/fout_analysis
   fout/fout_ukigumo
+  fout/fout_notebooks
+  fout/fout_crawler
+  fout/fout_text_labeler
   doiken/fout_sandbox
   doiken/cpp_test
   doiken/perl
+  doiken/python
 )
 for r in ${repos[@]}; do
     git clone "git@github.com:${r}.git" 2>&1 | grep -v 'already exists'
@@ -23,30 +27,7 @@ done
 ##
 ## App
 ##
-BREW_EXECS=(
-  plenv
-)
-{
-  PATTERN="$(brew list | xargs echo | perl -pe 's/ /|/g')"
-  for e in ${BREW_EXECS[@]}; do
-      [ "$(egrep -v \"$PATTERN\" <(echo $e))" != "" ] && brew install $e
-  done
-} &
-CASK_EXECS=(
-	mathpix-snipping-tool
-)
-{
-  PATTERN="$(brew cask list | xargs echo | perl -pe 's/ /|/g')"
-  for e in ${CASK_EXECS[@]}; do
-      [ "$(egrep -v $PATTERN <(echo $e))" != "" ] && brew cask install $e
-  done
-} &
-
-##
-## for fout_logs java
-##
-brew tap homebrew/cask-versions
-brew cask install adoptopenjdk8
+brew bundle --file ~/dotfiles/Brewfile.fout &
 
 ##
 ## for fout perl
@@ -60,30 +41,36 @@ cd $REPO_DIR/fout
 # build 5.24.3 ~> carton install
 # http://tweeeety.hateblo.jp/entry/2015/06/21/203144
 PATTERN=`plenv versions | cut -d' ' -f 2 | xargs echo | perl -pe 's/ /|/g'`
-if [ "$(egrep -v $PATTERN <(echo 5.24.3))" != "" ]; then
-	plenv install 5.24.3
-	plenv local 5.24.3
-	plenv install-cpanm
-	plenv exec cpanm Module::Install
-	plenv exec cpanm Carton
-  # not required so far
-  # plenv exec carton install
-fi
+{
+  if [ "$(egrep -v $PATTERN <(echo 5.24.3))" != "" ]; then
+    plenv install 5.24.3
+    plenv local 5.24.3
+    plenv install-cpanm
+    plenv exec cpanm Module::Install
+    plenv exec cpanm Carton
+    # not required so far
+    # plenv exec carton install
+  fi
+} &
 
 # for fout box
-boxes=(
-  localdev-c7
-  localdev
+docker_env=(
+  fout
+  fout_logs
 )
-for box in ${boxes[@]}; do
-		PATTERN=`vagrant box list | grep "$box " | cut -d' ' -f 1`
-		[ "$PATTERN" != "$box" ] && vagrant box add "http://downloads.fout.local/vagrant/${box}"
-done
+{
+  for env in ${docker_env[@]}; do
+    cd ~/fout_sandbox/unittest/$env
+    docker-compose up -d
+    docker-compose exec perl /bin/bash -lc /unittest/setup.sh
+    docker-compose down
+  done
+} &
 
 # hammerspoon
 cat >~/.hammerspoon/Spoons/github_watcher.lua <<EOL
 gw = require("../GithubWatcher")
-gw.envFile = '/Users/doi_kenji/.zshrc.d/work.zsh'
+gw.envFile = "${HOME}/.zshrc.d/work.zsh"
 gw:start()
 EOL
 

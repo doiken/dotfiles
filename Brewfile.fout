@@ -1,0 +1,9 @@
+tap "homebrew/cask-versions"
+
+brew "plenv"
+
+cask "adoptopenjdk8"
+brew "amazon-ecs-cli"
+brew "awscli"
+# cask "mathpix-snipping-tool"
+
