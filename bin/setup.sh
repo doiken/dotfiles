@@ -3,8 +3,8 @@
 ##
 ## First of all, we need git
 ##
-[ ! -x /usr/local/bin/brew ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install git
+which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+which git || brew install git
 
 ##
 ## Get This Repository
