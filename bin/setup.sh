@@ -1,6 +1,12 @@
 #!/bin/bash
 
 ##
+## First of all, we need git
+##
+[ ! -x /usr/local/bin/brew ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install git
+
+##
 ## Get This Repository
 ##
 [ ! -d $HOME/dotfiles ] && git clone git@github.com:doiken/dotfiles.git $HOME/dotfiles
@@ -38,7 +44,6 @@ done
 ##
 
 ## Homebrew
-[ ! -x /usr/local/bin/brew ] && ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew bundle --global &
 
 ##
