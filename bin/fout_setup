@@ -68,11 +68,11 @@ docker_env=(
 } &
 
 # hammerspoon
-cat >~/.hammerspoon/Spoons/github_watcher.lua <<EOL
-gw = require("../GithubWatcher")
-gw.envFile = "${HOME}/.zshrc.d/work.zsh"
-gw:start()
-EOL
+{
+  for f in $(echo ~/.hammerspoon/fout/*); do
+		ln -s $f ~/.hammerspoon/Spoons/$(basename $f)
+  done
+} &
 
 ~/bin/pmset.sh 25 0
 
