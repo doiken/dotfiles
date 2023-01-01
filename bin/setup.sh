@@ -3,8 +3,8 @@
 ##
 ## First of all, we need git
 ##
-which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-which git || brew install git
+which brew >/dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+which git >/dev/null || brew install git
 
 ##
 ## Get This Repository
@@ -44,16 +44,17 @@ done
 ##
 
 ## Homebrew
-brew bundle --global &
+{
+	brew bundle --global >/dev/null
 
-##
-## Configure
-##
-SCRIPTS=( ~/bin/key_repeat.sh )
-for script in ${SCRIPTS[@]}; do
-    [ -x $script ] && $script
-done
-
+  ##
+  ## node-build
+  ##
+	if [ ! -d "$(ndenv root)/plugins/node-build" ]; then
+		mkdir -p "$(ndenv root)"/plugins
+		git clone https://github.com/riywo/node-build.git $(ndenv root)/plugins/node-build
+	fi
+} &
 ##
 ## docker completion
 ## https://docs.docker.com/docker-for-mac/
@@ -65,9 +66,9 @@ done
 wait
 
 ##
-## node-build
+## Configure
 ##
-if [ ! -d "$(ndenv root)/plugins/node-build" ]; then
-  mkdir -p "$(ndenv root)"/plugins
-  git clone https://github.com/riywo/node-build.git $(ndenv root)/plugins/node-build
-fi
+SCRIPTS=( ~/bin/key_repeat.sh )
+for script in ${SCRIPTS[@]}; do
+    [ -x $script ] && $script
+done

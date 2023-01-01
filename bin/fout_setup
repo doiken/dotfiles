@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 REPO_DIR=${REPO_DIR:-"$HOME/Repositories"}
+mkdir -p $REPO_DIR
 cd $REPO_DIR
 repos=(
   fout/fout
@@ -27,21 +28,20 @@ done
 ##
 ## App
 ##
-brew bundle --file ~/dotfiles/Brewfile.fout &
+brew bundle --file ~/dotfiles/Brewfile.fout >/dev/null &
 
 ##
 ## for fout perl
 ##
 # brew install perl-build broken for now
 # https://qiita.com/narita_cpp/items/03e55b9acf4b3fbed99c
-git clone git://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ 2>&1 | grep -v 'already exists'
-
-cd $REPO_DIR/fout
+test -f ~/.plenv/plugins/perl-build/ || git clone git@github.com:tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ 2>&1 | grep -v 'already exists'
 
 # build 5.24.3 ~> carton install
 # http://tweeeety.hateblo.jp/entry/2015/06/21/203144
-PATTERN=`plenv versions | cut -d' ' -f 2 | xargs echo | perl -pe 's/ /|/g'`
 {
+	cd $REPO_DIR/fout
+	PATTERN=`plenv versions | cut -d' ' -f 2 | xargs echo | perl -pe 's/ /|/g'`
   if [ "$(egrep -v $PATTERN <(echo 5.24.3))" != "" ]; then
     plenv install 5.24.3
     plenv local 5.24.3
@@ -60,7 +60,7 @@ docker_env=(
 )
 {
   for env in ${docker_env[@]}; do
-    cd ~/fout_sandbox/unittest/$env
+    cd ~/Repositories/fout_sandbox/unittest/$env
     docker-compose up -d
     docker-compose exec perl /bin/bash -lc /unittest/setup.sh
     docker-compose down
@@ -70,7 +70,7 @@ docker_env=(
 # hammerspoon
 {
   for f in $(echo ~/.hammerspoon/fout/*); do
-		ln -s $f ~/.hammerspoon/Spoons/$(basename $f)
+		test -f ~/.hammerspoon/Spoons/$(basename $f) || ln -s $f ~/.hammerspoon/Spoons/$(basename $f)
   done
 } &
 

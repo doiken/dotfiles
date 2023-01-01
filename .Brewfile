@@ -1,5 +1,4 @@
 tap "argon/mas"
-tap "caskroom/cask"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-fonts"
@@ -9,7 +8,6 @@ brew "cask"
 brew "colordiff"
 brew "cpanminus"
 brew "ctags"
-brew "docker"
 brew "fswatch"
 brew "git"
 brew "htop"
@@ -36,22 +34,23 @@ cask "deepl"
 cask "docker"
 cask "font-jetbrains-mono"
 cask "font-ricty-diminished"
-cask "google-chrome"
 cask "google-cloud-sdk"
-cask "google-japanese-ime"
+# not working on mba m2. install manually
+# cask "google-japanese-ime"
 cask "hammerspoon"
 cask "iina"
 cask "intellij-idea-ce"
 cask "iterm2"
 cask "keycastr"
 cask "licecap"
-cask "mapture"
+# not available
+# cask "mapture"
 cask "ngrok"
 cask "notion"
 cask "pycharm-ce"
 cask "skitch"
-cask "slack"
 cask "visual-studio-code"
 
-mas "Xcode", id: 497799835
-mas "CopyLess 2", id: 99384101
+# 時間かかりすぎるため手動に切り替え
+# mas "CopyLess 2", id: 99384101
+# mas "Xcode", id: 497799835

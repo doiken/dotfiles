@@ -8,13 +8,13 @@ boost () {
   defaults write -g KeyRepeat -int $key_repeat
 }
 
-if [ $(defaults read -g InitialKeyRepeat) -eq $init_key_repeat ]; then
+if [ "$(defaults read -g InitialKeyRepeat)" -eq $init_key_repeat ]; then
   exit 0
 fi
 
 echo -n "key repeat not boosted. boost it?[y/n]: "
 read yn
 
-if [ $yn == 'y' ]; then
+if [ "$yn" == 'y' ]; then
   boost
 fi

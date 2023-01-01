@@ -70,7 +70,7 @@ RUBYGEMS_GEMDEPS=-
 #
 # git
 #
-path=(/usr/local/share/git-core/contrib/diff-highlight/ $path)
+path=($(brew --prefix)/share/git-core/contrib/diff-highlight/ $path)
 
 # General settings
 #

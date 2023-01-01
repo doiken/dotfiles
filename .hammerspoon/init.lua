@@ -193,6 +193,8 @@ end
 -- require
 --
 Keymaps = require("keymaps")
+DisableEisuuKana = require("DisableCodes")
+DisableEisuuKana.start()
 
 -- Monitor = require("monitor")
 -- Monitor.start()

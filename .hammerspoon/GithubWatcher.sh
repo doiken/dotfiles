@@ -10,11 +10,12 @@
 #   GITHUB_TOKEN env var should be defined in PATH_TO_ENVFILE
 #   jq command required
 source $1
+export PATH="$PATH:/opt/homebrew/bin/"
 since=`date -v-7d "+%Y-%m-%d"`
 # 先勝ちの unique_by に合わせて他者の更新した(であろう) pulls を先に抽出
 commands=(
-    '"https://api.github.com/notifications?all=true&since=${since}"| /usr/local/bin/jq ".[]|{title: .subject.title, url:.subject.url, updated_at: .updated_at, updated_by: "\""other"\"", last_read_at: .last_read_at}"'
-    '"https://api.github.com/search/issues?q=involves:doiken+state:open+is:pr+updated:>=${since}" | /usr/local/bin/jq ".items[]|{title: .title, url:.url, updated_at: .updated_at, updated_by: "\""me"\""}"'
+    '"https://api.github.com/notifications?all=true&since=${since}"| jq ".[]|{title: .subject.title, url:.subject.url, updated_at: .updated_at, updated_by: "\""other"\"", last_read_at: .last_read_at}"'
+    '"https://api.github.com/search/issues?q=involves:doiken+state:open+is:pr+updated:>=${since}" | jq ".items[]|{title: .title, url:.url, updated_at: .updated_at, updated_by: "\""me"\""}"'
 )
 
 cmd_prefix="curl -sH 'Authorization: token ${GITHUB_TOKEN}' "
@@ -24,4 +25,4 @@ for cmd in "${commands[@]}" ; do
 done
 
 # url で unique したいが pulls/issues に分かれているため title で妥協
-echo $stdout | /usr/local/bin/jq . --slurp | /usr/local/bin/jq 'unique_by(.url)'
+echo $stdout | jq . --slurp | jq 'unique_by(.url)'
