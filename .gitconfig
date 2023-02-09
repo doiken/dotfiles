@@ -33,7 +33,7 @@
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
-  cot = "!f() { git branch -D tmp/MERGED-`git rev-parse --abbrev-ref HEAD` 2>/dev/null; git checkout -b tmp/`git rev-parse --abbrev-ref HEAD`-MERGED; git fetch; git merge origin/master; }; f"
+  cot = "!f() { git branch -D tmp/MERGED-`git rev-parse --abbrev-ref HEAD` 2>/dev/null; git checkout -b tmp/MERGED-`git rev-parse --abbrev-ref HEAD`; git fetch; git merge origin/master; }; f"
   # branch関連
   b  = branch
   # log関連
@@ -64,7 +64,7 @@
   r3  = reset HEAD~~~
   # rebase
   rb = rebase
-  rbh = "!f() { git rebase -i "HEAD~${1}"; }; f"
+  rbi = "!f() { git rebase -i "HEAD~${1}"; }; f"
   rba = rebase --abort
   rbc = rebase --continue
   # diff関連
@@ -90,7 +90,7 @@
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
-  review = "!f() { b=tmp/REVIEW-${1}; git branch -D $b; git checkout -b ${b}; git fetch; git merge --no-edit --no-ff origin/${1}; git reset HEAD~; }; f"
+  review = "!f() { b=tmp/REVIEW-${1}; git branch -D $b 2>&1 >/dev/null; git checkout -b ${b}; git fetch; git merge --no-edit --no-ff origin/${1}; git reset HEAD~; }; f"
   reviewed = "!f() { git clean -fd; git checkout .; git checkout $1; }; f"
 [rebase]
   autosquash = true
@@ -117,3 +117,5 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[init]
+	defaultBranch = main
