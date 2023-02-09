@@ -24,6 +24,11 @@ spoon.SpoonInstall:andUse("Snippet", {
   config = {
     snippets = {
       {
+        text = "join lines",
+        action = "shell",
+        contents = "/usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/\\$1 /g'",
+      },
+      {
         text = "redash iframe",
         action = "shell",
         contents = "/Users/doi_kenji/bin/redash_iframe",
@@ -101,6 +106,8 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
       -- app name = { idx1, ... }
       ["iTerm2"] = {
         {{'ctrl'}, ']'},
+        {{'ctrl'}, 'n'},
+        {{'ctrl'}, 'p'},
       },
       ["Emacs"] = {},
       ["Android Studio"] = {

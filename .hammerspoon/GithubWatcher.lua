@@ -66,7 +66,7 @@ local function buildPull(exitCode, stdOut, stdErr, prevPullUpdates)
             review_count = 0,
             reviews = {},
         }
-        if (pulls["repos"][repo_name]["reviews"][id] == nil) then
+        if (id and pulls["repos"][repo_name]["reviews"][id] == nil) then
             pulls["review_count"] = pulls["review_count"] + 1
             pulls["repos"][repo_name]["review_count"] = pulls["repos"][repo_name]["review_count"] + 1
             local y, m, d, h, i = pull["updated_at"]:match("^(%d+)-0?(%d+)-0?(%d+)T0?(%d+):0?(%d+)")
