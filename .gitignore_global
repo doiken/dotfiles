@@ -24,3 +24,6 @@ tempCodeRunnerFile.*
 # spark
 derby.log
 target
+
+# docker
+**/docker-compose.override.yml

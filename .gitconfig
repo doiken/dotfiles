@@ -33,7 +33,7 @@
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
-  cot = "!f() { git branch -D tmp/MERGED-`git rev-parse --abbrev-ref HEAD` 2>/dev/null; git checkout -b tmp/MERGED-`git rev-parse --abbrev-ref HEAD`; git fetch; git merge origin/master; }; f"
+  cot = "!f() { git branch -D tmp/MERGED-`git rev-parse --abbrev-ref HEAD` 2>/dev/null; git checkout -b tmp/MERGED-`git rev-parse --abbrev-ref HEAD`; git fetch; git merge --no-edit origin/master; }; f"
   # branch関連
   b  = branch
   # log関連
