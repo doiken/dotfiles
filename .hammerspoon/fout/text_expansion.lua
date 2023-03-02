@@ -40,6 +40,7 @@ spoon.SpoonInstall:andUse("TextExpansion", {
         return hs.execute(". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10")
       end,
       aligned = "\\begin{aligned}\n\\end{aligned}",
+      table = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
       help = function ()
         local keyset={}
         local n=0

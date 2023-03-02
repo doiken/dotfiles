@@ -26,7 +26,7 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "join lines",
         action = "shell",
-        contents = "/usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/\\$1 /g'",
+        contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/$1 /g'",
       },
       {
         text = "redash iframe",
@@ -39,19 +39,19 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = function () spoon.FoAttendance.regist("attend") end,
       },
       {
-        text = "toggle attendance",
-        action = "hs",
-        contents = function () spoon.FoAttendance:toggle() end,
+        text = "redmine table",
+        action = "text",
+        contents = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
+      },
+      {
+        text = "image md to html",
+        action = "shell",
+        contents = [[LANG=ja_JP.UTF-8 /usr/bin/pbpaste | perl -pe 's/!\[image\]\(([^)]+)\)/<img src="$1" width=600px>/g']],
       },
       {
         text = "other",
         action = "nest",
         contents = {
-          {
-            text = "fo_attendance status",
-            action = "hs",
-            contents = function () spoon.FoAttendance:status() end
-          },
           {
             text = "redash ymd query",
             action = "text",
@@ -62,19 +62,14 @@ spoon.SpoonInstall:andUse("Snippet", {
               |and hour = {{hour}}]]):gsub(" +|", ""),
           },
           {
-            text = "redmine table",
-            action = "text",
-            contents = "|_.  |_.  |_.  |\n|  |  |  |",
-          },
-          {
             text = "space2table textile",
             action = "shell",
-            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
+            contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
           },
           {
             text = "space2table markdown",
             action = "shell",
-            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
+            contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
           },
         },
       },
