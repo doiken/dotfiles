@@ -13,7 +13,7 @@ alias v=vagrant
 alias vb='VBoxManage'
 alias d='docker'
 alias dm='docker-machine'
-alias dc='docker compose'
+alias dc='docker-compose'
 alias git=hub
 alias ctags='/usr/local/bin/ctags'
 if [[ -x `which colordiff` ]]; then

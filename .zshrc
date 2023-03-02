@@ -10,7 +10,23 @@ done
 ##
 cdpath=(~/Documents ~/Repositories ~ $cdpath)
 path=($HOME/bin/ $path)
-fpath=(~/.zsh/completion $fpath)
+fpath=(
+  ~/.zsh/completion
+  $fpath
+  ${HOMEBREW_PREFIX}/share/zsh/site-functions
+)
+
+##
+## compinit
+##
+
+# for aws cli completion
+# see: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+autoload bashcompinit && bashcompinit
+
+autoload -Uz compinit && compinit
+
+which aws_completer>/dev/null && complete -C 'aws_completer' aws
 
 ##
 ## rbenv
@@ -28,27 +44,6 @@ if [[ -f $HOME/.ndenv/bin ]]; then
 		export PATH="$HOME/.ndenv/bin:$PATH"
 fi
 
-
-##
-## for peco
-##
-function history-peco() {
-  local tac
-
-  if which tac > /dev/null; then
-    tac="tac"
-  else
-    tac="tail -r"
-  fi
-
-  BUFFER=$(history -n 1 | eval $tac | peco --query "$LBUFFER")
-  CURSOR=$#BUFFER
-
-  zle reset-prompt
-}
-
-zle -N history-peco
-bindkey '^r' history-peco
 
 ##
 ## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell

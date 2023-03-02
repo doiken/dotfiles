@@ -6,7 +6,8 @@ source $ZPLUG_HOME/init.zsh
 
 # manually install by zplug install
 zplug 'zsh-users/zsh-autosuggestions', as:plugin
-zplug 'zsh-users/zsh-completions', as:plugin
+zplug "zsh-users/zsh-completions", as:plugin
+zplug 'marlonrichert/zsh-autocomplete', as:plugin
 zplug 'zsh-users/zsh-syntax-highlighting', defer:3, as:plugin
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 zplug "greymd/docker-zsh-completion"
