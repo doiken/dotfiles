@@ -90,8 +90,9 @@
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
-  review = "!f() { b=tmp/REVIEW-${1}; git branch -D $b 2>&1 >/dev/null; git checkout -b ${b}; git fetch; git merge --no-edit --no-ff origin/${1}; git reset HEAD~; }; f"
+  review = "!f() { b=tmp/REVIEW-${1}; git branch -D $b &>/dev/null; git checkout -b ${b}; git fetch; git merge --no-edit --no-ff origin/${1}; git reset HEAD~; }; f"
   reviewed = "!f() { git clean -fd; git checkout .; git checkout $1; }; f"
+  where = check-ignore -v 
 [rebase]
   autosquash = true
   autostash = true
