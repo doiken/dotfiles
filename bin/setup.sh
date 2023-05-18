@@ -30,6 +30,7 @@ DOT_FILES=(
   .ctags
   .tmpl
   .editrc
+  .git_template
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 

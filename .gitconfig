@@ -28,7 +28,7 @@
   clo = clone --single-branch --depth 1 # shallow clone: for nearly download purpose
   clb = clone --filter=blob:none # blobless clone: for quick and effective clone
   ci = commit
-  cim = "!f() { git commit -m \"`git branch | perl -ne '/\\* ([0-9]+)-/ and print qq/[#$1] /'`$*\"; }; f"
+  cim = "!f() { git commit -m \"$*\"; }; f"
   cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
@@ -120,3 +120,4 @@
 	clean = git-lfs clean -- %f
 [init]
 	defaultBranch = main
+	templatedir = ~/.git_template

@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Search Print Function
+# Redirect output to stderr.
+exec 1>&2
+statement=$(git diff --staged HEAD | grep -E '^\+.*(print|warn)[ \(]')
+if [ "$statement" != "" ]; then
+   cat <<EOF
+m9(^Д^) < debug文字発見
+${statement}
+EOF
+fi
