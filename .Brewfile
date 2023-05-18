@@ -48,6 +48,7 @@ cask "licecap"
 cask "ngrok"
 cask "notion"
 cask "pycharm-ce"
+cask "raycast"
 cask "skitch"
 cask "visual-studio-code"
 
