@@ -34,7 +34,7 @@ function xenv {
 	lang=$1
 	case "$lang" in
 		"ruby" | r*) eval "$(rbenv init -)" ;;
-		"node" | n*) eval "$(ndenv init -)" ;;
+		"node" | n*) eval "$(nodenv init -)" ;;
 		"perl" | pl* )
 			export PATH="$HOME/.plenv/bin:$PATH";
 			eval "$(plenv init -)" ;;

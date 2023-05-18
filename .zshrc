@@ -38,14 +38,6 @@ if [[ -f $HOME/.rbenv/bin ]]; then
 fi
 
 ##
-## for ndenv
-##
-if [[ -f $HOME/.ndenv/bin ]]; then
-		export PATH="$HOME/.ndenv/bin:$PATH"
-fi
-
-
-##
 ## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell
 ##
 [[ -n "$TMUX" ]] && unset zle_bracketed_paste

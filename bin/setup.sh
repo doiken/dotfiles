@@ -47,14 +47,6 @@ done
 ## Homebrew
 {
 	brew bundle --global >/dev/null
-
-  ##
-  ## node-build
-  ##
-	if [ ! -d "$(ndenv root)/plugins/node-build" ]; then
-		mkdir -p "$(ndenv root)"/plugins
-		git clone https://github.com/riywo/node-build.git $(ndenv root)/plugins/node-build
-	fi
 } &
 ##
 ## docker completion
