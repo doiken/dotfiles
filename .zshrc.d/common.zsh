@@ -39,6 +39,7 @@ function xenv {
 			export PATH="$HOME/.plenv/bin:$PATH";
 			eval "$(plenv init -)" ;;
 		"python"| py* ) eval "$(pyenv init -)" ;;
+		"pipx"| pi* ) export PATH="$PATH:/Users/doi_kenji/.local/bin:/Users/doi_kenji/Library/Python/3.11/bin" ;;
 		* )
       xenv ruby
       xenv node
@@ -47,6 +48,7 @@ function xenv {
 			;;
 	esac
 }
+
 function mode_op {
   # トグルしたい prompt
   p="\$ "
