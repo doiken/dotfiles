@@ -49,6 +49,32 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = [[LANG=ja_JP.UTF-8 /usr/bin/pbpaste | perl -pe 's/!\[image\]\(([^)]+)\)/<img src="$1" width=600px>/g']],
       },
       {
+        text = "ChatGPT fukatsu PPT 1",
+        action = "text",
+        contents = ([[# 命令書:
+          | あなたは[プロの編集者]です。
+          | 以下の制約条件と入力文をもとに[最高の要約]を出力してください。
+          |
+          | # 制約条件:
+          | • 文字数は300文字ていど。
+          | • 小学生にもわかるように。
+          | •重要なキーワードを取り残さない。
+          | •文章を簡潔に。
+          |
+          | # 入力文：
+          | [入力文章]
+          |
+          | # 出力文：]]):gsub(" +|", ""),
+      },
+      {
+        text = "ChatGPT fukatsu PPT 2",
+        action = "text",
+        contents = ([[あなたはプロの XXX です。
+          | YYY で悩んでいます。私のかわりにZZZをしてください。
+          | このタスクで最高の結果をだすために追加の情報が必要な場合は質問をしてください。
+          |]]):gsub(" +|", ""),
+      },
+      {
         text = "other",
         action = "nest",
         contents = {

@@ -27,7 +27,9 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           return os.date(format, os.time()-24*60*60)
       end,
       collapse = '{{collapse(表示)\n<pre><code class="bash">\n@clipboard\n</code></pre>\n}}',
-      code = '<pre><code class="bash">\n@clipboard\n</code></pre>\n',
+      code = function ()
+        return hs.execute("LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
+      end,
       details = ([[<details>
           |<summary>詳細</summary>
           |
