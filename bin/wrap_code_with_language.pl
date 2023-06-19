@@ -16,6 +16,8 @@ sub guess_language {
         return 'bash';
     } elsif ($code =~ /^(val|case) /m || $code =~ / new /m ) {
         return 'scala';
+    } elsif ($code =~ /^[\-\+<>]\s+/m ) {
+        return 'diff';
     } elsif ($code =~ /^(def|if [a-zA-Z]) /m || $code =~ / for [^ ]+ in /m ) {
         return 'python';
     } else {
