@@ -74,6 +74,4 @@ docker_env=(
   done
 } &
 
-~/bin/pmset.sh 25 0
-
 wait

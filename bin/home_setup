@@ -26,5 +26,3 @@ CASK_EXECS=(
   done
 }
 
-# enter standby mode in 1 hour
-~/bin/pmset.sh 25 0
