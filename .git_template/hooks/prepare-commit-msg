@@ -25,8 +25,12 @@ COMMIT_SOURCE=$2
 SHA1=$3
 
 prefix=$(git branch | perl -ne '/\* ([0-9]+)-/ and print qq/[#$1] /')
-/usr/bin/perl -i.bak -spe 'my $p = "$prefix"; print "$prefix" if $prefix' -- -prefix="$prefix" "$COMMIT_MSG_FILE"
-# /usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
+# skip if ammend
+if grep -qE "^\[#\d+\]" "$COMMIT_MSG_FILE"; then
+    exit
+fi
+
+sed -i.bak "1s/^/${prefix}/" "$COMMIT_MSG_FILE"
 
 # case "$COMMIT_SOURCE,$SHA1" in
 #  ,|template,)

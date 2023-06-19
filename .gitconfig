@@ -4,6 +4,7 @@
 [core]
   editor = vim
 	excludesfile = ~/.gitignore_global
+	hooksPath = /Users/doi_kenji/.git_template/hooks
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
@@ -120,4 +121,4 @@
 	clean = git-lfs clean -- %f
 [init]
 	defaultBranch = main
-	templatedir = ~/.git_template
+
