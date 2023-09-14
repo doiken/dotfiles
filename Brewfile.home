@@ -1,0 +1,10 @@
+brew "ffmpeg"
+
+cask "anydesk"
+cask "keka"
+cask "the-unarchiver"
+cask "send-anywhere"
+cask "android-file-transfer"
+cask "a-better-finder-rename"
+cask "yacreader"
+
