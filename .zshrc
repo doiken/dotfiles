@@ -26,6 +26,10 @@ autoload bashcompinit && bashcompinit
 
 autoload -Uz compinit && compinit
 
+# tab x 2 で incremental search
+# 	ref. https://qiita.com/aosho235/items/ee178ece3d514026b7ae
+zstyle ':completion:*' menu select interactive
+
 which aws_completer>/dev/null && complete -C 'aws_completer' aws
 
 ##

@@ -31,33 +31,38 @@ function denv {
   export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
 }
 function xenv {
-	lang=$1
-	case "$lang" in
-		"ruby" | r*) eval "$(rbenv init -)" ;;
-		"node" | n*) eval "$(nodenv init -)" ;;
-		"perl" | pl* )
-			export PATH="$HOME/.plenv/bin:$PATH";
-			eval "$(plenv init -)" ;;
-		"python"| py* ) eval "$(pyenv init -)" ;;
-		"pipx"| pi* ) export PATH="$PATH:/Users/doi_kenji/.local/bin:/Users/doi_kenji/Library/Python/3.11/bin" ;;
-		* )
-      xenv ruby
-      xenv node
-      xenv perl
-      xenv python
-			;;
-	esac
+	while [[ $# -gt 0 ]] ;
+	do
+		lang="$1"
+    shift;
+		case "$lang" in
+			"ruby" | r*) eval "$(rbenv init -)" ;;
+			"node" | n*) eval "$(nodenv init -)" ;;
+			"perl" | pl* )
+				export PATH="$HOME/.plenv/bin:$PATH";
+				eval "$(plenv init -)" ;;
+			"python"| py* ) eval "$(pyenv init -)" ;;
+			"pipx"| pi* ) export PATH="$PATH:/Users/doi_kenji/.local/bin:/Users/doi_kenji/Library/Python/3.11/bin" ;;
+			* )
+				xenv ruby
+				xenv node
+				xenv perl
+				xenv python
+				xenv pipx
+				;;
+		esac
+   done
 }
 
 function mode_op {
   # トグルしたい prompt
-  p="\$ "
+  p='[%* doiken@%1~]\$ '
   if [ "$PROMPT_BACK" != "" ]; then
     export PROMPT=$PROMPT_BACK
     export PROMPT_BACK=""
   else
     export PROMPT_BACK=$PROMPT
-    export PROMPT=$p
+    export PROMPT="$p"
   fi
 }
 # see: https://zenn.dev/kumamoto/articles/d536ac6df8a544
@@ -117,6 +122,27 @@ export LANG=ja_JP.UTF-8
 ##
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export GOPATH=$HOME/.go
+
+##
+## for fzf
+##
+export FZF_DEFAULT_OPTS="--height 20% --layout=reverse --inline-info" # man fzf
+function history-fzf() {
+  local tac
+
+  if which tac > /dev/null; then
+    tac="tac"
+  else
+    tac="tail -r"
+  fi
+
+  BUFFER=$(history -n 1 | eval $tac | fzf --query "$LBUFFER")
+  CURSOR=$#BUFFER
+
+  zle reset-prompt
+}
+zle -N history-fzf
+bindkey '^r' history-fzf
 
 ##
 ## Docker Machine
