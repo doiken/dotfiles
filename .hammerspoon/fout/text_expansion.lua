@@ -5,10 +5,10 @@ spoon.SpoonInstall:andUse("TextExpansion", {
     keywords = {
       mtg = function ()
         local meetings = {
-          ["1"] = "- weekly朝会",
-          ["2"] = "- Science 定例\n- 分析基盤定例",
+          ["1"] = "- tech manager 定例",
+          ["2"] = "- Science 定例\n",
           ["4"] = "- core定例\n- tech weekly\n- log定例",
-          ["5"] = "- tech weekly",
+          ["5"] = "- Red PM MTG\n- tech weekly",
         }
         local week = hs.execute("date +%w"):gsub("%s+", "")
         return meetings[week]
@@ -26,7 +26,10 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           |]]):gsub(" +|", "")
           return os.date(format, os.time()-24*60*60)
       end,
-      collapse = '{{collapse(表示)\n<pre><code class="bash">\n@clipboard\n</code></pre>\n}}',
+      collapse = function ()
+        code = hs.execute("LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
+        return '{{collapse(表示)\n' .. code .. '\n}}'
+      end,
       code = function ()
         return hs.execute("LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
       end,
@@ -43,6 +46,22 @@ spoon.SpoonInstall:andUse("TextExpansion", {
       end,
       aligned = "\\begin{aligned}\n\\end{aligned}",
       table = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
+      tex = ([[katex で次の条件で式を書いて。
+        |- コピーできる
+        |- イコールの位置を aligned で揃える
+        |- 一つの式ごとに数式の改行 "\\" と文字の改行 "\n" を与える
+        |
+        |例:
+        |```
+        |\begin{aligned}
+        |x &= 1 \\
+        |
+        |y &= 2 \\
+        |\end{aligned}
+        |```
+        |
+        |@clipboard
+        |]]):gsub(" +|", ""),
       help = function ()
         local keyset={}
         local n=0
