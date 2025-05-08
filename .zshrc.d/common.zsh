@@ -126,7 +126,7 @@ export GOPATH=$HOME/.go
 ##
 ## for fzf
 ##
-export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --inline-info" # man fzf
+export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --inline-info --preview-window right:60%:wrap --preview='echo {}' --no-sort --exact" # man fzf
 function history-fzf() {
   local tac
 
