@@ -28,7 +28,6 @@ brew "tmux"
 brew "tree"
 brew "zplug"
 
-cask "biscuit"
 cask "deepl"
 cask "docker"
 cask "font-jetbrains-mono"
@@ -50,6 +49,7 @@ cask "pycharm-ce"
 cask "raycast"
 cask "skitch"
 cask "visual-studio-code"
+cask "wavebox"
 
 # 時間かかりすぎるため手動に切り替え
 # mas "CopyLess 2", id: 99384101
