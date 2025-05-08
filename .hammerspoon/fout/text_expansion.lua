@@ -6,13 +6,12 @@ spoon.SpoonInstall:andUse("TextExpansion", {
       mtg = function ()
         local meetings = {
           ["1"] = "- tech manager 定例",
-          ["2"] = "- Science 定例\n",
-          ["4"] = "- core定例\n- tech weekly\n- log定例",
+          ["4"] = "- Science 定例\n- core定例\n- tech weekly\n- log定例",
           ["5"] = "- Red PM MTG\n- tech weekly",
         }
         local week = hs.execute("date +%w"):gsub("%s+", "")
         return meetings[week]
-          and ('MTG\n\n' .. meetings[week] .. "\n\n@clipboard")
+          and (meetings[week] .. "\n\n@clipboard")
           or ""
       end,
       ymd = function ()
@@ -27,11 +26,17 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           return os.date(format, os.time()-24*60*60)
       end,
       collapse = function ()
-        code = hs.execute("LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
+        code = hs.execute("env LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
         return '{{collapse(表示)\n' .. code .. '\n}}'
       end,
+      values = ([[select * from (
+          |    values
+          |        (1, 'a'),
+          |        (2, 'b'),
+          |        (3, 'c')
+          |) as t (id, name)]]):gsub(" +|", ""),
       code = function ()
-        return hs.execute("LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
+        return hs.execute("env LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
       end,
       details = ([[<details>
           |<summary>詳細</summary>
@@ -45,7 +50,6 @@ spoon.SpoonInstall:andUse("TextExpansion", {
         return hs.execute(". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10")
       end,
       aligned = "\\begin{aligned}\n\\end{aligned}",
-      table = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
       tex = ([[katex で次の条件で式を書いて。
         |- コピーできる
         |- イコールの位置を aligned で揃える
@@ -62,16 +66,6 @@ spoon.SpoonInstall:andUse("TextExpansion", {
         |
         |@clipboard
         |]]):gsub(" +|", ""),
-      help = function ()
-        local keyset={}
-        local n=0
-
-        for k,v in pairs(spoon.TextExpansion.keywords) do
-          n=n+1
-          keyset[n]=spoon.TextExpansion.prefix .. k
-        end
-        return table.concat(keyset, "\n")
-      end,
     },
   },
   start = true

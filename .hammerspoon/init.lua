@@ -20,13 +20,15 @@ end
 --
 spoon.SpoonInstall:andUse("Snippet", {
   repo = 'doiken',
+  branch = 'lang_in_shell',
   hotkeys = { toggle_snippet = { { "cmd", "shift" }, "b" } },
   config = {
+    lang_in_shell = "ja_JP.UTF-8",
     snippets = {
       {
         text = "join lines",
         action = "shell",
-        contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/$1 /g'",
+        contents = "/usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/$1 /g'",
       },
       {
         text = "redash iframe",
@@ -46,7 +48,7 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "image md to html",
         action = "shell",
-        contents = [[LANG=ja_JP.UTF-8 /usr/bin/pbpaste | perl -pe 's/!\[image\]\(([^)]+)\)/<img src="$1" width=600px>/g']],
+        contents = [[/usr/bin/pbpaste | perl -pe 's/!\[image\]\(([^)]+)\)/<img src="$1" width=600px>/g']],
       },
       {
         text = "ChatGPT fukatsu PPT 1",
@@ -90,12 +92,12 @@ spoon.SpoonInstall:andUse("Snippet", {
           {
             text = "space2table textile",
             action = "shell",
-            contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
+            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
           },
           {
             text = "space2table markdown",
             action = "shell",
-            contents = "LANG=ja_JP.UTF-8 /usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
+            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
           },
         },
       },
@@ -220,12 +222,8 @@ end
 --
 -- require
 --
-Keymaps = require("keymaps")
 DisableEisuuKana = require("DisableCodes")
 DisableEisuuKana.start()
-
--- Monitor = require("monitor")
--- Monitor.start()
 
 -- for cli use
 require("hs.ipc")
