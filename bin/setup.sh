@@ -61,7 +61,7 @@ wait
 ##
 ## Configure
 ##
-SCRIPTS=( ~/bin/key_repeat.sh )
+SCRIPTS=( bin/defaults.pl )
 for script in ${SCRIPTS[@]}; do
     [ -x $script ] && $script
 done
