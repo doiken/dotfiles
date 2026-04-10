@@ -20,6 +20,8 @@ tempCodeRunnerFile.*
 
 # python
 .venv
+__pycache__/
+*.pyc
 
 # spark
 derby.log
@@ -27,3 +29,7 @@ target
 
 # docker
 **/docker-compose.override.yml
+
+# claude
+worktrees
+
