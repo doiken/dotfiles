@@ -1,10 +1,19 @@
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 spoon.SpoonInstall.repos.doiken = {
-   url = "https://github.com/doiken/Spoons",
-   desc = "doiken's spoon repository",
-   branch = "master",
+  url = "https://github.com/doiken/Spoons",
+  desc = "doiken's spoon repository",
+  branch = "master",
 }
+-- spoon.SpoonInstall.repos.doiken2 = {
+--   url = "https://github.com/doiken/Spoons-1",
+--   desc = "doiken's spoon repository2",
+--   branch = "fix/brewinfo-configurable-brew-path",
+-- }
+-- spoon.SpoonInstall:andUse("BrewInfo", {
+--   repo = 'doiken2',
+--   config = { brew_path = '/opt/homebrew/bin/brew' },
+-- })
 
 -- Load lua files in spoon directory(not version controled)
 -- for customization purpose
@@ -127,6 +136,11 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
   config = {
     acceptOnly = {
       -- app name = { idx1, ... }
+      ["Warp"] = {
+        {{'ctrl'}, ']'},
+        {{'ctrl'}, 'n'},
+        {{'ctrl'}, 'p'},
+      },
       ["iTerm2"] = {
         {{'ctrl'}, ']'},
         {{'ctrl'}, 'n'},
@@ -162,12 +176,6 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
       },
       ["Code"] = {
         {{'ctrl'}, ']'},
-        {{'ctrl'}, 'c'},
-        {{'ctrl'}, 'n'},
-        {{'ctrl'}, 'p'},
-        {{'ctrl'}, 'm'},
-        {{'ctrl'}, 'h'},
-        {{'ctrl'}, 'd'},
       },
     }
   }
@@ -227,3 +235,5 @@ DisableEisuuKana.start()
 
 -- for cli use
 require("hs.ipc")
+
+

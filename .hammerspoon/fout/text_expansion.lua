@@ -26,7 +26,7 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           return os.date(format, os.time()-24*60*60)
       end,
       collapse = function ()
-        code = hs.execute("env LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
+        local code = hs.execute("env LANG=ja_JP.UTF-8 /usr/bin/pbpaste | ~/bin/wrap_code_with_language.pl")
         return '{{collapse(表示)\n' .. code .. '\n}}'
       end,
       values = ([[select * from (
@@ -67,6 +67,7 @@ spoon.SpoonInstall:andUse("TextExpansion", {
         |@clipboard
         |]]):gsub(" +|", ""),
     },
+    limitCandidate = 20,
   },
-  start = true
+  start = true,
 })
