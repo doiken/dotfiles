@@ -74,4 +74,15 @@ docker_env=(
   done
 } &
 
+##
+## claude
+##
+# plugin (fout_sandbox/claude) は settings.json の extraKnownMarketplaces/enabledPlugins 宣言で自動導入されるためここでは扱わない
+# Redmine MCP。API キーは Keychain 由来の $REDMINE_API_KEY (.zshrc.d/fout.zsh) を実行時展開。
+# 新マシンでは初回のみ: security add-generic-password -s redmine-api-key -a $USER -w '<APIキー>'
+{
+  claude mcp list 2>/dev/null | grep -q 'redmine-mcp-api' \
+    || claude mcp add --scope user --transport http redmine-mcp-api http://localhost:8023/v2/mcp --header 'X-Redmine-API-Key: ${REDMINE_API_KEY}'
+} &
+
 wait

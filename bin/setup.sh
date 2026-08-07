@@ -31,6 +31,7 @@ DOT_FILES=(
   .tmpl
   .editrc
   .git_template
+  .claude
   $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 

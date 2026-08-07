@@ -1,0 +1,164 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(~/Repositories/**)",
+      "Read(/**)",
+      "Read(//tmp/**)",
+      "Read(//var/tmp/**)",
+      "Read(~/.claude/**)",
+      "Read(~/Downloads/**)",
+      "Edit(/**)",
+      "Edit(//tmp/**)",
+      "Edit(//var/tmp/**)",
+      "Edit(~/.claude/**)",
+      "Search(~/Repositories/**)",
+      "Search(/**)",
+      "Search(//tmp/**)",
+      "Search(//var/tmp/**)",
+      "Search(~/.claude/**)",
+      "Search(~/Downloads/**)",
+      "Grep(~/Repositories/**)",
+      "Grep(//tmp/**)",
+      "Grep(//var/tmp/**)",
+      "Grep(~/.claude/**)",
+      "Grep(~/Downloads/**)",
+      "WebFetch",
+      "WebSearch",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git clone *)",
+      "Bash(git grep *)",
+      "Bash(git commit *)",
+      "Bash(git worktree *)",
+      "Bash(git -C * checkout *)",
+      "Bash(git -C * commit *)",
+      "Bash(git -C * diff *)",
+      "Bash(git -C * diff)",
+      "Bash(git -C * log *)",
+      "Bash(git -C * log *)",
+      "Bash(git -C * add *)",
+      "Bash(git -C * worktree *)",
+      "Bash(git -C * status *)",
+      "Bash(git -C * status *)",
+      "Bash(git -C * grep * )",
+      "Bash(git -C * show * )",
+      "Bash(git -C * rev-list * )",
+      "Bash(gh search *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh repo view *)",
+      "Bash(gh api *)",
+      "Bash(gh issue list *)",
+      "Bash(gh issue view *)",
+      "Bash(gh label list *)",
+      "Bash(/var/tmp/osc/*/.venv/bin/pip install *)",
+      "Bash(/var/tmp/osc/*/.venv/bin/python *)",
+      "Bash(uv pip install *)",
+      "Bash(uv venv *)",
+      "Bash(find *)",
+      "Bash(mkdir *)",
+      "Bash(ln *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(sleep *)",
+      "Bash(pwd *)",
+      "Bash(cd *)",
+      "Bash(grep *)",
+      "Bash(perl -wc:*)",
+      "Bash(pbcopy *)",
+      "Bash(pbpaste *)",
+      "Bash(carton exec perl -wc:*)",
+      "Bash(jest:*)",
+      "Bash(tsc:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(npm run test:*)",
+      "Bash(pdftoppm *)",
+      "Bash(open *)",
+      "mcp__redmine-mcp__*",
+      "mcp__redmine-mcp-api__*"
+    ],
+    "deny": [
+      "Bash(find *\\;)",
+      "Bash(sudo:*)",
+      "Bash(rm *)",
+      "Bash(rm -rf:*)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git rebase *)",
+      "Bash(git -C * push *)",
+      "Bash(git -C * reset *)",
+      "Bash(git -C * rebase *)",
+      "Bash(git -C * ls-files *)",
+      "Bash(gh api *POST*)",
+      "Read(.env.*)",
+      "Read(.envrc)",
+      "Read(id_rsa)",
+      "Edit(.env*)",
+      "Edit(**/secrets/**)",
+      "Bash(mysql:*)"
+    ]
+  },
+  "model": "fable",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"cwd\": \"'\"$(pwd)\"'\", \"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"cwd\": \"'\"$(pwd)\"'\", \"notification_type\": \"error\"}' | ~/.claude/scripts/notify.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/notify.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/scripts/statusline.sh"
+  },
+  "enabledPlugins": {
+    "feature-dev@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "fout@fout-sandbox": true
+  },
+  "extraKnownMarketplaces": {
+    "fout-sandbox": {
+      "source": {
+        "source": "directory",
+        "path": "~/Repositories/fout_sandbox/claude"
+      }
+    }
+  },
+  "language": "Japanese",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}

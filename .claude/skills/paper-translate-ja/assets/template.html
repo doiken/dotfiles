@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{PAPER_TITLE}} — 日本語解説</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --panel: #ffffff;
+    --border: #d8d4cc;
+    --accent: #2b5876;
+    --text: #222;
+    --muted: #666;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, "Hiragino Sans", "Yu Gothic Medium", sans-serif; line-height: 1.7; }
+  header { padding: 24px 32px; background: var(--accent); color: #fff; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header .meta { font-size: 13px; opacity: 0.85; }
+  header .notice { margin-top: 10px; padding: 8px 12px; background: rgba(255,255,255,0.12); border-radius: 4px; font-size: 12px; line-height: 1.5; }
+  nav { padding: 16px 32px; background: #ecebe3; border-bottom: 1px solid var(--border); font-size: 13px; }
+  nav a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+  nav a:hover { text-decoration: underline; }
+  main { padding: 24px 32px; }
+  .page {
+    display: grid;
+    grid-template-columns: minmax(480px, 1fr) 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    scroll-margin-top: 16px;
+  }
+  .page-img-wrap {
+    position: sticky;
+    top: 12px;
+    align-self: start;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+    border: 1px solid var(--border);
+    background: #f1efe8;
+  }
+  .page-img-wrap img { width: 100%; height: auto; display: block; }
+  .page-text { font-size: 14px; }
+  .page-num { color: var(--muted); font-size: 12px; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .page-text h2 { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 4px; font-size: 18px; margin: 0 0 12px; }
+  .page-text h3 { color: var(--accent); font-size: 15px; margin: 18px 0 6px; }
+  .page-text h4 { font-size: 14px; margin: 14px 0 4px; color: #444; }
+  .page-text p { margin: 6px 0 12px; }
+  .page-text ul, .page-text ol { margin: 6px 0 12px; padding-left: 22px; }
+  .page-text li { margin-bottom: 4px; }
+  .page-text .quote { background: #f5f3ec; border-left: 3px solid var(--accent); padding: 8px 12px; margin: 8px 0; font-size: 13px; color: #333; }
+  .page-text .term { background: #f5f3ec; padding: 1px 4px; border-radius: 3px; font-family: ui-monospace, "SF Mono", monospace; font-size: 12px; }
+  .page-text .note { color: var(--muted); font-size: 12px; font-style: italic; }
+  .page-text .caption { background: #fffbe7; border-left: 3px solid #c9a227; padding: 8px 12px; margin: 8px 0; font-size: 13px; }
+  .page-text .caption-label { font-weight: bold; color: #8c6d10; display: block; margin-bottom: 2px; }
+  .image-only { grid-template-columns: 1fr; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .image-only .page-img-wrap { position: static; max-height: none; }
+  .img-note { margin: 0 32px 16px; color: var(--muted); font-size: 13px; }
+  footer { padding: 18px 32px; color: var(--muted); font-size: 12px; text-align: center; border-top: 1px solid var(--border); margin-top: 40px; }
+  code { font-family: ui-monospace, "SF Mono", monospace; font-size: 12px; background: #f5f3ec; padding: 1px 4px; border-radius: 3px; }
+  .future-direction { background: #eef4f9; border-left: 3px solid var(--accent); padding: 8px 12px; margin: 10px 0; font-size: 13px; }
+  .future-direction strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{PAPER_TITLE}} — 日本語解説</h1>
+  <div class="meta">{{PAPER_META}}</div>
+  <div class="notice">本ページは個人学習目的での理解補助として、原文の各段落を要約・解説したものです。定義・図表キャプション・主要な主張・数値結果のみ忠実に翻訳しています。原文の全体像は左側のPDFページ画像で確認してください。</div>
+</header>
+<nav>
+  {{NAV_LINKS}}
+</nav>
+<main>
+
+{{PAGE_SECTIONS}}
+
+</main>
+<footer>
+  {{PAPER_TITLE}} — 日本語解説（個人学習目的）。原文の引用番号 [N] はそのまま残してあります。<br>
+  生成: {{GENERATED_DATE}}
+</footer>
+</body>
+</html>
+
+<!--
+
+=== ページセクションのテンプレート ===
+
+▼ 本文ページ (テキスト中心) のテンプレート:
+<section class="page" id="pN">
+  <div class="page-img-wrap"><img src="pages/p-NN.png" alt="Page N"></div>
+  <div class="page-text">
+    <div class="page-num">PAGE N</div>
+    <h2>章タイトル — 訳</h2>
+    <p>段落要約...</p>
+
+    <h3>定義・主張ブロック (忠実翻訳の場合)</h3>
+    <div class="quote">
+      原文の定義をほぼそのまま日本語化した内容。
+    </div>
+
+    <div class="caption">
+      <span class="caption-label">Figure N: タイトル翻訳</span>
+      キャプションの翻訳。
+    </div>
+
+    <div class="future-direction">
+      <strong>Future Direction X: タイトル</strong> — 内容
+    </div>
+  </div>
+</section>
+
+▼ 画像のみのページ (参考文献・図のみ) のテンプレート:
+<section class="page image-only" id="pN">
+  <div class="page-img-wrap"><img src="pages/p-NN.png" alt="Page N"></div>
+</section>
+
+▼ 画像のみページの後に補足キャプションを付ける場合:
+<div class="img-note">
+  <strong>Fig. X (p.N):</strong> キャプションの翻訳。
+</div>
+
+▼ 専門用語のインライン表記:
+<span class="term">X = {x_1, ..., x_n} ∈ R^{n×d}</span>
+
+-->

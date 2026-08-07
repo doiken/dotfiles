@@ -1,1 +1,9 @@
 .hammerspoon/Spoons/*
+
+# claude: 許可リスト方式。明示したものだけ track し、runtime データ・認証情報は構造的に除外する
+/.claude/*
+!/.claude/CLAUDE.md
+!/.claude/settings.json
+!/.claude/skills/
+!/.claude/agents/
+!/.claude/scripts/

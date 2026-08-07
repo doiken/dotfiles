@@ -31,6 +31,8 @@ function redash_proxy () {
 ##
 export FOUT_HOME=/fout/fout/
 export PATH="${HOMEBREW_PREFIX}/opt/mysql-client@8.0/bin:$PATH"
+export REDMINE_API_KEY=$(security find-generic-password -s redmine-api-key -w)
+
 # export GOOGLE_CLOUD_PROJECT=fout-dsp
 funciton bsh () {
   ssh-add ~/.ssh/id_rsa_bastion
