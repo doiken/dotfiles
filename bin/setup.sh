@@ -9,7 +9,7 @@ which git >/dev/null || brew install git
 ##
 ## Get This Repository
 ##
-[ ! -d $HOME/dotfiles ] && git clone git@github.com:doiken/dotfiles.git $HOME/dotfiles
+[ ! -d $HOME/dotfiles ] && git clone https://github.com/doiken/dotfiles.git $HOME/dotfiles
 
 ##
 ## Sym Link
