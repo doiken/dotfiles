@@ -161,9 +161,6 @@ spoon.SpoonInstall:andUse("SwitchableHotkey", {
         {{'ctrl'}, 'c'},
         {{'ctrl'}, 'n'},
         {{'ctrl'}, 'p'},
-        {{'ctrl'}, 'm'},
-        {{'ctrl'}, 'd'},
-        {{'ctrl'}, 'h'},
       },
       ["PyCharm"] = {
         {{'ctrl'}, ']'},
