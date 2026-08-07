@@ -22,7 +22,8 @@ my %app_keys = (
     #   2. 設定値を調べる       defaults read DOMAIN_NAME NSUserKeyEquivalents
     #   3. 値を貼り付ける
     'com.google.Chrome' => '{
-        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@$,";
+        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@~,";
+        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@~.";
         "\\U30bf\\U30d6\\U3092\\U8907\\U88fd" = "@k";
         "\\U524d\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~h";
         "\\U6b21\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~l";
@@ -61,6 +62,8 @@ print "defaults read com.apple.dock\n" . `defaults read com.apple.dock | grep -E
 `defaults write com.apple.Finder "AppleShowAllFiles" -bool "true"`;
 ## パスバーを表示
 `defaults write com.apple.Finder ShowPathbar -bool "true"`;
+## ステータスバーを表示
+`defaults write com.apple.Finder ShowStatusBar -bool "true"`;
 ## ゴミ箱を空にするときの警告無効化
 `defaults write com.apple.Finder WarnOnEmptyTrash -bool "false"`;
 print "defaults com.apple.Finder\n" . `defaults read com.apple.Finder | grep -E 'AppleShowAllFiles|ShowPathbar|WarnOnEmptyTrash'` . "\n";
@@ -77,3 +80,8 @@ print "defaults com.apple.AppleMultitouchTrackpad\n" . `defaults read com.apple.
 
 # restart modified apps by your self to make keys enabled
 `killall cfprefsd`;
+
+# 充電時のチャイムを切る
+`defaults write com.apple.PowerChime ChimeOnNoHardware -bool true;killall PowerChime`;
+print "defaults com.apple.PowerChime\n" . `defaults read com.apple.PowerChime | grep -E 'ChimeOnNoHardware'` . "\n";
+
