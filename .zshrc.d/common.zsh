@@ -2,6 +2,7 @@
 # Aliases
 #
 alias ll='ls -l'
+alias la='ls -CFal'
 
 autoload zmv
 alias zmv="noglob zmv"
@@ -13,9 +14,17 @@ alias v=vagrant
 alias vb='VBoxManage'
 alias d='docker'
 alias dm='docker-machine'
-alias dc='docker-compose'
+alias dc='COMPOSE_BAKE=true docker-compose'
 alias git=hub
 alias ctags='/usr/local/bin/ctags'
+
+function cr { claude --resume "$@"; }
+function cf { claude --resume --fork-session "$@"; }
+
+function tc  { tmux new-session claude "$@"; }
+function tcr { tmux new-session claude --resume "$@"; }
+function tcf { tmux new-session claude --resume --fork-session "$@"; }
+
 if [[ -x `which colordiff` ]]; then
   alias diff='colordiff'
 fi

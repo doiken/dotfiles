@@ -5,7 +5,7 @@ function _f_step () {
   # 社内サーバなら SSH_STEP_SERVER を更新
   first_arg=$(printf "%s\n" "$@" | grep -E -m 1 -v '^-')
   if [[ "$first_arg" == fjord* || "$first_arg" == ukigumo* ]]; then
-    echo xp0_global
+    echo xp
   else
 		echo gw
   fi
@@ -23,11 +23,15 @@ function fcp () {
   step_server=$(_f_step "$@")
   rsync -av -e "ssh -oClearAllForwardings=yes ${step_server} sudo -u nn -i ssh" $from $to
 }
+function redash_proxy () {
+  ssh -tL 8080:localhost:8080 gw "sudo -u nn ssh -NL 8080:docker2.jp.fout.internal:5000 redash.log"
+}
 ##
 ## Env
 ##
 export FOUT_HOME=/fout/fout/
 export PATH="${HOMEBREW_PREFIX}/opt/mysql-client@8.0/bin:$PATH"
+# export GOOGLE_CLOUD_PROJECT=fout-dsp
 funciton bsh () {
   ssh-add ~/.ssh/id_rsa_bastion
   ssh -At gw "ssh bastion $@"
