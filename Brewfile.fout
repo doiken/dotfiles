@@ -6,6 +6,7 @@ cask "adoptopenjdk8"
 brew "amazon-ecs-cli"
 brew "awscli"
 brew "mysql-client"
+brew "uv"
 
 # cask "mathpix-snipping-tool"
 
