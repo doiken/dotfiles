@@ -20,7 +20,7 @@
 #   permission_prompt : ツール実行の許可待ち (サウンド: Ping)
 #   idle_prompt       : ユーザー入力待ち     (サウンド: Purr)
 #   stop              : タスク完了           (サウンド: Glass)
-#   error             : エラーで停止         (サウンド: Basso) ※ StopFailure フック
+#   error             : エラーで停止         (サウンド: Ping) ※ StopFailure フック
 #
 # 設定例 (~/.claude/settings.json):
 #   {
@@ -39,54 +39,26 @@ cwd=$(echo "$input" | jq -r '.cwd')
 project=$(basename "$cwd")
 notification_type=$(echo "$input" | jq -r '.notification_type')
 
-# ターミナルアプリの Bundle ID を自動検出
-get_terminal_bundle_id() {
-  # __CFBundleIdentifier が設定されていれば直接使用（最も確実）
-  if [[ -n "${__CFBundleIdentifier}" ]]; then
-    echo "${__CFBundleIdentifier}"
-    return
-  fi
-
-  # TERM_PROGRAM 環境変数から検出（フォールバック）
-  case "${TERM_PROGRAM}" in
-    "Apple_Terminal") echo "com.apple.Terminal" ;;
-    "iTerm.app")      echo "com.googlecode.iterm2" ;;
-    "ghostty")        echo "com.mitchellh.ghostty" ;;
-    "WarpTerminal")   echo "dev.warp.Warp-Stable" ;;
-    *)
-      # プロセスツリーから検出
-      local pid parent comm
-      pid=$$
-      while [[ "${pid}" -ne 1 ]] 2>/dev/null; do
-        parent=$(ps -p "${pid}" -o ppid= 2>/dev/null | tr -d ' ') || break
-        [[ -z "${parent}" ]] && break
-        comm=$(ps -p "${parent}" -o comm= 2>/dev/null)
-        case "${comm}" in
-          *Terminal*)  echo "com.apple.Terminal"; return ;;
-          *iTerm*)     echo "com.googlecode.iterm2"; return ;;
-          *Cursor*)    echo "com.todesktop.230313mzl4w4u92"; return ;;
-          *Code*)      echo "com.microsoft.VSCode"; return ;;
-          *warp*)      echo "dev.warp.Warp-Stable"; return ;;
-          *)           ;;
-        esac
-        pid="${parent}"
-      done
-      echo ""
-      ;;
-  esac
-}
-
-BUNDLE_ID=$(get_terminal_bundle_id)
+# クリック時にフォーカスする端末アプリの Bundle ID。
+#
+# NOTE tmux 利用時は ~/.tmux.conf の update-environment への登録が必要。この変数は起動時に
+#   設定されて以後は子プロセスへコピーされるだけなので、デーモンである tmux サーバ配下では
+#   起動元アプリの値のまま固定される（VS Code から起動したサーバに iTerm2 で繋いでも
+#   VS Code が前面化する）。登録すれば new-session / attach のたびに session environment が
+#   更新され、そこから作られるペインが正しい値を受け取る。tmux 外なら登録は不要。
+#
+# NOTE 効くのは登録後に作られたペインのみ。実行中プロセスの環境変数は書き換えられない。
+BUNDLE_ID="${__CFBundleIdentifier}"
 
 send_notification() {
   local message="$1"
   local sound="$2"
+  local args=(-title "Claude Code" -subtitle "${project}" -message "${message}")
 
-  if [[ -n "${BUNDLE_ID}" ]]; then
-    terminal-notifier -title "Claude Code" -subtitle "${project}" -message "${message}" -sound "${sound}" -activate "${BUNDLE_ID}"
-  else
-    terminal-notifier -title "Claude Code" -subtitle "${project}" -message "${message}" -sound "${sound}"
-  fi
+  [[ -n "${sound}" ]] && args+=(-sound "${sound}")
+  [[ -n "${BUNDLE_ID}" ]] && args+=(-activate "${BUNDLE_ID}")
+
+  terminal-notifier "${args[@]}"
 }
 
 case "${notification_type}" in
