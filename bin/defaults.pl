@@ -8,12 +8,25 @@
 #   modify mac settings by defaults
 use strict;
 use warnings;
+# システム設定 > キーボード > キーボードショートカット > アプリケーションのショートカット
+# に一覧表示させるための登録。ショートカット自体は NSUserKeyEquivalents で効くので、
+# ここが失敗しても動作には影響しない。
+# NOTE: macOS Ventura 以降 com.apple.universalaccess は TCC 保護されており、
+#       ターミナルにフルディスクアクセスが無いと read/write ともに失敗する。
 sub add_custom_menu_entry {
     my ($app) = @_;
     die 'usage: addCustomMenuEntryIfNeeded com.company.appname' unless $app;
 
-    my $grep =`defaults read com.apple.universalaccess "com.apple.custommenu.apps" | grep ${app}`;
-    `defaults write com.apple.universalaccess "com.apple.custommenu.apps" -array-add "${app}"` unless $grep;
+    my $current = `defaults read com.apple.universalaccess "com.apple.custommenu.apps" 2>/dev/null`;
+    return if $current =~ /\Q${app}\E/;
+
+    `defaults write com.apple.universalaccess "com.apple.custommenu.apps" -array-add "${app}" 2>/dev/null`;
+    my $after = `defaults read com.apple.universalaccess "com.apple.custommenu.apps" 2>/dev/null`;
+    unless ($after =~ /\Q${app}\E/) {
+        print "  WARN: ${app} を com.apple.custommenu.apps に登録できませんでした。\n";
+        print "        ターミナルに「フルディスクアクセス」を許可すると登録できます。\n";
+        print "        Chrome そのものには反映されており、システムショートカットに表示されないだけで動作自体には影響しません。\n";
+    }
 }
 
 my %app_keys = (
@@ -21,13 +34,17 @@ my %app_keys = (
     #   1. 該当ドメインを調べる defaults domains | sed -e 's/,/\n/g' | grep -i APP_NAME
     #   2. 設定値を調べる       defaults read DOMAIN_NAME NSUserKeyEquivalents
     #   3. 値を貼り付ける
+    # 修飾キー: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
     'com.google.Chrome' => '{
-        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@~,";
-        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@~.";
-        "\\U30bf\\U30d6\\U3092\\U8907\\U88fd" = "@k";
-        "\\U524d\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~h";
-        "\\U6b21\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~l";
-        "Google Chrome \\U3092\\U96a0\\U3059" = "@~^$h";
+        "\\U30bf\\U30d6\\U3092\\U56fa\\U5b9a" = "@~.";                          /* タブを固定           Cmd+Opt+.   */
+        "\\U30bf\\U30d6\\U3092\\U8907\\U88fd" = "@k";                           /* タブを複製           Cmd+K       */
+        "\\U524d\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~h";            /* 前のタブを選択       Cmd+Opt+H   */
+        "\\U6b21\\U306e\\U30bf\\U30d6\\U3092\\U9078\\U629e" = "@~l";            /* 次のタブを選択       Cmd+Opt+L   */
+        "\\U30c0\\U30a6\\U30f3\\U30ed\\U30fc\\U30c9" = "@~$l";                  /* ダウンロード         Cmd+Opt+Shift+L
+                                                                                   ダウンロードの既定は Cmd+Opt+L で
+                                                                                   「次のタブを選択」と衝突する。
+                                                                                   明示的にずらして衝突を解消する。 */
+        "Google Chrome \\U3092\\U96a0\\U3059" = "@~^$h";                        /* Google Chrome を隠す Cmd+Opt+Ctrl+Shift+H */
     }',
     'com.jetbrains.intellij.ce' => '{
         "Hide IntelliJ IDEA" = "@~^h";

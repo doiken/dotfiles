@@ -62,7 +62,7 @@ wait
 ##
 ## Configure
 ##
-SCRIPTS=( bin/defaults.pl )
+SCRIPTS=( $HOME/dotfiles/bin/defaults.pl )
 for script in ${SCRIPTS[@]}; do
     [ -x $script ] && $script
 done
