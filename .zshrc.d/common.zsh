@@ -18,6 +18,7 @@ alias dc='COMPOSE_BAKE=true docker-compose'
 alias git=hub
 alias ctags='/usr/local/bin/ctags'
 
+function cl { claude "$@"; }
 function cr { claude --resume "$@"; }
 function cf { claude --resume --fork-session "$@"; }
 
