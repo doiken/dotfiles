@@ -5,6 +5,13 @@ MODEL_DISPLAY=$(echo "$input" | jq -r '.model.display_name')
 CURRENT_DIR=$(echo "$input" | jq -r '.workspace.current_dir')
 TRANSCRIPT_PATH=$(echo "$input" | jq -r '.transcript_path // empty')
 
+# セッションタイトル (20文字を超える場合は … で切り詰め)
+SESSION_NAME=$(echo "$input" | jq -r '(.session_name // "") | if length > 20 then .[0:20] + "…" else . end')
+TITLE_SEG=""
+if [ -n "$SESSION_NAME" ]; then
+  TITLE_SEG=" | 📝 ${SESSION_NAME}"
+fi
+
 # このセッションでの compaction 回数 (transcript に isCompactSummary:true の行が残る)
 COMPACT_SEG=""
 if [ -n "$TRANSCRIPT_PATH" ] && [ -f "$TRANSCRIPT_PATH" ]; then
@@ -89,4 +96,4 @@ else
 fi
 
 # echo "🤖 ${MODEL_DISPLAY} | 📁 ${CURRENT_DIR##*/}${GIT_BRANCH} | 💰️ ${TOKEN_COUNT}"
-echo "🤖 ${MODEL_DISPLAY} | 📁 ${CURRENT_DIR##*/} | 💰️ ${TOKEN_COUNT}${COMPACT_SEG}${RATE_SEG}"
+echo "🤖 ${MODEL_DISPLAY} | 📁 ${CURRENT_DIR##*/} | 💰️ ${TOKEN_COUNT}${COMPACT_SEG}${RATE_SEG}${TITLE_SEG}"
