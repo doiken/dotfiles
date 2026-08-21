@@ -155,10 +155,12 @@
     }
   },
   "language": "Japanese",
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
+  "theme": "custom:doienv",
   "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }
