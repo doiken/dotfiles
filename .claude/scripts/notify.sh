@@ -13,8 +13,9 @@
 #
 # 入力 (stdin):
 #   JSON 形式。以下のフィールドを参照する:
-#     - cwd              : カレントディレクトリ (通知のサブタイトルに使用)
-#     - notification_type : 通知種別 ("permission_prompt" | "idle_prompt" | "stop")
+#     - cwd               : カレントディレクトリ (通知のサブタイトルに使用)
+#     - notification_type : 通知種別 ("permission_prompt" | "idle_prompt" | "stop" | "error")
+#     - transcript_path   : セッションの transcript (stop 時のサブエージェント実行中判定に使用)
 #
 # 通知種別:
 #   permission_prompt : ツール実行の許可待ち (サウンド: Ping)
@@ -27,15 +28,25 @@
 #     "hooks": {
 #       "Notification": [
 #         { "matcher": "", "hooks": [{ "type": "command", "command": "~/.claude/scripts/notify.sh" }] }
+#       ],
+#       "Stop": [
+#         { "matcher": "", "hooks": [{ "type": "command", "command": "jq -c '. + {\"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh" }] }
 #       ]
 #     }
 #   }
+#   Stop / StopFailure はフックの stdin JSON (transcript_path 含む) をそのまま渡すこと。
+#
+# NOTE 通知を出しっぱなし (クリックするまで消えない) にするには、システム設定 > 通知 >
+#   terminal-notifier の通知スタイルを「警告」に変更する。terminal-notifier 単体では
+#   通知ごとにスタイルを変えられない。
+#
 # NOTE VSCode では PermissionRequest が発火しない
 # https://github.com/anthropics/claude-code/issues/11156
 #
 
 input=$(cat)
-cwd=$(echo "$input" | jq -r '.cwd')
+cwd=$(echo "$input" | jq -r '.cwd // empty')
+[[ -z "${cwd}" ]] && cwd=$PWD
 project=$(basename "$cwd")
 notification_type=$(echo "$input" | jq -r '.notification_type')
 
@@ -61,6 +72,50 @@ send_notification() {
   terminal-notifier "${args[@]}"
 }
 
+# サブエージェント実行中の Stop かどうかを判定する。
+#
+# サブエージェントに投げただけのターン終了は「タスク完了」ではない
+# (ユーザーのアクションが不要なため通知しない)。
+#
+# 判定方法: transcript 上で、最後のユーザーメッセージ以降に
+#   - 起動されたサブエージェント: tool_result に "Async agent launched" を含む tool_use_id
+#   - 完了通知: queue-operation の <task-notification> 内の <tool-use-id>
+#   の差分が残っていれば実行中とみなす。
+#
+# 「最後のユーザーメッセージ以降」に限定するのは、中断等で完了通知が来ないまま
+# 残ったエージェントが以後の stop 通知を永久に抑制するのを防ぐため。
+# 判定に失敗した場合は通知する側に倒れる。
+has_running_subagents() {
+  local transcript="$1"
+  [[ -f "${transcript}" ]] || return 1
+
+  local pending
+  pending=$(jq -n '
+    reduce inputs as $e (
+      {launched: [], notified: []};
+      if $e.type == "user"
+         and ($e.isMeta != true)
+         and (($e.message.content | type) == "string"
+              or ([$e.message.content[]? | select(.type == "tool_result")] | length) == 0)
+      then {launched: [], notified: []}
+      else
+        .launched += [$e.message.content[]?
+                      | select(.type == "tool_result")
+                      | select((.content | tostring) | contains("Async agent launched"))
+                      | .tool_use_id]
+        | .notified += [$e
+                        | select(.type == "queue-operation")
+                        | .content // ""
+                        | scan("<tool-use-id>([^<]+)</tool-use-id>")
+                        | .[0]]
+      end
+    )
+    | .launched - .notified | length
+  ' "${transcript}" 2>/dev/null)
+
+  [[ "${pending}" =~ ^[0-9]+$ ]] && (( pending > 0 ))
+}
+
 case "${notification_type}" in
   "permission_prompt")
     send_notification "許可待ち" "Ping"
@@ -69,6 +124,10 @@ case "${notification_type}" in
     # send_notification "入力待ち" "Purr"
     ;;
   "stop")
+    transcript=$(echo "$input" | jq -r '.transcript_path // empty')
+    if has_running_subagents "${transcript}"; then
+      exit 0
+    fi
     send_notification "タスク完了" "Glass"
     ;;
   "error")

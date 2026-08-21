@@ -109,7 +109,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"cwd\": \"'\"$(pwd)\"'\", \"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh"
+            "command": "jq -c '. + {\"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh"
           }
         ]
       }
@@ -120,7 +120,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"cwd\": \"'\"$(pwd)\"'\", \"notification_type\": \"error\"}' | ~/.claude/scripts/notify.sh"
+            "command": "jq -c '. + {\"notification_type\": \"error\"}' | ~/.claude/scripts/notify.sh"
           }
         ]
       }
