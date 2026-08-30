@@ -62,6 +62,7 @@
       "Bash(ln *)",
       "Bash(ls *)",
       "Bash(cat *)",
+      "Bash(jq *)",
       "Bash(sleep *)",
       "Bash(pwd *)",
       "Bash(cd *)",
