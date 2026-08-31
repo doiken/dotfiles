@@ -10,3 +10,5 @@ brew "uv"
 
 # cask "mathpix-snipping-tool"
 
+# Automatically restart SSH sessions and tunnels
+brew "autossh"
