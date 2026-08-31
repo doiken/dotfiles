@@ -1,0 +1,9 @@
+#compdef claude_session cs
+
+local -a cmds
+cmds=(
+  'save:アクティブなセッション一覧を保存する(再起動前に実行)'
+  'list:保存済みセッションを cwd に関係なく一覧表示'
+  'resume:fzf で1つ選び、tmux 上で claude --resume する'
+)
+(( CURRENT == 2 )) && _describe 'command' cmds

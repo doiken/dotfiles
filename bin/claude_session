@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Claude Code セッションの保存・一覧・再開
+#   claude_session save   : アクティブなセッション一覧を保存する(再起動前に実行)
+#   claude_session list   : 保存済みセッションを cwd に関係なく一覧表示
+#   claude_session resume : カレントディレクトリのセッションを fzf で1つ選び claude --resume する
+#                           (tmux セッション内のターミナルで実行する想定)
+set -euo pipefail
+
+SESSIONS_DIR="$HOME/.claude/sessions"
+# basename "$0" だと symlink 別名(cs)で保存先が分裂するため固定名にする
+SAVED="/var/tmp/claude_session.tsv"
+
+usage() {
+  echo "usage: $(basename "$0") {save|list|resume}" >&2
+  exit 1
+}
+
+require_saved() {
+  if [ ! -s "$SAVED" ]; then
+    echo "no saved sessions: $SAVED (run '$(basename "$0") save' first)" >&2
+    exit 1
+  fi
+}
+
+cmd_save() {
+  local tmp="$SAVED.tmp" f pid count
+  : > "$tmp"
+  for f in "$SESSIONS_DIR"/*.json; do
+    [ -e "$f" ] || continue
+    pid=$(jq -r '.pid // empty' "$f")
+    [ -n "$pid" ] || continue
+    # 生きている claude プロセスのみ対象(クラッシュ残骸の json を除外)
+    [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = "claude" ] || continue
+    jq -r '[.sessionId, .cwd, (.name // "unnamed")] | @tsv' "$f" >> "$tmp"
+  done
+  mv "$tmp" "$SAVED"
+  count=$(grep -c '' "$SAVED" || true)
+  echo "saved $count session(s) -> $SAVED"
+  column -t -s $'\t' "$SAVED"
+}
+
+cmd_list() {
+  require_saved
+  awk -F'\t' '{ printf "%s\t%s\t%s\n", $3, $2, $1 }' "$SAVED" | column -t -s $'\t'
+}
+
+cmd_resume() {
+  require_saved
+  local candidates selected id
+  # カレントディレクトリのセッションのみ対象
+  candidates=$(awk -F'\t' -v cwd="$PWD" '$2 == cwd' "$SAVED")
+  if [ -z "$candidates" ]; then
+    echo "no saved sessions for $PWD" >&2
+    exit 1
+  fi
+  selected=$(fzf --delimiter=$'\t' --with-nth=3 --prompt='claude session> ' <<< "$candidates") || exit 1
+  id=$(cut -f1 <<< "$selected")
+  exec claude --resume "$id"
+}
+
+case "${1:-}" in
+  save)   cmd_save ;;
+  list)   cmd_list ;;
+  resume) cmd_resume ;;
+  *)      usage ;;
+esac

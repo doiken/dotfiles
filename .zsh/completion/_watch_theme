@@ -1,0 +1,8 @@
+#compdef watch_theme wt
+
+# cwd のプロジェクトのセッションIDを新しい順に補完する
+# (watch_theme の choose_session と同じディレクトリ規則)
+local proj=$HOME/.claude/projects/${PWD//[^A-Za-z0-9]/-}
+local -a ids
+ids=( $proj/*.jsonl(Nom:t:r) )
+(( CURRENT == 2 )) && compadd -a ids
