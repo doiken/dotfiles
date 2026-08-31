@@ -56,7 +56,6 @@ echo "Running brew bundle in background... (see $BREW_LOG)"
 ## https://docs.docker.com/docker-for-mac/
 ##
 # [ ! -e /usr/local/share/zsh/site-functions/_docker ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
-# [ ! -e /usr/local/share/zsh/site-functions/_docker-machine ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.zsh-completion /usr/local/share/zsh/site-functions/_docker-machine
 # [ ! -e /usr/local/share/zsh/site-functions/_docker-compose ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
 
 wait
@@ -79,7 +78,10 @@ fi
 ##
 ## Configure
 ##
-SCRIPTS=( $HOME/dotfiles/bin/defaults.pl )
+SCRIPTS=(
+    $HOME/dotfiles/setup/defaults.pl
+    $HOME/dotfiles/setup/podman_setup
+)
 for script in ${SCRIPTS[@]}; do
     [ -x $script ] && $script
 done

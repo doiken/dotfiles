@@ -9,7 +9,7 @@ done
 ## User configuration
 ##
 cdpath=(~/Documents ~/Repositories ~ $cdpath)
-path=($HOME/bin/ $path)
+path=($HOME/dotfiles/setup/ $HOME/bin/ $path)
 fpath=(
   ~/.zsh/completion
   $fpath

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# NAME
+#   podman_setup
+# DESCRIPTION
+#   docker CLI 互換のため /var/run/docker.sock を podman machine に向ける
+#   helper 導入済み (LaunchDaemon の plist が居る) なら何もしない
+#   ref: https://podman-desktop.io/docs/migrating-from-docker/using-podman-mac-helper
+
+HELPER=$(brew --prefix)/bin/podman-mac-helper
+PLIST=/Library/LaunchDaemons/com.github.containers.podman.helper-$USER.plist
+
+[ -x $HELPER ] || { echo "podman not installed, skip"; exit 0; }
+[ -f $PLIST ] && exit 0
+
+podman machine list -q 2>/dev/null | grep -q . || podman machine init
+
+sudo $HELPER install
+## helper 導入後、machine 側にソケットを掴み直させる
+podman machine stop 2>/dev/null
+podman machine start

@@ -13,8 +13,7 @@ alias perld="perl -MData::Dumper -E"
 alias v=vagrant
 alias vb='VBoxManage'
 alias d='docker'
-alias dm='docker-machine'
-alias dc='COMPOSE_BAKE=true docker-compose'
+alias dc='docker compose'
 alias git=hub
 alias ctags='/usr/local/bin/ctags'
 
@@ -30,16 +29,6 @@ if [[ -x `which colordiff` ]]; then
   alias diff='colordiff'
 fi
 
-function denv {
-  # faster approach
-  # https://github.com/docker/machine/issues/1884#issuecomment-169509429
-  DOCKER_MACHINE_NAME=${1:-${DOCKER_MACHINE_NAME:-default}}
-  eval $(docker-machine inspect ${DOCKER_MACHINE_NAME} --format \
-  "export DOCKER_HOST=tcp://{{ .Driver.IPAddress }}:2376
-  export DOCKER_TLS_VERIFY=1
-  export DOCKER_CERT_PATH={{ .HostOptions.AuthOptions.StorePath }}
-  export DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME}")
-}
 function xenv {
 	while [[ $# -gt 0 ]] ;
 	do
@@ -155,12 +144,6 @@ function history-fzf() {
 zle -N history-fzf
 bindkey '^r' history-fzf
 
-##
-## Docker Machine
-##
-# too heavy to load every time
-# manually type denv
-# if which docker-machine > /dev/null; then docker-machine active 2>/dev/null && eval "$(docker-machine env default)"; fi
 
 dexec() { docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash -l"; }
 drun() { docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "$@"; }
