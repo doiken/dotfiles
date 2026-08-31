@@ -46,8 +46,10 @@ done
 ##
 
 ## Homebrew
+BREW_LOG=/tmp/dotfiles_brew_bundle.log
+echo "Running brew bundle in background... (see $BREW_LOG)"
 {
-	brew bundle --global >/dev/null
+	brew bundle --global >$BREW_LOG 2>&1
 } &
 ##
 ## docker completion
@@ -58,6 +60,21 @@ done
 # [ ! -e /usr/local/share/zsh/site-functions/_docker-compose ] && ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
 
 wait
+echo "brew bundle finished (see $BREW_LOG)"
+
+##
+## Touch ID for sudo (macOS 14.4+)
+## https://qiita.com/y-vectorfield/items/3fc96150e63448a80c1b
+##
+if [ -f /etc/pam.d/sudo_local.template ] && ! grep -q '^auth.*pam_tid.so' /etc/pam.d/sudo_local 2>/dev/null; then
+    echo "Enabling Touch ID for sudo (password required once)"
+    {
+        ## tmux/screen 内でも Touch ID を効かせる
+        PAM_REATTACH=$(brew --prefix)/lib/pam/pam_reattach.so
+        [ -f $PAM_REATTACH ] && echo "auth       optional       $PAM_REATTACH"
+        sed 's/^#auth/auth/' /etc/pam.d/sudo_local.template
+    } | sudo tee /etc/pam.d/sudo_local >/dev/null
+fi
 
 ##
 ## Configure
