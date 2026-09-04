@@ -82,7 +82,7 @@ else
     token_display="$total_tokens"
   fi
 
-  # Color coding for percentage (auto-compact が約83.5%で発動するため、その直前の80%で赤)
+  # Color coding for percentage (auto-compact の既定閾値 85% (autoCompactWindow) の直前の 80% で赤)
   if [ "$percentage" -ge 80 ]; then
     color="\033[31m"  # Red
   elif [ "$percentage" -ge 65 ]; then

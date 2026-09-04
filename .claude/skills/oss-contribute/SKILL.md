@@ -3,7 +3,7 @@ name: oss-contribute
 description: |
   OSSへのコントリビュートを段階的に支援する。
   候補リポジトリ・issue選定 → 再現確認 → 修正 → PR文章作成 の流れで進める。
-  各ステップで報告し、ユーザー確認を挟む。PR の自動作成は行わない。
+  ユーザー確認は issue 選定とコミット前の2箇所のみ。再現→修正→テストは自走する。PR の自動作成は行わない。
 argument-hint: "[言語やライブラリのヒント（例: 'Python scikit-learn系'）]"
 allowed-tools:
   - Agent
@@ -25,15 +25,13 @@ OSSへのコントリビュート（主にバグ修正PR）を段階的に支援
 ## 原則
 
 - **PR の自動作成（`gh pr create`）は絶対に行わない**。PR文章のドラフトまでが範囲
-- **各ステップの完了時に必ず報告し、次に進む前にユーザー確認を取る**
+- **ユーザー確認は2箇所に集約する**: Step 1 の issue 選定と、Step 4 のコミット・PR 文章の確定。Step 2〜3（再現→修正→テスト）は機械的に検証可能なため、確認を挟まず一括で自走し、結果のみ報告する
 - コミットもユーザーの明示的な指示があるまで行わない
 - fork 操作は確認の上で実施する（fork 先は `doiken/REPO_NAME`）
 - **既存ユーザーの動作を壊す破壊的変更は避ける**。修正はあくまで既存の振る舞いを維持した上でのバグ修正や機能追加に留めること
 - **コードの修正を伴う**ものとする。document やコメント、テストのみの修正は対象外
 - **コンテキスト肥大を防ぐため、調査は subagent に委譲する**
-- **Bash の承認回数を最小化する**。venv の python フルパス（例: `/var/tmp/osc/REPO/.venv/bin/python`）を使い、`cd` や `source activate` を不要にする。`&&` チェーンも避け、各コマンドを独立して実行する
-- **代替手段がある場合は `cd` を使わない**。git 操作は `git -C /var/tmp/osc/REPO_NAME` で、その他のコマンドもフルパス指定で実行する
-- **Bash コマンドでリダイレクト文字 `>` を使わない**。`>` を含むコマンドは `Bash(gh search *)` 等の allow ルールにマッチしないバグがある（[claude-code#13137](https://github.com/anthropics/claude-code/issues/13137)）。日付フィルタは `--created ">2026-01-01"` ではなく `--created "2026-01-01..2026-12-31"` の**レンジ形式**を使う。Stars フィルタも `--stars ">100"` ではなく `--stars "100..999999"` とする。`2>&1` も付けない
+- **承認回数の最小化はグローバル CLAUDE.md の原則に従う**（`cd`・`&&`・パイプ・リダイレクト回避、`gh search` の日付・Stars フィルタはレンジ形式）。このスキル固有の適用: venv は `/var/tmp/osc/REPO/.venv/bin/python` のフルパスを使い、git 操作は `git -C /var/tmp/osc/REPO_NAME` で行う
 - **経験を蓄積・参照・ブラッシュアップする**。保存先は `~/.claude/skills/oss-contribute/experience/` 内。詳細は各ステップの「経験」項を参照
 
 ## 候補の品質チェックリスト
@@ -148,12 +146,8 @@ uv venv --python 3.11 -p /var/tmp/osc/REPO_NAME/.venv
 3. 再現スクリプトを Write ツールで `/var/tmp/osc/reproduce_{REPO}_{ISSUE}.py` に作成
 4. フルパス python で再現スクリプトを実行
 5. 結果を確認し、チェック3〜6を評価
-6. **ユーザーに報告**:
-   - 再現結果（成功/失敗）
-   - 修正対象ファイルとコード箇所（コードは Read ツールで確認）
-   - 想定される変更行数
-   - チェック4〜6の評価結果
-   - 設計判断が絡むリスクの有無
+6. チェック3〜6がすべて合格なら、**ユーザー確認を待たずそのまま Step 3 に進む**
+   - 再現失敗・チェック不合格・設計判断が絡むリスクがある場合のみ停止し、報告して判断を仰ぐ
 
 **経験（Step 2）**:
 - **開始時**: `~/.claude/skills/oss-contribute/experience/reproduce.md` を Read。再現・環境構築で過去に詰まったポイントを確認
@@ -174,10 +168,12 @@ uv venv --python 3.11 -p /var/tmp/osc/REPO_NAME/.venv
 5. 既存テスト全パスを確認
    - `/var/tmp/osc/REPO_NAME/.venv/bin/python -m pytest ...`
 6. 必要に応じてテストケースを追加
-7. **ユーザーに報告**:
+7. **ユーザーに報告**（Step 2〜3 の結果をまとめて）:
+   - 再現結果と、修正による解消の確認
    - diff の全体像
    - テスト結果
    - 修正の説明（リポジトリ概要、issue内容とURL、修正内容、再現スクリプトの実行コマンドを簡潔に）
+   - チェック4〜6の評価結果
 
 **経験（Step 3）**:
 - **開始時**: `~/.claude/skills/oss-contribute/experience/coding.md` を Read。過去のユーザー指摘・修正パターンを確認し、同じ指摘を繰り返さない

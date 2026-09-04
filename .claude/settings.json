@@ -2,12 +2,12 @@
   "permissions": {
     "allow": [
       "Read(~/Repositories/**)",
-      "Read(/**)",
+      "Read(./**)",
       "Read(//tmp/**)",
       "Read(//var/tmp/**)",
       "Read(~/.claude/**)",
       "Read(~/Downloads/**)",
-      "Edit(/**)",
+      "Edit(./**)",
       "Edit(//tmp/**)",
       "Edit(//var/tmp/**)",
       "Edit(~/.claude/**)",
@@ -61,7 +61,6 @@
       "Bash(jq *)",
       "Bash(sleep *)",
       "Bash(pwd *)",
-      "Bash(cd *)",
       "Bash(grep *)",
       "Bash(perl -wc:*)",
       "Bash(pbcopy *)",
@@ -73,8 +72,26 @@
       "Bash(npm run test:*)",
       "Bash(pdftoppm *)",
       "Bash(open *)",
-      "mcp__redmine-mcp__*",
-      "mcp__redmine-mcp-api__*"
+      "mcp__redmine-mcp-api__get_details",
+      "mcp__redmine-mcp-api__search_redmine",
+      "mcp__redmine-mcp-api__list_recent_tickets",
+      "mcp__redmine-mcp-api__list_field_options",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude_ai_Slack__slack_read_channel",
+      "mcp__claude_ai_Slack__slack_read_thread",
+      "mcp__claude_ai_Slack__slack_read_canvas",
+      "mcp__claude_ai_Slack__slack_read_file",
+      "mcp__claude_ai_Slack__slack_read_user_profile",
+      "mcp__claude_ai_Slack__slack_get_reactions",
+      "mcp__claude_ai_Slack__slack_list_channel_members",
+      "mcp__claude_ai_Slack__slack_search_channels",
+      "mcp__claude_ai_Slack__slack_search_emojis",
+      "mcp__claude_ai_Slack__slack_search_public",
+      "mcp__claude_ai_Slack__slack_search_public_and_private",
+      "mcp__claude_ai_Slack__slack_search_users"
+    ],
+		"ask": [
+      "mcp__claude_ai_Slack__slack_send_message_draft"
     ],
     "deny": [
       "Bash(find *\\;)",
@@ -98,7 +115,16 @@
       "Read(id_rsa)",
       "Edit(.env*)",
       "Edit(**/secrets/**)",
-      "Bash(mysql:*)"
+      "Bash(mysql:*)",
+      "mcp__redmine-mcp-api__delete_note",
+      "mcp__claude_ai_Google_Drive__share_file",
+      "mcp__claude_ai_Google_Drive__trash_file",
+      "mcp__claude_ai_Slack__slack_send_message",
+      "mcp__claude_ai_Slack__slack_schedule_message",
+      "mcp__claude_ai_Slack__slack_add_reaction",
+      "mcp__claude_ai_Slack__slack_create_conversation",
+      "mcp__claude_ai_Slack__slack_create_canvas",
+      "mcp__claude_ai_Slack__slack_update_canvas"
     ]
   },
   "model": "fable",
@@ -110,6 +136,10 @@
           {
             "type": "command",
             "command": "jq -c '. + {\"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh"
+          },
+          {
+            "type": "command",
+            "command": "t=$(jq -r .transcript_path); d=${t%.jsonl}; a=$(jq -rs '[.[]|select(.type==\"ai-title\")][-1].aiTitle // empty' \"$t\"); [ -e \"$d/custom-title.json\" ] || [ -z \"$a\" ] || { mkdir -p \"$d\"; jq -n --arg t \"$a\" '{customTitle:$t}' > \"$d/custom-title.json\"; } 2>/dev/null || true"
           }
         ]
       }
@@ -161,6 +191,5 @@
     "mode": "hold"
   },
   "theme": "custom:doienv",
-  "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "agentPushNotifEnabled": true
 }

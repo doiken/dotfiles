@@ -40,8 +40,6 @@ description: 英語の学術論文PDFを日本語化して理解補助するス�
 
 不足している場合、最初の Step 2 や Step 6 で承認プロンプトが出る。`update-config` スキル経由で追加するのが推奨経路。
 
-ファイル操作は **Read / Write / Edit / Glob ツール**を直接使い、Bash 経由の `cat`/`ls`/`grep`/`find` は避けること (承認プロンプトを避けるため)。
-
 ## ワークフロー
 
 ### Step 1: 意図と範囲の確認
