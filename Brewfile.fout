@@ -1,9 +1,6 @@
-brew "plenv"
-
 cask "temurin@8"
 brew "awscli"
 brew "mysql-client"
-brew "uv"
 
 # cask "mathpix-snipping-tool"
 

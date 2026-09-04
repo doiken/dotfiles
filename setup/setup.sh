@@ -45,6 +45,10 @@ done
 mkdir -p ~/.config/sheldon
 [ ! -e ~/.config/sheldon/plugins.toml ] && ln -s $HOME/dotfiles/.config/sheldon/plugins.toml ~/.config/sheldon/plugins.toml
 
+# mise (runtime version manager)
+mkdir -p ~/.config/mise
+[ ! -e ~/.config/mise/config.toml ] && ln -s $HOME/dotfiles/.config/mise/config.toml ~/.config/mise/config.toml
+
 ##
 ## Install Basics
 ##

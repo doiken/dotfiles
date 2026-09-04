@@ -5,12 +5,6 @@
   editor = vim
 	excludesfile = ~/.gitignore_global
 	hooksPath = /Users/doi_kenji/.git_template/hooks
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [color]
 	ui = auto
 [alias]
@@ -100,7 +94,6 @@
   prune = true
 [merge]
 	ff = false
-	tool = vimdiff
 [gui]
 	encoding = UTF-8
 [pull]
@@ -108,9 +101,14 @@
 [push]
 	default = simple
 [pager]
-	log = diff-highlight | less
-	show = diff-highlight | less
-	diff = diff-highlight | less
+	log = delta
+	show = delta
+	diff = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
 [init]
 	defaultBranch = main
 

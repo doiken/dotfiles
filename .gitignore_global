@@ -29,6 +29,10 @@ target
 # docker
 **/docker-compose.override.yml
 
+# mise (per-project tool versions)
+.mise.toml
+mise.toml
+
 # claude
 worktrees
 

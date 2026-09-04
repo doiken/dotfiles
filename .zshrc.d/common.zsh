@@ -1,8 +1,15 @@
 #
 # Aliases
 #
-alias ll='ls -lh'
-alias la='ls -lhaF'
+if (( $+commands[eza] )); then
+  alias ll='eza -l --git'
+  alias la='eza -la --git'
+  alias tree='eza --tree'
+else
+  alias ll='ls -lh'
+  alias la='ls -lhaF'
+fi
+(( $+commands[bat] )) && alias cat='bat --paging=never'
 
 autoload zmv
 alias zmv="noglob zmv"
@@ -24,33 +31,13 @@ function tcf { tmux new-session claude --resume --fork-session "$@"; }
 function csr  { claude_session resume "$@"; }
 function tcsr { tmux new-session claude_session resume "$@"; }
 
-if [[ -x `which colordiff` ]]; then
-  alias diff='colordiff'
+# 素の diff も delta で表示(元の diff は command diff)
+if (( $+commands[delta] )); then
+  function diff { command diff -u "$@" | delta; }
 fi
 
-function xenv {
-	while [[ $# -gt 0 ]] ;
-	do
-		lang="$1"
-    shift;
-		case "$lang" in
-			"ruby" | r*) eval "$(rbenv init -)" ;;
-			"node" | n*) eval "$(nodenv init -)" ;;
-			"perl" | pl* )
-				export PATH="$HOME/.plenv/bin:$PATH";
-				eval "$(plenv init -)" ;;
-			"python"| py* ) eval "$(pyenv init -)" ;;
-			"pipx"| pi* ) export PATH="$PATH:/Users/doi_kenji/.local/bin:/Users/doi_kenji/Library/Python/3.11/bin" ;;
-			* )
-				xenv ruby
-				xenv node
-				xenv perl
-				xenv python
-				xenv pipx
-				;;
-		esac
-   done
-}
+# mise: python/node/perl/ruby のバージョン管理(旧 pyenv/nodenv/plenv/rbenv + xenv)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
 
 function mode_op {
   # トグルしたい prompt
@@ -66,11 +53,6 @@ function mode_op {
 # see: https://zenn.dev/kumamoto/articles/d536ac6df8a544
 alias man='env LANG=C man'
 alias jman='env LANG=ja_JP.UTF-8 man'
-
-#
-# git
-#
-path=($HOMEBREW_PREFIX/share/git-core/contrib/diff-highlight $path)
 
 # General settings
 #
@@ -105,6 +87,8 @@ export LESS="-iRMXS"
 export CLICOLOR=true
 export LSCOLORS='exfxcxdxbxGxDxabagacad'
 export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
+# eza: メタデータ列(権限・サイズ・日付・所有者)をグレーに抑えてファイル名の色を際立たせる
+export EZA_COLORS="ur=38;5;245:uw=38;5;245:ux=38;5;245:ue=38;5;245:gr=38;5;245:gw=38;5;245:gx=38;5;245:tr=38;5;245:tw=38;5;245:tx=38;5;245:xa=38;5;245:sn=38;5;245:sb=38;5;245:da=38;5;245:uu=38;5;245:un=38;5;245:gu=38;5;245:gn=38;5;245"
 export EDITOR=vim
 export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000
@@ -121,22 +105,12 @@ export GOPATH=$HOME/.go
 ## for fzf
 ##
 export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --inline-info --preview-window right:60%:wrap --preview='echo {}' --no-sort --exact" # man fzf
-function history-fzf() {
-  local tac
-
-  if which tac > /dev/null; then
-    tac="tac"
-  else
-    tac="tail -r"
-  fi
-
-  BUFFER=$(history -n 1 | eval $tac | fzf --query "$LBUFFER")
-  CURSOR=$#BUFFER
-
-  zle reset-prompt
-}
-zle -N history-fzf
-bindkey '^r' history-fzf
+# fd をファイル・ディレクトリ列挙に使用
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
+# 公式キーバインド: Ctrl-R 履歴 / Ctrl-T ファイル挿入 / Alt-C ディレクトリ移動
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 
 dexec() { docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash -l"; }

@@ -30,29 +30,6 @@ done
 ##
 brew bundle --file ~/dotfiles/Brewfile.fout >/dev/null &
 
-##
-## for fout perl
-##
-# brew install perl-build broken for now
-# https://qiita.com/narita_cpp/items/03e55b9acf4b3fbed99c
-test -d ~/.plenv/plugins/perl-build/ || git clone git@github.com:tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ 2>&1 | grep -v 'already exists'
-
-# build 5.24.3 ~> carton install
-# http://tweeeety.hateblo.jp/entry/2015/06/21/203144
-{
-	cd $REPO_DIR/fout
-	PATTERN=`plenv versions | cut -d' ' -f 2 | xargs echo | perl -pe 's/ /|/g'`
-  if [ "$(egrep -v $PATTERN <(echo 5.24.3))" != "" ]; then
-    plenv install 5.24.3
-    plenv local 5.24.3
-    plenv install-cpanm
-    plenv exec cpanm Module::Install
-    plenv exec cpanm Carton
-    # not required so far
-    # plenv exec carton install
-  fi
-} &
-
 # for fout box
 docker_env=(
   fout
