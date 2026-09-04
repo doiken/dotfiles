@@ -30,15 +30,21 @@ function redash_proxy () {
 ## Env
 ##
 export FOUT_HOME=/fout/fout/
-export PATH="${HOMEBREW_PREFIX}/opt/mysql-client@8.0/bin:$PATH"
-export REDMINE_API_KEY=$(security find-generic-password -s redmine-api-key -w)
+export PATH="${HOMEBREW_PREFIX}/opt/mysql-client/bin:$PATH"
+# Keychain アクセスで起動をブロックしないよう遅延実行(zsh-defer 不在時は同期)
+_load_redmine_api_key() { export REDMINE_API_KEY=$(security find-generic-password -s redmine-api-key -w); }
+if (( $+functions[zsh-defer] )); then
+  zsh-defer _load_redmine_api_key
+else
+  _load_redmine_api_key
+fi
 
 # export GOOGLE_CLOUD_PROJECT=fout-dsp
-funciton bsh () {
+function bsh () {
   ssh-add ~/.ssh/id_rsa_bastion
   ssh -At gw "ssh bastion $@"
 }
-funciton bshl () {
+function bshl () {
   ssh-add ~/.ssh/id_rsa_bastion
   ssh -AL 8157:localhost:8157 gw "ssh -ND 8157 bastion"
 }

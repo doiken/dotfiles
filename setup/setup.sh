@@ -41,6 +41,10 @@ do
     [ ! -e $HOME/$file ] && ln -s $HOME/dotfiles/$file $HOME/$file
 done
 
+# sheldon (zsh plugin manager)
+mkdir -p ~/.config/sheldon
+[ ! -e ~/.config/sheldon/plugins.toml ] && ln -s $HOME/dotfiles/.config/sheldon/plugins.toml ~/.config/sheldon/plugins.toml
+
 ##
 ## Install Basics
 ##

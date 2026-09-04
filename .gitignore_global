@@ -15,7 +15,6 @@ local
 .vscode
 .vstags
 .history
-**/.history
 tempCodeRunnerFile.*
 
 # python

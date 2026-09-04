@@ -1,0 +1,15 @@
+shell = "zsh"
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+apply = ["fpath"]
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+
+# 他プラグインより後に読み込む必要がある(旧 zplug の defer:2 相当)
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"

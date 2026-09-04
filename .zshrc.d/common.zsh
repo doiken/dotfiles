@@ -1,8 +1,8 @@
 #
 # Aliases
 #
-alias ll='ls -l'
-alias la='ls -CFal'
+alias ll='ls -lh'
+alias la='ls -lhaF'
 
 autoload zmv
 alias zmv="noglob zmv"
@@ -10,12 +10,8 @@ alias zcp="zmv -C"
 alias zwild="zmv -p" # any command
 
 alias perld="perl -MData::Dumper -E"
-alias v=vagrant
-alias vb='VBoxManage'
 alias d='docker'
 alias dc='docker compose'
-alias git=hub
-alias ctags='/usr/local/bin/ctags'
 
 function cl { claude "$@"; }
 function cr { claude --resume "$@"; }
@@ -72,14 +68,9 @@ alias man='env LANG=C man'
 alias jman='env LANG=ja_JP.UTF-8 man'
 
 #
-# ruby
-#
-RUBYGEMS_GEMDEPS=-
-
-#
 # git
 #
-path=($(brew --prefix)/share/git-core/contrib/diff-highlight/ $path)
+path=($HOMEBREW_PREFIX/share/git-core/contrib/diff-highlight $path)
 
 # General settings
 #
@@ -114,9 +105,9 @@ export LESS="-iRMXS"
 export CLICOLOR=true
 export LSCOLORS='exfxcxdxbxGxDxabagacad'
 export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
-#export EDITOR=vim
+export EDITOR=vim
 export HISTFILE=~/.zsh_history
-export HISTSIZE=100000
+export HISTSIZE=1000000
 export SAVEHIST=1000000
 export LANG=ja_JP.UTF-8
 

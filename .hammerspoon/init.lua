@@ -45,11 +45,6 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = "/Users/doi_kenji/bin/redash_iframe",
       },
       {
-        text = "hs: attend",
-        action = "hs",
-        contents = function () spoon.FoAttendance.regist("attend") end,
-      },
-      {
         text = "redmine table",
         action = "text",
         contents = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
@@ -122,7 +117,7 @@ spoon.SpoonInstall:andUse("LastKeyRepeat", {
     mapping = {
       { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'h' } },
       { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'l' } },
-      { first = { key = 'g', mors = {'ctrl'} }, second = { key = 'k' } },
+      { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'k' } },
       { first = { key = 'g', mods = {'ctrl'} }, second = { key = 'j' } },
     },
     appsDisable = { "iTerm2" }

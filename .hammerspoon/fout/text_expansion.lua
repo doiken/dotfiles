@@ -46,9 +46,6 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           |```
           |</details>
         |]]):gsub(" +|", ""),
-      task = function ()
-        return hs.execute(". ~/.zshrc.d/work.zsh;/Users/doi_kenji/Repositories/fout_sandbox/bin/task_status.rb qiita 10")
-      end,
       aligned = "\\begin{aligned}\n\\end{aligned}",
       tex = ([[katex で次の条件で式を書いて。
         |- コピーできる

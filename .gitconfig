@@ -14,13 +14,14 @@
 [color]
 	ui = auto
 [alias]
-  bda = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
+  # デフォルトブランチ名 (origin/HEAD 未設定なら master)。設定は git remote set-head origin -a
+  defbranch = "!f() { b=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null) || b=origin/master; echo ${b#origin/}; }; f"
   pp = !git push origin `git rev-parse --abbrev-ref HEAD`
-  ppf = !git push origin `git rev-parse --abbrev-ref HEAD` ---force-with-lease
+  ppf = !git push origin `git rev-parse --abbrev-ref HEAD` --force-with-lease
   st = status
   # https://qiita.com/awakia/items/f14dc6310e469964a8f7
-  showpr = "!f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #'; }; f"
-	openpr = "!f() { hub browse -- `git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1 | cut -f5 -d' ' | sed -e 's%#%pull/%'`; }; f"
+  showpr = "!f() { git log --merges --oneline --reverse --ancestry-path $1...$(git defbranch) | grep 'Merge pull request #'; }; f"
+	openpr = "!f() { git log --merges --oneline --reverse --ancestry-path $1...$(git defbranch) | grep 'Merge pull request #' | head -n 1 | cut -f5 -d' ' | tr -d '#' | xargs gh pr view --web; }; f"
   cl = clean
   clf = clean -f
   cla = clean -fd
@@ -29,17 +30,17 @@
   clo = clone --single-branch --depth 1 # shallow clone: for nearly download purpose
   clb = clone --filter=blob:none # blobless clone: for quick and effective clone
   ci = commit
+  aa = "!f() { git add -A && git commit -m \"$*\"; }; f" # add all + commit message
   cim = "!f() { git commit -m \"$*\"; }; f"
   cif = commit --fixup
   cia = commit --amend     # 直前のcommitを修正
   cp = cherry-pick
   co = checkout --no-guess
   fco = "!f() { branch=$(git --no-pager branch -vv $1 | fzf +m) && git checkout $(echo $branch | awk '{print $1}' | sed 's/.* //'); }; f"
-  cot = "!f() { b=tmp/$(git rev-parse --abbrev-ref HEAD); git branch -D ${b} 2>/dev/null; git checkout -b ${b}; git fetch; git merge --no-edit origin/master; }; f"
+  cot = "!f() { b=tmp/$(git rev-parse --abbrev-ref HEAD); git branch -D ${b} 2>/dev/null; git checkout -b ${b}; git fetch; git merge --no-edit origin/$(git defbranch); }; f"
   # branch関連
   b  = branch
   # log関連
-  wc = whatchanged         # logに変更されたファイルも一緒に出す
   ls = log --stat          # logに変更されたファイルも一緒に出す
   lp = log -p              # diffも一緒に出す
   la = log --pretty=\"format:%ad %h (%an): %s\" --date=short  # ざっくりログ出す
@@ -47,7 +48,7 @@
   oneline = log --pretty=oneline
   ranking = shortlog -s -n --no-merges
   # stash
-  ss = stash save
+  ss = stash push
   sl = stash list
   sa = stash apply
   sp = stash pop
@@ -70,9 +71,6 @@
   rba = rebase --abort
   rbc = rebase --continue
   # diff関連
-  dm = diff master           # masterとのdiff
-  dw = diff --color-words    # 単語単位でいろつけてdiff
-  dc = diff --cached         # addされているものとのdiff
   df = "!f() { git diff $1 HEAD "${@:2}"; }; f"
   dff = "!f() { git diff $1 HEAD~ "${@:2}"; }; f"
   dfs = diff --staged        # 同上(1.6.1移行)
@@ -85,10 +83,9 @@
   gr = grep
   gn = grep -n
   # pr
-  pr = pull-request
-  # to use process substitution, call via bash -c "" https://stackoverflow.com/questions/31827146/how-to-use-a-parenthesis-character-inside-a-command-substitution-inside-a-bash-s
-  pro = "!f() { NUM=`git branch | grep '*' | perl -pe 's/\\* ([0-9]*).*/\\$1/g'`; bash -c \"hub pull-request -o -F <(sed -e 's/XXXXX/$NUM/g' ~/.tmpl/PULL_REQUEST_TEMPLATE.md .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null) --edit $@\"; }; f"
-  rmr = !git branch -a --merged | grep -v master | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
+  pr = !gh pr create
+  pro = "!f() { NUM=$(git rev-parse --abbrev-ref HEAD | grep -oE '^[0-9]+'); gh pr create --web --body \"$(sed -e s/XXXXX/$NUM/g ~/.tmpl/PULL_REQUEST_TEMPLATE.md .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null)\"; }; f"
+  rmr = !git branch -a --merged | grep -vE 'master|main' | grep remotes/origin| sed -e 's% *remotes/origin/%%' | xargs -I% git push origin :%
   ignore = update-index --assume-unchanged
   noignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
@@ -109,18 +106,11 @@
 [pull]
 	rebase = true
 [push]
-	default = matching
-[diff]
-	compactionHeuristic = true
+	default = simple
 [pager]
 	log = diff-highlight | less
 	show = diff-highlight | less
 	diff = diff-highlight | less
-[filter "lfs"]
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
 [init]
 	defaultBranch = main
 

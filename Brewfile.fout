@@ -1,9 +1,6 @@
-tap "homebrew/cask-versions"
-
 brew "plenv"
 
-cask "adoptopenjdk8"
-brew "amazon-ecs-cli"
+cask "temurin@8"
 brew "awscli"
 brew "mysql-client"
 brew "uv"

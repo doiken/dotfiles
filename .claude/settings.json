@@ -90,9 +90,6 @@
       "mcp__claude_ai_Slack__slack_search_public_and_private",
       "mcp__claude_ai_Slack__slack_search_users"
     ],
-		"ask": [
-      "mcp__claude_ai_Slack__slack_send_message_draft"
-    ],
     "deny": [
       "Bash(find *\\;)",
       "Bash(sudo:*)",
@@ -125,6 +122,9 @@
       "mcp__claude_ai_Slack__slack_create_conversation",
       "mcp__claude_ai_Slack__slack_create_canvas",
       "mcp__claude_ai_Slack__slack_update_canvas"
+    ],
+    "ask": [
+      "mcp__claude_ai_Slack__slack_send_message_draft"
     ]
   },
   "model": "fable",
@@ -191,5 +191,7 @@
     "mode": "hold"
   },
   "theme": "custom:doienv",
-  "agentPushNotifEnabled": true
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true,
+  "remoteControlAtStartup": true
 }
