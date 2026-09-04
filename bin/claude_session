@@ -31,30 +31,39 @@ cmd_save() {
     [ -n "$pid" ] || continue
     # 生きている claude プロセスのみ対象(クラッシュ残骸の json を除外)
     [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = "claude" ] || continue
-    jq -r '[.sessionId, .cwd, (.name // "unnamed")] | @tsv' "$f" >> "$tmp"
+    jq -r '[.sessionId, .cwd, (.name // "unnamed"),
+            ((.updatedAt // 0) / 1000 | floor | strflocaltime("%Y-%m-%d %H:%M"))] | @tsv' "$f" >> "$tmp"
   done
+  # 最終会話日時の新しい順に保存(list/resume がそのまま最新順になる)
+  sort -t $'\t' -k4,4r "$tmp" -o "$tmp"
   mv "$tmp" "$SAVED"
   count=$(grep -c '' "$SAVED" || true)
   echo "saved $count session(s) -> $SAVED"
-  column -t -s $'\t' "$SAVED"
+  print_sessions
+}
+
+print_sessions() {
+  awk -F'\t' '{ printf "%s\t%s\t%s\t%s\n", $4, $3, $2, $1 }' "$SAVED" | column -t -s $'\t'
 }
 
 cmd_list() {
   require_saved
-  awk -F'\t' '{ printf "%s\t%s\t%s\n", $3, $2, $1 }' "$SAVED" | column -t -s $'\t'
+  print_sessions
 }
 
 cmd_resume() {
   require_saved
   local candidates selected id
-  # カレントディレクトリのセッションのみ対象
-  candidates=$(awk -F'\t' -v cwd="$PWD" '$2 == cwd' "$SAVED")
+  # カレントディレクトリのセッションのみ対象(symlink 経由でも一致するよう物理パスでも比較)
+  candidates=$(awk -F'\t' -v cwd="$PWD" -v pcwd="$(pwd -P)" \
+    '$2 == cwd || $2 == pcwd { printf "%s\t%s\t%s\n", $4, $3, $1 }' "$SAVED")
   if [ -z "$candidates" ]; then
     echo "no saved sessions for $PWD" >&2
     exit 1
   fi
-  selected=$(fzf --delimiter=$'\t' --with-nth=3 --prompt='claude session> ' <<< "$candidates") || exit 1
-  id=$(cut -f1 <<< "$selected")
+  # 保存時点で最新順ソート済み。日時・名前をタブ区切りで表示
+  selected=$(fzf --delimiter=$'\t' --with-nth=1,2 --prompt='claude session> ' <<< "$candidates") || exit 1
+  id=$(cut -f3 <<< "$selected")
   exec claude --resume "$id"
 }
 

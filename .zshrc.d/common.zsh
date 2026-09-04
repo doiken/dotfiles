@@ -25,6 +25,9 @@ function tc  { tmux new-session claude "$@"; }
 function tcr { tmux new-session claude --resume "$@"; }
 function tcf { tmux new-session claude --resume --fork-session "$@"; }
 
+function csr  { claude_session resume "$@"; }
+function tcsr { tmux new-session claude_session resume "$@"; }
+
 if [[ -x `which colordiff` ]]; then
   alias diff='colordiff'
 fi
