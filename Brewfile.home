@@ -1,9 +1,14 @@
+tap "sikarugir-app/sikarugir" # cask "sikarugir" の提供元
+
+brew "emacs"
 brew "ffmpeg"
+brew "wimlib"
 
 cask "anydesk"
 cask "keka"
 cask "send-anywhere"
 cask "android-file-transfer"
 cask "a-better-finder-rename"
+cask "musicbrainz-picard"
+cask "sikarugir"
 cask "yacreader"
-

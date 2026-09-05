@@ -1,4 +1,18 @@
 #
+# Profile
+#
+# 会社支給機 (fout) か個人機 (home) かのフラグ。dotfiles/Brewfile の出し分けにも使う
+if [[ -z "$DOTFILES_PROFILE" ]]; then
+  case "$USER" in
+    doi_kenji) export DOTFILES_PROFILE=fout ;;
+    *)         export DOTFILES_PROFILE=home ;;
+  esac
+fi
+
+export HOMEBREW_BUNDLE_FILE="$HOME/dotfiles/Brewfile" # --file なしで dotfiles を見せる
+export HOMEBREW_DOTFILES_PROFILE="$DOTFILES_PROFILE"  # brew は HOMEBREW_ 以外を渡さない
+
+#
 # Aliases
 #
 if (( $+commands[eza] )); then

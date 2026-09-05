@@ -15,7 +15,6 @@ which git >/dev/null || brew install git
 ## Sym Link
 ##
 DOT_FILES=(
-  .Brewfile
   .hammerspoon
   bin
   .zsh
@@ -65,10 +64,13 @@ mkdir -p ~/.config/mise
 ##
 
 ## Homebrew
+## dotfiles/Brewfile が会社(fout)/個人(home)を判定して Brewfile.* を取り込む。
+## --global (~/.Brewfile) は使わなくなったので、旧シンボリックリンクがあれば掃除する。
+[ -L $HOME/.Brewfile ] && rm $HOME/.Brewfile
 BREW_LOG=/tmp/dotfiles_brew_bundle.log
 echo "Running brew bundle in background... (see $BREW_LOG)"
 {
-	brew bundle --global >$BREW_LOG 2>&1
+	brew bundle --file $HOME/dotfiles/Brewfile >$BREW_LOG 2>&1
 } &
 ##
 ## docker completion
