@@ -200,5 +200,5 @@
   "theme": "custom:doienv",
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "remoteControlAtStartup": true
+  "remoteControlAtStartup": false
 }
