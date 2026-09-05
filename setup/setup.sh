@@ -99,9 +99,17 @@ fi
 ##
 ## Configure
 ##
+## プロファイルは .zshrc.d/common.zsh の $DOTFILES_PROFILE・dotfiles/Brewfile と同じ規則。
+## setup.sh は zsh 起動前にも走るため、環境変数ではなく $USER で判定する。
+case "$USER" in
+    doi_kenji) PROFILE=fout ;;
+    *)         PROFILE=home ;;
+esac
+
 SCRIPTS=(
     $HOME/dotfiles/setup/defaults.pl
     $HOME/dotfiles/setup/podman_setup
+    $HOME/dotfiles/setup/${PROFILE}_setup # 存在しないプロファイルは -x で弾かれる
 )
 for script in ${SCRIPTS[@]}; do
     [ -x $script ] && $script
