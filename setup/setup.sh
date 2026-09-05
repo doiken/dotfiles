@@ -12,6 +12,22 @@ which git >/dev/null || brew install git
 [ ! -d $HOME/dotfiles ] && git clone https://github.com/doiken/dotfiles.git $HOME/dotfiles
 
 ##
+## Profile
+##
+## 会社(fout)か家(home)かの判定。.zshrc.d/common.zsh の $DOTFILES_PROFILE や
+## dotfiles/Brewfile と同じ規則。setup.sh は zsh 起動前にも走るため
+## 環境変数ではなく $USER を直接見る。
+##
+case "$USER" in
+    doi_kenji) PROFILE=fout ;;
+    *)         PROFILE=home ;;
+esac
+
+echo "############################################"
+echo "## PROFILE=$PROFILE で実行します (USER=$USER)"
+echo "############################################"
+
+##
 ## Sym Link
 ##
 DOT_FILES=(
@@ -99,13 +115,6 @@ fi
 ##
 ## Configure
 ##
-## プロファイルは .zshrc.d/common.zsh の $DOTFILES_PROFILE・dotfiles/Brewfile と同じ規則。
-## setup.sh は zsh 起動前にも走るため、環境変数ではなく $USER で判定する。
-case "$USER" in
-    doi_kenji) PROFILE=fout ;;
-    *)         PROFILE=home ;;
-esac
-
 SCRIPTS=(
     $HOME/dotfiles/setup/defaults.pl
     $HOME/dotfiles/setup/podman_setup
