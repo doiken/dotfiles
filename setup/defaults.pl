@@ -17,6 +17,10 @@ use warnings;
 # クリックで設定ペインが開く。FDA 不在は VSCode の動作低下の一因でもあるので、
 # この機会に許可させたい。
 my $FDA_PANE = 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles';
+# FDA の判定は TCC.db が読めるかで行う。defaults の書き込みは cfprefsd の反映が
+# 遅れて直後の read に現れないことがあり、それを FDA 不在と誤検知するため。
+sub has_full_disk_access { -r "$ENV{HOME}/Library/Application Support/com.apple.TCC/TCC.db" }
+
 my $fda_notified = 0;
 sub notify_full_disk_access {
     return if $fda_notified++; # アプリごとに呼ばれるので通知は1回だけ
@@ -38,6 +42,7 @@ sub add_custom_menu_entry {
     `defaults write com.apple.universalaccess "com.apple.custommenu.apps" -array-add "${app}" 2>/dev/null`;
     my $after = `defaults read com.apple.universalaccess "com.apple.custommenu.apps" 2>/dev/null`;
     unless ($after =~ /\Q${app}\E/) {
+        return if has_full_disk_access(); # 書き込みは通っており cfprefsd の反映待ち
         print "  WARN: ${app} を com.apple.custommenu.apps に登録できませんでした。\n";
         print "        ターミナルに「フルディスクアクセス」を許可すると登録できます。\n";
         print "        Chrome そのものには反映されており、システムショートカットに表示されないだけで動作自体には影響しません。\n";

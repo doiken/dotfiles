@@ -131,5 +131,7 @@ SCRIPTS=(
     $HOME/dotfiles/setup/${PROFILE}_setup # 存在しないプロファイルは -x で弾かれる
 )
 for script in ${SCRIPTS[@]}; do
-    [ -x $script ] && $script
+    ## プロファイル用スクリプトが無いマシンでも終了コードを 1 にしないよう continue で飛ばす
+    [ -x $script ] || continue
+    $script
 done
