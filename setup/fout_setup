@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+## SSH 鍵が無いと下の clone が全リポジトリ分 Permission denied を並べるだけで
+## 何をすべきか分からないため、先に 1 回だけ疎通確認して案内する
+if ! ssh -T -o BatchMode=yes -o StrictHostKeyChecking=accept-new git@github.com 2>&1 | grep -q 'successfully authenticated'; then
+    echo "ERROR: GitHub への SSH 認証に失敗しました。鍵を作成し GitHub に登録してください。"
+    echo "       ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git"
+    echo "       gh ssh-key add ~/.ssh/id_ed25519_git.pub"
+    exit 1
+fi
+
 REPO_DIR=${REPO_DIR:-"$HOME/Repositories"}
 mkdir -p $REPO_DIR
 cd $REPO_DIR

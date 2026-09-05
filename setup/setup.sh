@@ -7,7 +7,6 @@
 # REQUIREMENTS
 #   実行中に案内されないもの (sudo パスワードや Xcode CLT はプロンプトが出るので不要)
 #   PROFILE=fout でのみ、事前に用意が要る
-#   - GitHub 用 SSH 秘密鍵 (fout_setup が git@github.com: で 14 リポジトリを clone する)
 #   - Keychain の Redmine API キー (登録コマンドは fout_setup のコメント参照)
 #   - ~/.ssh/config と ~/.ssh/id_rsa_bastion (.ssh は dotfiles 管理外。fout.zsh が使う)
 
