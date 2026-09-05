@@ -32,13 +32,24 @@ DOT_FILES=(
   .editrc
   .git_template
   .claude
-  $(echo $(cd ~/dotfiles/; echo .zshrc.d/*))
 )
 
-mkdir -p ~/.zshrc.d
-for file in ${DOT_FILES[@]}
+## .zshrc.d 配下は 1 ファイルずつリンクする
+mkdir -p $HOME/.zshrc.d
+for f in $HOME/dotfiles/.zshrc.d/*.zsh; do
+    [ -e "$f" ] && DOT_FILES+=(".zshrc.d/${f##*/}")
+done
+
+## リネーム・削除で実体を失ったシンボリックリンクを掃除する
+## (残すと .zshrc の `source ~/.zshrc.d/*.zsh` が失敗する)
+for link in $HOME/.zshrc.d/*; do
+    [ -L "$link" ] && [ ! -e "$link" ] && rm "$link"
+done
+
+for file in "${DOT_FILES[@]}"
 do
-    [ ! -e $HOME/$file ] && ln -s $HOME/dotfiles/$file $HOME/$file
+    [ -L "$HOME/$file" ] && [ ! -e "$HOME/$file" ] && rm "$HOME/$file"
+    [ ! -e "$HOME/$file" ] && ln -s "$HOME/dotfiles/$file" "$HOME/$file"
 done
 
 # sheldon (zsh plugin manager)

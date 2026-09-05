@@ -51,8 +51,8 @@ which aws_completer>/dev/null && complete -C 'aws_completer' aws
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 
-# Created by `pipx` on 2022-07-29 08:53:15
-export PATH="$PATH:/Users/doi_kenji/.local/bin"
+# uv tool / pipx などがインストールするユーザーローカルの実行ファイル
+path=($path $HOME/.local/bin)
 
 # zoxide: 訪問履歴から cd 先を推測 (z <部分文字列> / zi で対話選択)
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"

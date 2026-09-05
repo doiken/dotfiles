@@ -4,7 +4,7 @@
 [core]
   editor = vim
 	excludesfile = ~/.gitignore_global
-	hooksPath = /Users/doi_kenji/.git_template/hooks
+	hooksPath = ~/.git_template/hooks
 [color]
 	ui = auto
 [alias]

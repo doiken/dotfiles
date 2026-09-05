@@ -1,3 +1,6 @@
+-- ホームディレクトリ名はマシンによって異なるので環境変数から取得する
+local HOME = os.getenv("HOME")
+
 hs.loadSpoon("SpoonInstall")
 spoon.SpoonInstall.use_syncinstall = true
 spoon.SpoonInstall.repos.doiken = {
@@ -42,7 +45,7 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "redash iframe",
         action = "shell",
-        contents = "/Users/doi_kenji/bin/redash_iframe",
+        contents = HOME .. "/bin/redash_iframe",
       },
       {
         text = "redmine table",
@@ -96,12 +99,12 @@ spoon.SpoonInstall:andUse("Snippet", {
           {
             text = "space2table textile",
             action = "shell",
-            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl textile",
+            contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl textile",
           },
           {
             text = "space2table markdown",
             action = "shell",
-            contents = "/usr/bin/pbpaste | /Users/doi_kenji/bin/space2table.pl markdown",
+            contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl markdown",
           },
         },
       },
