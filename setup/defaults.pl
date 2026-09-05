@@ -13,8 +13,9 @@ use warnings;
 # ここが失敗しても動作には影響しない。
 # NOTE: macOS Ventura 以降 com.apple.universalaccess は TCC 保護されており、
 #       ターミナルにフルディスクアクセスが無いと read/write ともに失敗する。
-# FDA 不足を通知で知らせる (長い出力に流れて気づけないため)。クリックで設定ペインが開く。
-# FDA 不在は VSCode の動作低下の一因でもあるので、この機会に許可させたい。
+# フルディスクアクセス(FDA)の不足を通知で知らせる (長い出力に流れて気づけないため)。
+# クリックで設定ペインが開く。FDA 不在は VSCode の動作低下の一因でもあるので、
+# この機会に許可させたい。
 my $FDA_PANE = 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles';
 my $fda_notified = 0;
 sub notify_full_disk_access {
