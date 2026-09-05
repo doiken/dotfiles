@@ -33,9 +33,12 @@ case "$USER" in
     *)         PROFILE=home ;;
 esac
 
-echo "############################################"
-echo "## PROFILE=$PROFILE で実行します (USER=$USER)"
-echo "############################################"
+## 反転表示で後続の brew 出力に埋もれないようにする。tty でなければ色を付けない
+if [ -t 1 ]; then
+    printf '\033[7m PROFILE=%s \033[0m (USER=%s)\n' "$PROFILE" "$USER"
+else
+    printf 'PROFILE=%s (USER=%s)\n' "$PROFILE" "$USER"
+fi
 
 ##
 ## Sym Link
