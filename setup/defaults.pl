@@ -13,6 +13,23 @@ use warnings;
 # ここが失敗しても動作には影響しない。
 # NOTE: macOS Ventura 以降 com.apple.universalaccess は TCC 保護されており、
 #       ターミナルにフルディスクアクセスが無いと read/write ともに失敗する。
+# フルディスクアクセス(FDA)の不足を能動的に知らせる。
+# print だけだと setup.sh の長い出力に流れて気づけないため通知を出す。
+# 通知をクリックするとシステム設定の該当ペインが開く。
+# FDA は下の custommenu 登録以外にも影響し、特に VSCode は FDA が無いと
+# 動作が重くなる事象が報告されている。新マシンのこの時点で許可しておきたい。
+my $FDA_PANE = 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles';
+my $fda_notified = 0;
+sub notify_full_disk_access {
+    return if $fda_notified++; # アプリごとに呼ばれるので通知は1回だけ
+    return unless `which terminal-notifier 2>/dev/null`;
+    system('terminal-notifier',
+        '-title',    'dotfiles setup',
+        '-subtitle', 'フルディスクアクセスが未許可です',
+        '-message',  'ターミナルに許可してください (VSCode の動作低下の回避にもなります)',
+        '-open',     $FDA_PANE);
+}
+
 sub add_custom_menu_entry {
     my ($app) = @_;
     die 'usage: addCustomMenuEntryIfNeeded com.company.appname' unless $app;
@@ -26,6 +43,7 @@ sub add_custom_menu_entry {
         print "  WARN: ${app} を com.apple.custommenu.apps に登録できませんでした。\n";
         print "        ターミナルに「フルディスクアクセス」を許可すると登録できます。\n";
         print "        Chrome そのものには反映されており、システムショートカットに表示されないだけで動作自体には影響しません。\n";
+        notify_full_disk_access();
     }
 }
 
