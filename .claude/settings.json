@@ -136,10 +136,6 @@
           {
             "type": "command",
             "command": "jq -c '. + {\"notification_type\": \"stop\"}' | ~/.claude/scripts/notify.sh"
-          },
-          {
-            "type": "command",
-            "command": "t=$(jq -r .transcript_path); d=${t%.jsonl}; a=$(jq -rs '[.[]|select(.type==\"ai-title\")][-1].aiTitle // empty' \"$t\"); [ -e \"$d/custom-title.json\" ] || [ -z \"$a\" ] || { mkdir -p \"$d\"; jq -n --arg t \"$a\" '{customTitle:$t}' > \"$d/custom-title.json\"; } 2>/dev/null || true"
           }
         ]
       }
@@ -162,6 +158,17 @@
           {
             "type": "command",
             "command": "~/.claude/scripts/notify.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/session-title.sh"
           }
         ]
       }
