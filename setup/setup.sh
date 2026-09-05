@@ -1,4 +1,19 @@
 #!/bin/bash
+#
+# NAME
+#   setup.sh
+# DESCRIPTION
+#   dotfiles のシンボリックリンク配置と各種セットアップ。何度実行しても良い
+# REQUIREMENTS
+#   - GUI ログインセッション (cask のアプリ配置に必要。SSH 越しだと失敗する)
+#   - sudo パスワード (Touch ID 設定 / cask の pkg / podman-mac-helper)
+#   - Xcode CLT (未導入なら Homebrew インストーラがプロンプトを出す)
+#   - フルディスクアクセス: defaults.pl のみ。無い場合は警告して続行する
+#   PROFILE=fout (fout_setup) では追加で以下が要る
+#   - GitHub 用 SSH 秘密鍵 (14 リポジトリを git@github.com: で clone するため)
+#   - Keychain の Redmine API キー (登録コマンドは fout_setup のコメント参照)
+#   - ~/.ssh/config と ~/.ssh/id_rsa_bastion (.ssh は dotfiles 管理外。fout.zsh が使う)
+#   dotfiles 自体の clone は HTTPS のため SSH 鍵は不要
 
 ##
 ## First of all, we need git
