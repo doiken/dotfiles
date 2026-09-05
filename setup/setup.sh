@@ -19,7 +19,9 @@ which git >/dev/null || brew install git
 ##
 ## Get This Repository
 ##
+## clone 自体は鍵の要らない HTTPS で行い、push できるよう origin だけ SSH に向け直す
 [ ! -d $HOME/dotfiles ] && git clone https://github.com/doiken/dotfiles.git $HOME/dotfiles
+git -C $HOME/dotfiles remote set-url origin git@github.com:doiken/dotfiles.git
 
 ##
 ## Profile
