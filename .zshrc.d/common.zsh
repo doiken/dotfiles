@@ -90,6 +90,8 @@ export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg
 # eza: メタデータ列(権限・サイズ・日付・所有者)をグレーに抑えてファイル名の色を際立たせる
 export EZA_COLORS="ur=38;5;245:uw=38;5;245:ux=38;5;245:ue=38;5;245:gr=38;5;245:gw=38;5;245:gx=38;5;245:tr=38;5;245:tw=38;5;245:tx=38;5;245:xa=38;5;245:sn=38;5;245:sb=38;5;245:da=38;5;245:uu=38;5;245:un=38;5;245:gu=38;5;245:gn=38;5;245"
 export EDITOR=vim
+# emacs キーバインドを明示。EDITOR=vim ではキーマップ viins が採用され Ctrl-E が ^E となるため
+bindkey -e
 export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000
 export SAVEHIST=1000000
