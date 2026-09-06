@@ -163,7 +163,7 @@ def choose_session(query: str | None) -> Session:
         if not hits:
             sys.exit(f"セッションが見つかりません: {query}")
         return hits[0]
-    lines = [f"{datetime.fromisoformat(s['last']).astimezone():%m/%d %H:%M}  {s['title']}\t{s['id']}"
+    lines = [f"{datetime.fromisoformat(s['last'].replace('Z', '+00:00')).astimezone():%m/%d %H:%M}  {s['title']}\t{s['id']}"
              for s in sessions]
     r = subprocess.run(
         ["fzf", "--prompt", "session> ", "--with-nth", "1", "--delimiter", "\t",
