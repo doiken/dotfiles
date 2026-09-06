@@ -4,6 +4,24 @@ shell = "zsh"
 github = "zsh-users/zsh-completions"
 apply = ["fpath"]
 
+# compinit は fzf-tab より前・fpath 完成後に実行する必要がある
+# (.zcompdump が24時間以内なら再スキャン省略の -C で高速化)
+[plugins.compinit]
+inline = '''
+autoload -Uz compinit
+() {
+  setopt local_options extended_glob
+  if [[ -n $HOME/.zcompdump(#qN.mh-24) ]]; then
+    compinit -C
+  else
+    compinit
+  fi
+}
+'''
+
+[plugins.fzf-tab]
+github = "Aloxaf/fzf-tab"
+
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
 

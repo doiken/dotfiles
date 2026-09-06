@@ -70,12 +70,14 @@ alias jman='env LANG=ja_JP.UTF-8 man'
 
 # General settings
 #
+setopt auto_cd
 setopt auto_list
 setopt auto_menu
 setopt auto_pushd
 setopt extended_history
 setopt hist_ignore_all_dups
 setopt hist_ignore_dups
+setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_save_no_dups
 # setopt ignore_eof
@@ -106,6 +108,9 @@ export EZA_COLORS="ur=38;5;245:uw=38;5;245:ux=38;5;245:ue=38;5;245:gr=38;5;245:g
 export EDITOR=vim
 # emacs キーバインドを明示。EDITOR=vim ではキーマップ viins が採用され Ctrl-E が ^E となるため
 bindkey -e
+# man を bat で色付き表示
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
 export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000
 export SAVEHIST=1000000
@@ -120,7 +125,12 @@ export GOPATH=$HOME/.go
 ##
 ## for fzf
 ##
-export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --inline-info --preview-window right:60%:wrap --preview='echo {}' --no-sort --exact" # man fzf
+export FZF_DEFAULT_OPTS="--height 80% --layout=reverse --border --info=inline" # man fzf
+# 履歴(Ctrl-R): コマンド全文を下3行に表示。exact/no-sort は履歴検索だけに適用
+export FZF_CTRL_R_OPTS="--no-sort --exact --preview 'echo {}' --preview-window down:3:wrap"
+# ファイル(Ctrl-T)・ディレクトリ(Alt-C): 中身をプレビュー
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:100 {} 2>/dev/null || eza -1 --color=always {}'"
+export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
 # fd をファイル・ディレクトリ列挙に使用
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND

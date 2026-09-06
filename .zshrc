@@ -12,36 +12,32 @@ done
 ##
 cdpath=(~/Documents ~/Repositories ~ $cdpath)
 path=($HOME/dotfiles/setup/ $HOME/bin/ $path)
-fpath=(
-  ~/.zsh/completion
-  $fpath
-  ${HOMEBREW_PREFIX}/share/zsh/site-functions
-)
+# fpath と compinit は .zshrc.d/01_plugins.zsh + sheldon 側(fzf-tab より前に実行が必要)
 
 ##
-## compinit
+## completion styles
 ##
 
 # for aws cli completion
 # see: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
 autoload bashcompinit && bashcompinit
-
-# .zcompdump が24時間以内なら再スキャンを省略して高速化 (-C)
-autoload -Uz compinit
-() {
-  setopt local_options extended_glob
-  if [[ -n $HOME/.zcompdump(#qN.mh-24) ]]; then
-    compinit -C
-  else
-    compinit
-  fi
-}
-
-# tab x 2 で incremental search
-# 	ref. https://qiita.com/aosho235/items/ee178ece3d514026b7ae
-zstyle ':completion:*' menu select interactive
-
 which aws_completer>/dev/null && complete -C 'aws_completer' aws
+
+# あいまいマッチ: 完全一致 → 大文字小文字無視 → 区切り文字(._-)またぎの部分一致
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+# 候補をグループ化して見出し表示(fzf-tab では [説明] 形式・< > でグループ切替)
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# 重い補完(brew, docker 等)をキャッシュ
+zstyle ':completion:*' use-cache true
+# 候補選択は fzf-tab に任せる
+zstyle ':completion:*' menu no
+
+# fzf-tab
+zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:(vi|vim|bat|cat|code):*' fzf-preview 'bat --color=always --style=numbers --line-range=:80 $realpath 2>/dev/null || eza -1 --color=always $realpath'
 
 ##
 ## Work Around: https://stackoverflow.com/questions/33452870/tmux-bracketed-paste-mode-issue-at-command-prompt-in-zsh-shell

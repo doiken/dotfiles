@@ -108,8 +108,8 @@ print "defaults com.apple.Finder\n" . `defaults read com.apple.Finder | grep -E 
 
 # Battery
 ## バッテリーを%表示
-`defaults write com.apple.menuextra.battery ShowPercent -string "YES"`;
-print "defaults defaults com.apple.menuextra.battery\n" . `defaults read com.apple.menuextra.battery | grep -E 'ShowPercent'` . "\n";
+`defaults write com.apple.controlcenter BatteryShowPercentage -bool "true"`;
+print "defaults com.apple.controlcenter\n" . `defaults read com.apple.controlcenter | grep -E 'BatteryShowPercentage'` . "\n";
 
 # Trackpad
 ## タップでクリック
@@ -118,6 +118,8 @@ print "defaults com.apple.AppleMultitouchTrackpad\n" . `defaults read com.apple.
 
 # restart modified apps by your self to make keys enabled
 `killall cfprefsd`;
+# BatteryShowPercentage の反映に必要(メニューバーが一瞬再起動する)
+`killall ControlCenter`;
 
 # 充電時のチャイムを切る
 `defaults write com.apple.PowerChime ChimeOnNoHardware -bool true;killall PowerChime`;
