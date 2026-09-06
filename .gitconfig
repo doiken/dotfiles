@@ -119,6 +119,13 @@
 [delta]
 	navigate = true
 	line-numbers = true
+	# 配色は VS Code の GitHub Dark に合わせる(# を含む値は要クォート)
+	syntax-theme = Visual Studio Dark+
+	plus-style = "syntax #1b4721"
+	plus-emph-style = "syntax #2ea043"
+	minus-style = "syntax #5d1a1d"
+	minus-emph-style = "syntax #f85149"
+	hunk-header-decoration-style = "#444d56 box"
 [init]
 	defaultBranch = main
 

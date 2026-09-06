@@ -108,6 +108,8 @@ export EZA_COLORS="ur=38;5;245:uw=38;5;245:ux=38;5;245:ue=38;5;245:gr=38;5;245:g
 export EDITOR=vim
 # emacs キーバインドを明示。EDITOR=vim ではキーマップ viins が採用され Ctrl-E が ^E となるため
 bindkey -e
+# bat/delta のシンタックステーマ(VS Code の GitHub Dark に寄せる)
+export BAT_THEME="Visual Studio Dark+"
 # man を bat で色付き表示
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export MANROFFOPT="-c"
