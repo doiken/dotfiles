@@ -4,17 +4,28 @@ shell = "zsh"
 github = "zsh-users/zsh-completions"
 apply = ["fpath"]
 
-# compinit は fzf-tab より前・fpath 完成後に実行する必要がある
-# (.zcompdump が24時間以内なら再スキャン省略の -C で高速化)
+# compinit は fzf-tab より前・fpath 完成後に実行する必要がある。
+# 補完定義の変化を検知した時だけフル再生成し、通常は -C で検査をスキップする。
+# - 全 fpath: ディレクトリ mtime(brew の relink・git pull 等の追加/削除/置換を検知)
+# - ~/.zsh/completion(自作)だけはファイル mtime も見て、その場編集も検知する
 [plugins.compinit]
 inline = '''
 autoload -Uz compinit
 () {
-  setopt local_options extended_glob
-  if [[ -n $HOME/.zcompdump(#qN.mh-24) ]]; then
-    compinit -C
+  local dump=$HOME/.zcompdump f
+  local rebuild=0
+  if [[ -f $dump ]]; then
+    for f in ${^fpath}(N-/) ~/.zsh/completion/*(N.); do
+      [[ $f -nt $dump ]] && { rebuild=1; break }
+    done
   else
+    rebuild=1
+  fi
+  if (( rebuild )); then
+    rm -f $dump
     compinit
+  else
+    compinit -C
   fi
 }
 '''
