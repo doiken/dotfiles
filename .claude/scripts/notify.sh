@@ -152,6 +152,9 @@ send_notification() {
 #
 # 「最後のユーザーメッセージ以降」に限定するのは、中断等で完了通知が来ないまま
 # 残ったエージェントが以後の stop 通知を永久に抑制するのを防ぐため。
+# ただし完了通知の <task-notification> は dequeue 後に user エントリ (string content)
+# としても再挿入されるため、ユーザーメッセージ扱いにしない (リセットすると
+# 実行中の残りエージェントの記録が消え、抑制が効かなくなる)。
 # 判定に失敗した場合は通知する側に倒れる。
 has_running_subagents() {
   local transcript="$1"
@@ -163,6 +166,7 @@ has_running_subagents() {
       {launched: [], notified: []};
       if $e.type == "user"
          and ($e.isMeta != true)
+         and (($e.message.content | tostring | startswith("<task-notification>")) | not)
          and (($e.message.content | type) == "string"
               or ([$e.message.content[]? | select(.type == "tool_result")] | length) == 0)
       then {launched: [], notified: []}
