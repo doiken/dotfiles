@@ -76,19 +76,26 @@ for link in $HOME/.zshrc.d/*; do
     [ -L "$link" ] && [ ! -e "$link" ] && rm "$link"
 done
 
+## .config 配下はディレクトリ単位でリンクする
+## (~/.config には gcloud/gh など管理外のツールが同居するため ~/.config 自体はリンクしない)
+mkdir -p $HOME/.config
+for d in $HOME/dotfiles/.config/*/; do
+    [ -d "$d" ] || continue
+    dir=${d%/}
+    dir=${dir##*/}
+    ## 旧方式(ファイル単位リンク)からの移行。中身がリンクだけなら畳んで作り直す
+    if [ -d "$HOME/.config/$dir" ] && [ ! -L "$HOME/.config/$dir" ]; then
+        find "$HOME/.config/$dir" -type l -exec rm {} +
+        rmdir "$HOME/.config/$dir" 2>/dev/null
+    fi
+    DOT_FILES+=(".config/$dir")
+done
+
 for file in "${DOT_FILES[@]}"
 do
     [ -L "$HOME/$file" ] && [ ! -e "$HOME/$file" ] && rm "$HOME/$file"
     [ ! -e "$HOME/$file" ] && ln -s "$HOME/dotfiles/$file" "$HOME/$file"
 done
-
-# sheldon (zsh plugin manager)
-mkdir -p ~/.config/sheldon
-[ ! -e ~/.config/sheldon/plugins.toml ] && ln -s $HOME/dotfiles/.config/sheldon/plugins.toml ~/.config/sheldon/plugins.toml
-
-# mise (runtime version manager)
-mkdir -p ~/.config/mise
-[ ! -e ~/.config/mise/config.toml ] && ln -s $HOME/dotfiles/.config/mise/config.toml ~/.config/mise/config.toml
 
 ##
 ## Install Basics

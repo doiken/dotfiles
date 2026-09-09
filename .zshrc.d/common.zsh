@@ -102,9 +102,11 @@ setopt transient_rprompt
 export LESS="-iRMXS"
 export CLICOLOR=true
 export LSCOLORS='exfxcxdxbxGxDxabagacad'
-export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
-# eza: メタデータ列(権限・サイズ・日付・所有者)をグレーに抑えてファイル名の色を際立たせる
-export EZA_COLORS="ur=38;5;245:uw=38;5;245:ux=38;5;245:ue=38;5;245:gr=38;5;245:gw=38;5;245:gx=38;5;245:tr=38;5;245:tw=38;5;245:tx=38;5;245:xa=38;5;245:sn=38;5;245:sb=38;5;245:da=38;5;245:uu=38;5;245:un=38;5;245:gu=38;5;245:gn=38;5;245"
+# zsh 補完(.zshrc の list-colors)専用。export すると eza に継承され theme.yml の色を上書きするため付けない
+LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:'
+# eza: 配色は ~/.config/eza/theme.yml で管理する
+# man は XDG_CONFIG_HOME 未設定時に $HOME/.config/eza へフォールバックすると書くが、0.23.5 は実際にはしないため明示する
+export EZA_CONFIG_DIR="$HOME/.config/eza"
 export EDITOR=vim
 # emacs キーバインドを明示。EDITOR=vim ではキーマップ viins が採用され Ctrl-E が ^E となるため
 bindkey -e
