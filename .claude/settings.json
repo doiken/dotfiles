@@ -127,7 +127,10 @@
       "mcp__claude_ai_Slack__slack_send_message_draft"
     ]
   },
-  "model": "fable",
+  "model": "opus",
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
   "hooks": {
     "Stop": [
       {
