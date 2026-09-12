@@ -1,17 +1,29 @@
 #!/usr/bin/env bash
-# Claude Code セッションの保存・一覧・再開
+# Claude Code セッションの保存・一覧・選択
 #   claude_session save   : アクティブなセッション一覧を保存する(再起動前に実行)
 #   claude_session list   : 保存済みセッションを cwd に関係なく一覧表示
-#   claude_session resume : カレントディレクトリのセッションを fzf で1つ選び claude --resume する
-#                           (tmux セッション内のターミナルで実行する想定)
+#   claude_session select : stdin の候補から1行選んでそのまま出力する(フィルタ)
+#   claude_session resume : カレントディレクトリのセッションを1つ選び claude --resume する
+#
+# tmux に依存しない。tmux 連携(復元)は bin/tcs 側が担当する。
+#
+# list の出力形式:
+#   stdout が tty なら人間向けに整形、パイプなら生 TSV をそのまま出す(git 等と同じ流儀)
+# TSV 列: 1=updatedAt 2=name 3=cwd 4=sessionId 5=rootUuid 6=startedAt(epoch ms)
+#
+# rootUuid は fork 系譜(発生元)の識別子。--fork-session は transcript を message uuid ごと
+# コピーして sessionId だけ振り直すため、会話チェーンの根の uuid が系譜内で共通になる。
+# transcript が無い/根が見つからない場合は sessionId 自身を使い単独グループとして扱う。
+# (transcript の内部構造は公式ドキュメントに記載がなく、実ファイルを比較して確認した挙動)
 set -euo pipefail
 
 SESSIONS_DIR="$HOME/.claude/sessions"
+PROJECTS_DIR="$HOME/.claude/projects"
 # basename "$0" だと symlink 別名(cs)で保存先が分裂するため固定名にする
 SAVED="/var/tmp/claude_session.tsv"
 
 usage() {
-  echo "usage: $(basename "$0") {save|list|resume}" >&2
+  echo "usage: $(basename "$0") {save|list|select|resume}" >&2
   exit 1
 }
 
@@ -22,8 +34,22 @@ require_saved() {
   fi
 }
 
+# sessionId から fork 系譜の識別子(生きている会話チェーンの根の uuid)を得る。
+# 根は user とは限らず system エントリのこともあるので type では絞らない。
+# transcript は木構造で、プロンプト再送などで放棄されたブランチが前方に残ることがある。
+# 根(parentUuid == null)は複数出現しうるので、常に最後=最新のものを採る。
+root_uuid() {
+  local sid="$1" f root
+  for f in "$PROJECTS_DIR"/*/"$sid".jsonl; do
+    [ -e "$f" ] || continue
+    root=$(jq -rn 'last(inputs | select(.uuid != null and .parentUuid == null) | .uuid) // empty' "$f")
+    [ -n "$root" ] && { echo "$root"; return; }
+  done
+  echo "$sid"
+}
+
 cmd_save() {
-  local tmp="$SAVED.tmp" f pid count
+  local tmp="$SAVED.tmp" f pid sid count
   : > "$tmp"
   for f in "$SESSIONS_DIR"/*.json; do
     [ -e "$f" ] || continue
@@ -31,45 +57,82 @@ cmd_save() {
     [ -n "$pid" ] || continue
     # 生きている claude プロセスのみ対象(クラッシュ残骸の json を除外)
     [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = "claude" ] || continue
-    jq -r '[.sessionId, .cwd, (.name // "unnamed"),
-            ((.updatedAt // 0) / 1000 | floor | strflocaltime("%Y-%m-%d %H:%M"))] | @tsv' "$f" >> "$tmp"
+    sid=$(jq -r '.sessionId // empty' "$f")
+    [ -n "$sid" ] || continue
+    jq -r --arg root "$(root_uuid "$sid")" \
+      '[((.updatedAt // 0) / 1000 | floor | strflocaltime("%Y-%m-%d %H:%M")),
+        (.name // "unnamed"), .cwd, .sessionId, $root, (.startedAt // 0)] | @tsv' "$f" >> "$tmp"
   done
-  # 最終会話日時の新しい順に保存(list/resume がそのまま最新順になる)
-  sort -t $'\t' -k4,4r "$tmp" -o "$tmp"
+  # 最終会話日時の新しい順に保存(list がそのまま最新順になる)
+  sort -t $'\t' -k1,1r "$tmp" -o "$tmp"
   mv "$tmp" "$SAVED"
   count=$(grep -c '' "$SAVED" || true)
   echo "saved $count session(s) -> $SAVED"
-  print_sessions
+  print_sessions < "$SAVED"
 }
 
+# TSV を人間向けに整形(rootUuid は先頭8文字だけ出す)
 print_sessions() {
-  awk -F'\t' '{ printf "%s\t%s\t%s\t%s\n", $4, $3, $2, $1 }' "$SAVED" | column -t -s $'\t'
+  awk -F'\t' 'BEGIN { OFS = "\t" } { print $1, $2, substr($5, 1, 8), $3, $4 }' | column -t -s $'\t'
 }
 
 cmd_list() {
   require_saved
-  print_sessions
+  if [ -t 1 ]; then
+    print_sessions < "$SAVED"
+  else
+    cat "$SAVED"
+  fi
+}
+
+# stdin の候補から1行選んで stdout に出すフィルタ。
+# 候補は「表示文字列 \t ペイロード...」形式で、選ばれた行を丸ごと返す。
+# $CLAUDE_SESSION_SELECTOR で任意のフィルタコマンドに差し替えられる。
+#   例) export CLAUDE_SESSION_SELECTOR="fzf --delimiter=\$'\t' --with-nth=1"
+cmd_select() {
+  local rows
+  rows=$(cat)
+  [ -n "$rows" ] || { echo "no candidates" >&2; exit 1; }
+  if [ -n "${CLAUDE_SESSION_SELECTOR:-}" ]; then
+    printf '%s\n' "$rows" | eval "$CLAUDE_SESSION_SELECTOR"
+  else
+    default_select <<< "$rows"
+  fi
+}
+
+# 既定の selector: 番号を振って表示し、標準入力から番号を1つ受け取る(外部依存なし)
+default_select() {
+  local rows n i
+  rows=$(cat)
+  n=$(grep -c '' <<< "$rows")
+  cut -f1 <<< "$rows" | nl -ba -w3 -s': ' >&2
+  printf 'select [1-%d]> ' "$n" >&2
+  read -r i < /dev/tty
+  [[ "$i" =~ ^[0-9]+$ ]] && [ "$i" -ge 1 ] && [ "$i" -le "$n" ] || { echo "canceled" >&2; exit 1; }
+  sed -n "${i}p" <<< "$rows"
 }
 
 cmd_resume() {
   require_saved
   local candidates selected id
   # カレントディレクトリのセッションのみ対象(symlink 経由でも一致するよう物理パスでも比較)
-  candidates=$(awk -F'\t' -v cwd="$PWD" -v pcwd="$(pwd -P)" \
-    '$2 == cwd || $2 == pcwd { printf "%s\t%s\t%s\n", $4, $3, $1 }' "$SAVED")
+  # 表示は「日時 + セッション名」、ペイロードは sessionId
+  candidates=$(awk -F'\t' -v cwd="$PWD" -v pcwd="$(pwd -P)" 'BEGIN { OFS = "\t" }
+    $3 == cwd || $3 == pcwd { print $1 "  " $2, $4 }' "$SAVED")
   if [ -z "$candidates" ]; then
     echo "no saved sessions for $PWD" >&2
     exit 1
   fi
-  # 保存時点で最新順ソート済み。日時・名前をタブ区切りで表示
-  selected=$(fzf --delimiter=$'\t' --with-nth=1,2 --prompt='claude session> ' <<< "$candidates") || exit 1
-  id=$(cut -f3 <<< "$selected")
+  selected=$(printf '%s\n' "$candidates" | cmd_select)
+  [ -n "$selected" ] || exit 1
+  id=$(cut -f2 <<< "$selected")
   exec claude --resume "$id"
 }
 
 case "${1:-}" in
   save)   cmd_save ;;
   list)   cmd_list ;;
+  select) cmd_select ;;
   resume) cmd_resume ;;
   *)      usage ;;
 esac

@@ -42,8 +42,12 @@ function tc  { tmux new-session claude "$@"; }
 function tcr { tmux new-session claude --resume "$@"; }
 function tcf { tmux new-session claude --resume --fork-session "$@"; }
 
-function csr  { claude_session resume "$@"; }
-function tcsr { tmux new-session claude_session resume "$@"; }
+# claude_session/tcs の候補選択に fzf を使う(未設定なら番号入力の組み込み selector)
+export CLAUDE_SESSION_SELECTOR="fzf --delimiter=\$'\t' --with-nth=1 --prompt='claude session> '"
+
+function csr  { claude_session resume "$@"; }   # cwd のセッションを1つ復元
+function tcsr { tcs resume "$@"; }              # テーマ配下を window として一括復元
+function tcsf { tcs fork "$@"; }                # テーマ内で新規 window に fork
 
 # 素の diff も delta で表示(元の diff は command diff)
 if (( $+commands[delta] )); then

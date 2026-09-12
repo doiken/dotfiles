@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# tmux 向け claude_session ラッパー(1テーマ = 1 tmux セッション運用)
+#   tcs save   : claude_session save に委譲(再起動前に実行)
+#   tcs list   : fork 系譜ごとに集約して一覧表示
+#   tcs resume : 系譜を1つ選び、配下セッションを tmux セッションに window として並べる
+#   tcs fork   : 新規 window で claude --resume --fork-session する(テーマ内で派生)
+#
+# resume は今いる tmux セッションに window を足す(tmux 外なら新規セッションを張る)。
+# テーマ = tmux セッションの対応付けは、テーマごとに別セッションで resume する運用で担保する。
+set -euo pipefail
+
+# claude_session の TSV(1=updatedAt 2=name 3=cwd 4=sessionId 5=rootUuid 6=startedAt)を
+# rootUuid で畳んで「表示文字列 \t rootUuid」にする。
+# テーマ名と cwd は系譜の起点(startedAt 最小)、日時は系譜内の最新 updatedAt を採る。
+group() {
+  awk -F'\t' 'BEGIN { OFS = "\t" }
+    { root = $5
+      if ($1 > latest[root]) latest[root] = $1
+      if (!(root in started) || $6 + 0 < started[root]) {
+        started[root] = $6 + 0; name[root] = $2; cwd[root] = $3
+      }
+      count[root]++ }
+    END { for (root in latest)
+            print latest[root] "  " name[root] " (" count[root] ")  " cwd[root], root }' | sort -r
+}
+
+resume() {
+  local self rows key cwd sid headcwd="" headsid=""
+
+  # tmux 外なら、新規セッションの中で自分自身を呼び直す。detached なセッションは
+  # destroy-unattached on の環境で即破棄されるため、必ずアタッチした状態で作る。
+  # tmux サーバの環境にはシェルの export が載らないので selector は -e で引き継ぐ
+  if [ -z "${TMUX:-}" ]; then
+    self=$(cd "$(dirname "$0")" && pwd)/${0##*/}
+    exec tmux new-session -e "CLAUDE_SESSION_SELECTOR=${CLAUDE_SESSION_SELECTOR:-}" "$self" resume
+  fi
+
+  rows=$(claude_session list)
+  key=$(group <<< "$rows" | claude_session select | cut -f2)
+
+  # 系譜の起点から派生順(startedAt 昇順)に並べ、元の window 順を再現する。
+  # 起点は今いる window で起動するので、2件目以降だけ -d で裏に window を足す
+  while IFS=$'\t' read -r _ _ cwd sid _; do
+    if [ -z "$headsid" ]; then
+      headcwd=$cwd headsid=$sid
+    else
+      tmux new-window -d -c "$cwd" claude --resume "$sid"
+    fi
+  done < <(awk -F'\t' -v k="$key" '$5 == k' <<< "$rows" | sort -t $'\t' -k6,6n)
+
+  [ -n "$headsid" ] || { echo "no sessions for $key" >&2; exit 1; }
+  cd "$headcwd"
+  exec claude --resume "$headsid"
+}
+
+case "${1:-}" in
+  save)   claude_session save ;;
+  list)   claude_session list | group | cut -f1 ;;
+  resume) resume ;;
+  fork)   tmux new-window -c "$PWD" claude --resume --fork-session ;;
+  *)      echo "usage: $(basename "$0") {save|list|resume|fork}" >&2; exit 1 ;;
+esac

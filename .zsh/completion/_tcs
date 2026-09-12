@@ -1,0 +1,10 @@
+#compdef tcs
+
+local -a cmds
+cmds=(
+  'save:アクティブなセッション一覧を保存する(claude_session save に委譲)'
+  'list:fork 系譜(テーマ)ごとに集約して一覧表示'
+  'resume:fork 系譜を1つ選び tmux セッションとして一括復元'
+  'fork:新規 window で claude --resume --fork-session する'
+)
+(( CURRENT == 2 )) && _describe 'command' cmds
