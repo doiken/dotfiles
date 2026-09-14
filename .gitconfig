@@ -117,7 +117,6 @@
 [interactive]
 	diffFilter = delta --color-only
 [delta]
-	navigate = true
 	line-numbers = true
 	# 配色は VS Code の GitHub Dark に合わせる(# を含む値は要クォート)
 	syntax-theme = Visual Studio Dark+
