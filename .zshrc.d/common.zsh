@@ -103,7 +103,9 @@ setopt transient_rprompt
 #
 # Exports
 #
-export LESS="-iRMXS"
+# -F: 1画面に収まる出力は pager を抜けて画面に残す / -X を外して長い出力は代替画面へ
+# (-X のままだと VS Code ターミナルの Sticky Scroll の固定行が less の1行目に被る)
+export LESS="-iRMSF"
 export CLICOLOR=true
 export LSCOLORS='exfxcxdxbxGxDxabagacad'
 # zsh 補完(.zshrc の list-colors)専用。export すると eza に継承され theme.yml の色を上書きするため付けない
