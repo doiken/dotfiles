@@ -5,6 +5,7 @@
   editor = vim
 	excludesfile = ~/.gitignore_global
 	hooksPath = ~/.git_template/hooks
+	quotepath = false
 [color]
 	ui = auto
 [alias]
