@@ -9,7 +9,7 @@
 #
 # list の出力形式:
 #   stdout が tty なら人間向けに整形、パイプなら生 TSV をそのまま出す(git 等と同じ流儀)
-# TSV 列: 1=updatedAt 2=name 3=cwd 4=sessionId 5=rootUuid 6=startedAt(epoch ms)
+# TSV 列: 1=updatedAt 2=name 3=cwd 4=sessionId 5=rootUuid 6=createdAt(epoch 秒)
 #
 # rootUuid は fork 系譜(発生元)の識別子。--fork-session は transcript を message uuid ごと
 # コピーして sessionId だけ振り直すため、会話チェーンの根の uuid が系譜内で共通になる。
@@ -48,6 +48,19 @@ root_uuid() {
   echo "$sid"
 }
 
+# sessionId からセッションの作成時刻(epoch 秒)を得る。
+# session json の startedAt は claude プロセスの起動時刻で resume ごとに更新されるため使えない。
+# --fork-session は transcript をファイルごとコピーするので、その birthtime が fork した時刻になる。
+# (birthtime は inode 固有で ctime とは別。rsync 等でコピーすると失われるため呼び出し側でフォールバックする)
+created_at() {
+  local sid="$1" f
+  for f in "$PROJECTS_DIR"/*/"$sid".jsonl; do
+    [ -e "$f" ] || continue
+    stat -f '%B' "$f"
+    return
+  done
+}
+
 cmd_save() {
   local tmp="$SAVED.tmp" f pid sid count
   : > "$tmp"
@@ -59,9 +72,11 @@ cmd_save() {
     [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = "claude" ] || continue
     sid=$(jq -r '.sessionId // empty' "$f")
     [ -n "$sid" ] || continue
-    jq -r --arg root "$(root_uuid "$sid")" \
+    # createdAt が取れないときだけ startedAt(ms)を秒に丸めて代用する
+    jq -r --arg root "$(root_uuid "$sid")" --arg created "$(created_at "$sid")" \
       '[((.updatedAt // 0) / 1000 | floor | strflocaltime("%Y-%m-%d %H:%M")),
-        (.name // "unnamed"), .cwd, .sessionId, $root, (.startedAt // 0)] | @tsv' "$f" >> "$tmp"
+        (.name // "unnamed"), .cwd, .sessionId, $root,
+        (($created | tonumber?) // ((.startedAt // 0) / 1000 | floor))] | @tsv' "$f" >> "$tmp"
   done
   # 最終会話日時の新しい順に保存(list がそのまま最新順になる)
   sort -t $'\t' -k1,1r "$tmp" -o "$tmp"

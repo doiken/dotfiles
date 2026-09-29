@@ -11,13 +11,15 @@ set -euo pipefail
 
 # claude_session の TSV(1=updatedAt 2=name 3=cwd 4=sessionId 5=rootUuid 6=startedAt)を
 # rootUuid で畳んで「表示文字列 \t rootUuid」にする。
-# テーマ名と cwd は系譜の起点(startedAt 最小)、日時は系譜内の最新 updatedAt を採る。
+# テーマ名と cwd は系譜の起点(createdAt 最小)、日時は系譜内の最新 updatedAt を採る。
+# 同じ秒に fork した場合の衝突回避用に sessionId も見て順序を決める。
 group() {
   awk -F'\t' 'BEGIN { OFS = "\t" }
     { root = $5
       if ($1 > latest[root]) latest[root] = $1
-      if (!(root in started) || $6 + 0 < started[root]) {
-        started[root] = $6 + 0; name[root] = $2; cwd[root] = $3
+      if (!(root in created) || $6 + 0 < created[root] ||
+          ($6 + 0 == created[root] && $4 < head[root])) {
+        created[root] = $6 + 0; head[root] = $4; name[root] = $2; cwd[root] = $3
       }
       count[root]++ }
     END { for (root in latest)
@@ -38,7 +40,8 @@ resume() {
   rows=$(claude_session list)
   key=$(group <<< "$rows" | claude_session select | cut -f2)
 
-  # 系譜の起点から派生順(startedAt 昇順)に並べ、元の window 順を再現する。
+  # 系譜の起点から作成順(createdAt 昇順)に並べ、元の window 順を再現する。
+  # 同じ秒に fork した場合の衝突回避用に sessionId を第2キーにする。
   # 起点は今いる window で起動するので、2件目以降だけ -d で裏に window を足す
   while IFS=$'\t' read -r _ _ cwd sid _; do
     if [ -z "$headsid" ]; then
@@ -46,7 +49,7 @@ resume() {
     else
       tmux new-window -d -c "$cwd" claude --resume "$sid"
     fi
-  done < <(awk -F'\t' -v k="$key" '$5 == k' <<< "$rows" | sort -t $'\t' -k6,6n)
+  done < <(awk -F'\t' -v k="$key" '$5 == k' <<< "$rows" | sort -t $'\t' -k6,6n -k4,4)
 
   [ -n "$headsid" ] || { echo "no sessions for $key" >&2; exit 1; }
   cd "$headcwd"
