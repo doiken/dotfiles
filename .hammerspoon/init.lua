@@ -43,45 +43,19 @@ spoon.SpoonInstall:andUse("Snippet", {
         contents = "/usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/$1 /g'",
       },
       {
-        text = "redash iframe",
-        action = "shell",
-        contents = HOME .. "/bin/redash_iframe",
-      },
-      {
         text = "redmine table",
         action = "text",
         contents = "{background:#E6E6E6}. |_.  |_.  |_.  |\n|  |  |  |",
       },
       {
-        text = "image md to html",
+        text = "space2table textile",
         action = "shell",
-        contents = [[/usr/bin/pbpaste | perl -pe 's/!\[image\]\(([^)]+)\)/<img src="$1" width=600px>/g']],
+        contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl textile",
       },
       {
-        text = "ChatGPT fukatsu PPT 1",
-        action = "text",
-        contents = ([[# 命令書:
-          | あなたは[プロの編集者]です。
-          | 以下の制約条件と入力文をもとに[最高の要約]を出力してください。
-          |
-          | # 制約条件:
-          | • 文字数は300文字ていど。
-          | • 小学生にもわかるように。
-          | •重要なキーワードを取り残さない。
-          | •文章を簡潔に。
-          |
-          | # 入力文：
-          | [入力文章]
-          |
-          | # 出力文：]]):gsub(" +|", ""),
-      },
-      {
-        text = "ChatGPT fukatsu PPT 2",
-        action = "text",
-        contents = ([[あなたはプロの XXX です。
-          | YYY で悩んでいます。私のかわりにZZZをしてください。
-          | このタスクで最高の結果をだすために追加の情報が必要な場合は質問をしてください。
-          |]]):gsub(" +|", ""),
+        text = "space2table markdown",
+        action = "shell",
+        contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl markdown",
       },
       {
         text = "other",
@@ -95,16 +69,6 @@ spoon.SpoonInstall:andUse("Snippet", {
               |and month = {{month}}
               |and day = {{day}}
               |and hour = {{hour}}]]):gsub(" +|", ""),
-          },
-          {
-            text = "space2table textile",
-            action = "shell",
-            contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl textile",
-          },
-          {
-            text = "space2table markdown",
-            action = "shell",
-            contents = "/usr/bin/pbpaste | " .. HOME .. "/bin/space2table.pl markdown",
           },
         },
       },

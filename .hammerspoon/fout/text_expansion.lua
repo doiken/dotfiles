@@ -18,10 +18,15 @@ spoon.SpoonInstall:andUse("TextExpansion", {
           local format = ([[select *
             |from parquet_jp.ad
             |where
-            |    year = %Y
-            |and month = %m
-            |and day = %d
-            |and hour = %H
+            |        year = %Y
+            |    and month = %m
+            |    and day = %d
+            |    and hour = %H
+            |    and ad_id != 0 
+            |    and ad_is_charged = '0'
+            |    and click_status = '0'
+            |    and is_valid = 1
+            |    and (error_code = 0 OR error_code IS NULL)
           |]]):gsub(" +|", "")
           return os.date(format, os.time()-24*60*60)
       end,
