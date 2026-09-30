@@ -28,7 +28,6 @@ POLL_SEC = 2
 MIN_UPDATE_INTERVAL = 8   # LLM 呼び出しの最短間隔(秒)
 EXCERPT_MESSAGES = 24     # LLM に渡す直近発言数
 CHUNK_CHARS = 150000      # 履歴取り込み時の1チャンク文字数(会話全文が1回で収まる大きさ)
-TITLE_WIDTH = 36          # テーマ列の表示セル幅(全角18文字)
 
 DIM, BOLD, RESET, CYAN = "\033[2m", "\033[1m", "\033[0m", "\033[36m"
 
@@ -39,7 +38,7 @@ PROMPT = """あなたは会話のテーマ追跡ツールです。開発者とAI
 
 ルール:
 - summary: 会話全体の目的と現在地を50字程度の1文で書く。テーマ名の羅列ではなく背景を書く
-- 各テーマ: {"id": 数値, "category": "大カテゴリ(20字以内)", "title": "テーマ名(30字以内)", "status": "done|wip|hold|todo", "recent": true|false, "note": "現状ひとこと(35字以内)"}
+- 各テーマ: {"id": 数値, "category": "大カテゴリ(20字以内)", "title": "テーマ名(30字以内)", "status": "done|wip|hold|todo", "recent": true|false, "note": "現状ひとこと(80字以内)"}
 - id: 既存テーマは同じ id をそのまま出力する。新規テーマだけ id を省略する
 - category: 議論の大きなまとまり。同じ名前を使い回してテーマをグルーピングする
 - 会話が単一の題材でも工程や観点(調査 / 方針決定 / 実装 / 検証 など)で分ける。テーマが4件以上あるのにカテゴリが1つなのは誤り
@@ -49,7 +48,7 @@ PROMPT = """あなたは会話のテーマ追跡ツールです。開発者とAI
 - todo は「次にやること」。会話で合意された次のアクションは必ず todo として残す
 - wip の note には「どこまで進んだか」、hold の note には「なぜ保留か」を必ず書く
 - recent: 会話の最新部分で実際に触れられたテーマだけ true(最大3つ)。話題が移ったものは false に戻す
-- recent なテーマの note は現状と論点を詳しめに書く(60字以内)
+- recent なテーマの note は現状と論点を詳しめに書く(120字以内)
 - 既存テーマの title は原則変更しない。ただしカテゴリ名に移した共通語を title から削る短縮だけは行ってよい。category はカテゴリ分割・共通語の移動のとき以外は変更しない。テーマは削除しない(統合すべき重複があれば done にして note に「〜に統合」と書く)
 - 新しいテーマを足す前に既存リストと照合する。言い換え・表記ゆれ・範囲が少し違うだけのものは追加せず、既存テーマの id を使って status と note の更新で表す
 - 粒度は「議論の論点」単位。挨拶・細かい作業手順はテーマにしない
@@ -297,6 +296,8 @@ def clip(s: str, width: int) -> str:
 STATUS_MARK = {"done": "x", "resolved": "x", "wip": "~", "active": "~",
                "hold": "-", "todo": " ", "open": " "}
 LEGEND = "[x] 完了  [~] 進行中  [-] 保留  [ ] 未着手"
+# 行頭に来ると読みにくい文字(ぶら下げ組みの対象)
+KINSOKU = "、。,.!?:;)]}）」』】〉》…ー"
 
 
 def categories_of(themes: list[Theme]) -> list[str]:
@@ -314,14 +315,35 @@ def section(label: str, width: int) -> str:
     return f"{DIM}── {label} " + "─" * max(0, width - disp_width(label) - 4) + RESET
 
 
-def theme_row(t: Theme, prefix: str, note_width: int) -> str:
-    """tree の1行(状態記号 + タイトル + 短い note)を組み立てる。"""
-    title = clip(t["title"], TITLE_WIDTH)
-    row = (f"{prefix}[{STATUS_MARK.get(t.get('status'), ' ')}] "
-           f"{title}{' ' * (TITLE_WIDTH - disp_width(title))}")
-    if t.get("note"):
-        row += f"  {DIM}… {clip(t['note'], note_width)}{RESET}"
-    return row
+def wrap(s: str, width: int) -> list[str]:
+    """表示幅 width セルで折り返した行のリストを返す。日本語主体なので文字単位で折る。
+
+    句読点・閉じ括弧が行頭に落ちると読みにくいので、行末にぶら下げる。
+    ")。" のように2つ連ねてぶら下がることがあるため、呼び出し側は4セルの余白を見ておく。
+    """
+    lines, cur, w = [], "", 0
+    for c in s.replace("\n", " "):
+        cw = disp_width(c)
+        if w + cw > width and c not in KINSOKU:
+            lines.append(cur)
+            cur, w = "", 0
+        cur += c
+        w += cw
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def theme_rows(t: Theme, prefix: str, stem: str, width: int) -> list[str]:
+    """tree の1テーマ分を返す。1行目が状態記号+タイトル、2行目以降が折り返した note。
+
+    note はタイトルの位置に字下げして、罫線と本文が混ざらないようにする。
+    """
+    rows = [f"{prefix}[{STATUS_MARK.get(t.get('status'), ' ')}] "
+            f"{BOLD}{clip(t['title'], width - disp_width(prefix) - 4)}{RESET}"]
+    indent = stem + " " * 4  # 状態記号 "[x] " の分だけ寄せてタイトルと頭を揃える
+    return rows + [f"{indent}{DIM}{line}{RESET}"
+                   for line in wrap(t.get("note") or "", max(20, width - disp_width(indent) - 4))]
 
 
 def render(session: Session, summary: str, themes: list[Theme], status: str = "") -> None:
@@ -330,13 +352,12 @@ def render(session: Session, summary: str, themes: list[Theme], status: str = ""
     width = term.columns
     lines = [f"{BOLD}{CYAN}◤ {clip(session['title'], width - 24)}{RESET}  "
              f"{DIM}{session['id'][:8]} · {datetime.now():%H:%M:%S}{RESET}", ""]
-    if summary:  # 50字を指定しても実測120字前後になるので折り返しは端末に任せる
-        lines += [section("概要", width), summary.replace("\n", " "), ""]
+    if summary:  # 50字を指定しても実測120字前後になるので折り返して幅を揃える
+        lines += [section("概要", width)] + wrap(summary, width - 4) + [""]
     if not themes:
         lines.append(f"{DIM}(まだテーマがありません — 会話を待っています){RESET}")
     else:
         lines.append(section("テーマ", width))
-    note_width = max(10, width - TITLE_WIDTH - 14)  # 罫線・状態記号・"… " の分を引く
     cats = categories_of(themes)
     for ci, cat in enumerate(cats):
         last_cat = ci == len(cats) - 1
@@ -344,16 +365,17 @@ def render(session: Session, summary: str, themes: list[Theme], status: str = ""
         stem = "  " if last_cat else "│ "
         items = [t for t in themes if (t.get("category") or "その他") == cat]
         for ii, t in enumerate(items):
-            lines.append(theme_row(t, stem + ("└ " if ii == len(items) - 1 else "├ "),
-                                   note_width))
+            last = ii == len(items) - 1
+            lines += theme_rows(t, stem + ("└ " if last else "├ "),
+                                stem + ("  " if last else "│ "), width)
     recent = [t for t in themes if t.get("recent")]
     if recent:  # tree と重複させたうえで、直近の論点だけ note を全文で読めるようにする
         lines += ["", section("直近の作業", width)]
         for t in recent:
             lines.append(f"[{STATUS_MARK.get(t.get('status'), ' ')}] "
                          f"{BOLD}{clip(t['title'], width - 5)}{RESET}")
-            if t.get("note"):
-                lines.append(f"    {DIM}{t['note']}{RESET}".replace("\n", " "))
+            lines += [f"    {DIM}{line}{RESET}"
+                      for line in wrap(t.get("note") or "", width - 8)]
     lines += ["", f"{DIM}{LEGEND}{'   ' + status if status else ''}{RESET}"]  # 高さを固定するため常設
     pad = max(0, term.lines - len(lines) - 1)  # 折り返しで溢れた分はスクロールで下端に揃う
     print("\033[2J\033[H" + "\n" * pad + "\n".join(lines), flush=True)
