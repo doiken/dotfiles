@@ -132,19 +132,25 @@ def read_messages(path: Path, offset: int) -> tuple[list[Message], int]:
 
 
 def session_info(path: Path) -> tuple[str | None, str | None]:
-    """transcript ファイルから (最終会話時刻ISO, タイトル) を取得する。"""
-    last_ts, title = None, None
+    """transcript ファイルから (最終会話時刻ISO, タイトル) を取得する。
+
+    /rename ・--name で付けた名前({"type":"agent-name"})を
+    自動生成タイトル({"type":"ai-title"})より優先する。
+    """
+    last_ts, ai_title, name = None, None, None
     with open(path, "rb") as f:
         for line in f.read().decode("utf-8", errors="replace").splitlines():
             try:
                 rec = json.loads(line)
             except json.JSONDecodeError:
                 continue
-            if rec.get("type") == "ai-title":
-                title = rec.get("aiTitle")
+            if rec.get("type") == "agent-name":
+                name = rec.get("agentName") or name
+            elif rec.get("type") == "ai-title":
+                ai_title = rec.get("aiTitle")
             elif extract_message(rec):
                 last_ts = rec.get("timestamp") or last_ts
-    return last_ts, title
+    return last_ts, name or ai_title
 
 
 def choose_session(query: str | None) -> Session:
