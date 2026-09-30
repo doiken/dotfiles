@@ -131,6 +131,40 @@ def read_messages(path: Path, offset: int) -> tuple[list[Message], int]:
     return parse_messages(chunk[:end].decode("utf-8", errors="replace")), offset + end
 
 
+def parse_ts(ts: str) -> float:
+    """transcript の timestamp(末尾 Z の ISO8601)を epoch 秒に変換する。"""
+    return datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
+
+
+def fork_offset(path: Path) -> int:
+    """fork でコピーされた分岐前の履歴を読み飛ばすバイト位置を返す。
+
+    --fork-session はファイル先頭に fork 時刻の queue-operation を書いたうえで、親の履歴を
+    過去の timestamp のままコピーする。そのため先頭の queue-operation より後の時刻を持つ最初の
+    発言が分岐直後になる。fork でなければ 0 を返して会話全体を読む。
+    (transcript の構造は公式ドキュメントに記載がなく、実ファイルを比較して確認した挙動。
+     CLI 2.1.247 以降はコピー行に forkedFrom が付くため、将来はそちらを見るのが正しい)
+    """
+    fork_at, offset = None, 0
+    with open(path, "rb") as f:
+        for raw in f:
+            try:
+                rec = json.loads(raw)
+            except json.JSONDecodeError:
+                rec = {}
+            ts, typ = rec.get("timestamp"), rec.get("type")
+            if typ not in ("user", "assistant"):
+                # fork 時刻を示すのは先頭ブロックの queue-operation だけ(会話中のものは無関係)
+                if ts and fork_at is None and typ == "queue-operation":
+                    fork_at = parse_ts(ts)
+            elif fork_at is None:
+                return 0  # 発言に達しても fork マーカーが無い = fork ではない
+            elif ts and parse_ts(ts) >= fork_at:
+                return offset
+            offset += len(raw)
+    return 0
+
+
 def session_info(path: Path) -> tuple[str | None, str | None]:
     """transcript ファイルから (最終会話時刻ISO, タイトル) を取得する。
 
@@ -343,7 +377,8 @@ def catch_up(session: Session, state_file: Path) -> tuple[str, list[Theme], list
         with open(session["path"], "rb") as f:
             text = f.read(saved_offset).decode("utf-8", errors="replace")
         return summary, themes, parse_messages(text)[-EXCERPT_MESSAGES:], saved_offset
-    all_msgs, size = read_messages(session["path"], 0)
+    # fork 子は分岐前(親からのコピー)を読み飛ばし、分岐直後以降だけをテーマにする
+    all_msgs, size = read_messages(session["path"], fork_offset(session["path"]))
     chunks, cur, n = [], [], 0
     for msg in all_msgs:  # 文字数バジェットでチャンク分割
         cur.append(msg)
