@@ -33,10 +33,13 @@ export FOUT_HOME=/fout/fout/
 export PATH="${HOMEBREW_PREFIX}/opt/mysql-client/bin:$PATH"
 # Keychain アクセスで起動をブロックしないよう遅延実行(zsh-defer 不在時は同期)
 _load_redmine_api_key() { export REDMINE_API_KEY=$(security find-generic-password -s redmine-api-key -w); }
+_load_redash_api_key() { export REDASH_API_KEY=$(security find-generic-password -s redash-api-key -w); }
 if (( $+functions[zsh-defer] )); then
   zsh-defer _load_redmine_api_key
+  zsh-defer _load_redash_api_key
 else
   _load_redmine_api_key
+  _load_redash_api_key
 fi
 
 # export GOOGLE_CLOUD_PROJECT=fout-dsp
