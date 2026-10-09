@@ -38,7 +38,16 @@ function cl { claude "$@"; }
 function cr { claude --resume "$@"; }
 function cf { claude --resume --fork-session "$@"; }
 # 操作(フタ閉じ含む)による画面復帰を避けるため遅延実行
-function crc { (sleep 10; pmset displaysleepnow) & caffeinate -i claude remote-control "$@"; }
+# 起動済みの claude rc があれば、そのプロセスの終了まで caffeinate する
+function crc {
+  (sleep 10; pmset displaysleepnow) &
+  local pid=$(pgrep -fn 'claude (rc|remote-control)')
+  if [[ -n $pid ]]; then
+    caffeinate -i -w "$pid"
+  else
+    caffeinate -i claude remote-control "$@"
+  fi
+}
 
 function tc  { tmux new-session claude "$@"; }
 function tcr { tmux new-session claude --resume "$@"; }
