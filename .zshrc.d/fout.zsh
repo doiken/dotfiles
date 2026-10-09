@@ -51,3 +51,26 @@ function bshl () {
   ssh-add ~/.ssh/id_rsa_bastion
   ssh -AL 8157:localhost:8157 gw "ssh -ND 8157 bastion"
 }
+
+# 常駐プロセス用の tmux セッション。なければ作成し、あればアタッチする
+# 左: 空き / 右: claude-rc(1/4), redmine(1/4), proxy(1/2, 手動起動用の空きシェル)
+function dock {
+  local s=dock
+  # .tmux.conf の destroy-unattached on を上書きし、detach 後も残す
+  # (未アタッチのセッションは次のコマンドまでに破棄されるため、1回の tmux 呼び出しにまとめる)
+  # -t $s は分割直後のアクティブペインを指す
+  tmux has-session -t "=$s" 2>/dev/null || tmux new-session -d -s $s -n dock \; \
+    set -t $s destroy-unattached off \; \
+    set -w -t $s pane-border-status top \; \
+    set -w -t $s pane-border-format ' #{@name} ' \; \
+    split-window -h -t $s -c "$HOME/Documents/work" \; \
+    set -p -t $s @name claude-rc \; \
+    send-keys -t $s 'caffeinate -i claude remote-control' C-m \; \
+    split-window -v -t $s -l 75% \; \
+    set -p -t $s @name redmine \; \
+    send-keys -t $s 'autossh -M 0 -N xp_proxy' C-m \; \
+    split-window -v -t $s -l 67% \; \
+    set -p -t $s @name proxy \; \
+    select-pane -t "$s:.{left}"
+  if [[ -n $TMUX ]]; then tmux switch-client -t $s; else tmux attach -t $s; fi
+}
