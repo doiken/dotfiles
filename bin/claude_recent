@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# transcript から最近のセッションを一覧し、1つ選んで claude --resume する
+#   claude_recent        : $CLAUDE_SESSION_SELECTOR(fzf 等)で選んで resume
+#   claude_recent list   : 一覧のみ(「日時  タイトル \t sessionId」の TSV)
+#
+# claude_session resume は save 済み(起動中)のセッションしか扱えない。こちらはカレント
+# ディレクトリの transcript を直接読むので、Remote Control 経由で web 側から作られた
+# セッションも含めて選べる。
+# タイトルは /rename の custom-title を自動命名の ai-title より優先し、いずれも最後の値を採る。
+# タイトル行が1つも無い transcript(会話前・-p 実行など)は一覧に出さない。
+# 日時は transcript の mtime(最終書き込み)。
+# (transcript の構造は公式ドキュメントに記載がなく、実ファイルで確認した挙動)
+set -euo pipefail
+
+PROJECT_DIR="$HOME/.claude/projects/$(pwd -P | sed 's/[^A-Za-z0-9]/-/g')"
+
+cmd_list() {
+  local mtimes
+  [ -d "$PROJECT_DIR" ] || { echo "no transcripts for $PWD" >&2; exit 1; }
+  mtimes=$(stat -f '%m%t%N' "$PROJECT_DIR"/*.jsonl)
+  # grep は該当なしで 1 を返すので pipefail に引っかからないよう握りつぶす
+  { grep -H '"type":"custom-title"\|"type":"ai-title"' "$PROJECT_DIR"/*.jsonl || true; } \
+    | jq -Rrn --arg mtimes "$mtimes" '
+        def sid: capture("(?<id>[^/]+)\\.jsonl").id;
+        ($mtimes | split("\n") | map(split("\t") | {(.[1] | sid): (.[0] | tonumber)}) | add) as $mt
+        | [inputs | capture("^(?<f>[^:]*):(?<j>.*)$") | {id: (.f | sid), r: (.j | fromjson)}]
+        | group_by(.id)
+        | map({id: .[0].id, at: $mt[.[0].id],
+               title: ((map(.r.customTitle // empty | select(. != "")) | last)
+                       // (map(.r.aiTitle // empty) | last))})
+        | map(select(.title)) | sort_by(-.at)[]
+        | [(.at | strflocaltime("%Y-%m-%d %H:%M")) + "  " + .title, .id] | @tsv'
+}
+
+cmd_resume() {
+  local selected
+  selected=$(cmd_list | claude_session select)
+  [ -n "$selected" ] || exit 1
+  exec claude --resume "$(cut -f2 <<< "$selected")"
+}
+
+case "${1:-resume}" in
+  list)   cmd_list ;;
+  resume) cmd_resume ;;
+  *)      echo "usage: $(basename "$0") [list|resume]" >&2; exit 1 ;;
+esac
