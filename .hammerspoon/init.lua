@@ -38,6 +38,11 @@ spoon.SpoonInstall:andUse("Snippet", {
     lang_in_shell = "ja_JP.UTF-8",
     snippets = {
       {
+        text = "sleep",
+        action = "shell",
+        contents = "sleep 3; /usr/bin/pmset displaysleepnow",
+      },
+      {
         text = "join lines",
         action = "shell",
         contents = "/usr/bin/pbpaste | perl -pe 's/([^\\.])[\r\n]/$1 /g'",
