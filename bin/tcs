@@ -4,6 +4,7 @@
 #   tcs list   : fork 系譜ごとに集約して一覧表示
 #   tcs resume : 系譜を1つ選び、配下セッションを tmux セッションに window として並べる
 #   tcs fork   : 新規 window で claude --resume --fork-session する(テーマ内で派生)
+#   tcs restart [pane] : pane の claude を終了し、同じセッションを開き直す
 #
 # resume は今いる tmux セッションに window を足す(tmux 外なら新規セッションを張る)。
 # テーマ = tmux セッションの対応付けは、テーマごとに別セッションで resume する運用で担保する。
@@ -56,10 +57,35 @@ resume() {
   exec claude --resume "$headsid"
 }
 
+# session json の tmux 欄(例: 72:@89.%97)で pane と sessionId を対応付ける。
+# (tmux 欄は公式ドキュメントに記載がなく、実ファイルで確認した挙動)
+# pane id は tmux サーバ再起動で再利用されるので、生きている claude プロセスに限定する
+restart() {
+  local pane="$1" rows pid sid cwd cmd
+
+  rows=$(jq -r --arg suffix ".$pane" 'select((.tmux // "") | endswith($suffix)) | [.pid, .sessionId, .cwd] | @tsv' \
+    "$HOME"/.claude/sessions/*.json)
+  while IFS=$'\t' read -r pid sid cwd; do
+    [ -n "$pid" ] && [ "$(ps -p "$pid" -o comm= 2>/dev/null)" = "claude" ] && break
+    sid=""
+  done <<< "$rows"
+
+  if [ -z "${sid:-}" ]; then
+    tmux display-message "no claude session in pane $pane"
+    return
+  fi
+
+  # シェルから起動した pane は、claude 終了後にシェルへ戻れるよう残す
+  cmd="claude --resume $sid"
+  [ "$pid" = "$(tmux display-message -p -t "$pane" '#{pane_pid}')" ] || cmd+='; exec "$SHELL"'
+  tmux respawn-pane -k -t "$pane" -c "$cwd" "$cmd"
+}
+
 case "${1:-}" in
   save)   claude_session save ;;
   list)   claude_session list | group | cut -f1 ;;
   resume) resume ;;
   fork)   tmux new-window -c "$PWD" claude --resume --fork-session ;;
-  *)      echo "usage: $(basename "$0") {save|list|resume|fork}" >&2; exit 1 ;;
+  restart) restart "${2:-${TMUX_PANE:?}}" ;;
+  *)      echo "usage: $(basename "$0") {save|list|resume|fork|restart}" >&2; exit 1 ;;
 esac
