@@ -1,14 +1,22 @@
 tap "sikarugir-app/sikarugir" # cask "sikarugir" の提供元
 
 brew "emacs"
+brew "exiftool"
 brew "ffmpeg"
+brew "findutils"
+brew "tailscale"
 brew "wimlib"
 
 cask "anydesk"
 cask "keka"
 cask "send-anywhere"
 cask "android-file-transfer"
+cask "android-platform-tools"
 cask "a-better-finder-rename"
 cask "musicbrainz-picard"
 cask "sikarugir"
 cask "yacreader"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
+# Video, audio and image converter
+cask "shutter-encoder"
