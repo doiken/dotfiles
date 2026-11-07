@@ -1,6 +1,5 @@
 tap "sikarugir-app/sikarugir" # cask "sikarugir" の提供元
 
-brew "emacs"
 brew "exiftool"
 brew "ffmpeg"
 brew "findutils"
