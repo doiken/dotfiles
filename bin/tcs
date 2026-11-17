@@ -5,6 +5,7 @@
 #   tcs resume : 系譜を1つ選び、配下セッションを tmux セッションに window として並べる
 #   tcs fork   : 新規 window で claude --resume --fork-session する(テーマ内で派生)
 #   tcs restart [pane] : pane の claude を終了し、同じセッションを開き直す
+#   tcs split [pane]   : pane の隣に新しい pane を作り、同じセッションを resume する
 #
 # resume は今いる tmux セッションに window を足す(tmux 外なら新規セッションを張る)。
 # テーマ = tmux セッションの対応付けは、テーマごとに別セッションで resume する運用で担保する。
@@ -60,8 +61,10 @@ resume() {
 # session json の tmux 欄(例: 72:@89.%97)で pane と sessionId を対応付ける。
 # (tmux 欄は公式ドキュメントに記載がなく、実ファイルで確認した挙動)
 # pane id は tmux サーバ再起動で再利用されるので、生きている claude プロセスに限定する
-restart() {
-  local pane="$1" rows pid sid cwd cmd
+# 見つかれば pid / sid / cwd を設定する
+find_session() {
+  local pane="$1" rows
+  pid="" sid="" cwd=""
 
   rows=$(jq -r --arg suffix ".$pane" 'select((.tmux // "") | endswith($suffix)) | [.pid, .sessionId, .cwd] | @tsv' \
     "$HOME"/.claude/sessions/*.json)
@@ -70,15 +73,25 @@ restart() {
     sid=""
   done <<< "$rows"
 
-  if [ -z "${sid:-}" ]; then
-    tmux display-message "no claude session in pane $pane"
-    return
-  fi
+  [ -n "$sid" ] || tmux display-message "no claude session in pane $pane"
+}
+
+restart() {
+  local pane="$1" pid sid cwd cmd
+  find_session "$pane"
+  [ -n "$sid" ] || return 0
 
   # シェルから起動した pane は、claude 終了後にシェルへ戻れるよう残す
   cmd="claude --resume $sid"
   [ "$pid" = "$(tmux display-message -p -t "$pane" '#{pane_pid}')" ] || cmd+='; exec "$SHELL"'
   tmux respawn-pane -k -t "$pane" -c "$cwd" "$cmd"
+}
+
+split() {
+  local pane="$1" pid sid cwd
+  find_session "$pane"
+  [ -n "$sid" ] || return 0
+  tmux split-window -h -t "$pane" -c "$cwd" claude --resume "$sid"
 }
 
 case "${1:-}" in
@@ -87,5 +100,6 @@ case "${1:-}" in
   resume) resume ;;
   fork)   tmux new-window -c "$PWD" claude --resume --fork-session ;;
   restart) restart "${2:-${TMUX_PANE:?}}" ;;
-  *)      echo "usage: $(basename "$0") {save|list|resume|fork|restart}" >&2; exit 1 ;;
+  split)  split "${2:-${TMUX_PANE:?}}" ;;
+  *)      echo "usage: $(basename "$0") {save|list|resume|fork|restart|split}" >&2; exit 1 ;;
 esac
