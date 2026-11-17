@@ -24,7 +24,7 @@ function fcp () {
   rsync -av -e "ssh -oClearAllForwardings=yes ${step_server} sudo -u nn -i ssh" $from $to
 }
 function redash_proxy () {
-  ssh -tL 8080:localhost:8080 gw "sudo -u nn ssh -NL 8080:docker2.jp.fout.internal:5000 redash.log"
+  ssh -tL 8080:localhost:8080 gw "sudo -u nn ssh -NL 8080:docker2.jp.fout.internal:5000 redash.fout.jp"
 }
 ##
 ## Env
