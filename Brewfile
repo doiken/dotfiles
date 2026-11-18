@@ -73,3 +73,5 @@ cask "the-unarchiver"
 cask "visual-studio-code"
 cask "warp"
 cask "wavebox"
+# Per-application volume mixer, equalizer, and audio router
+cask "finetune"
