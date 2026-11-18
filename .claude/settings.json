@@ -1,4 +1,5 @@
 {
+  "cleanupPeriodDays": 365,
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
   },
@@ -75,6 +76,7 @@
       "Bash(npm run test:*)",
       "Bash(pdftoppm *)",
       "Bash(open *)",
+      "Bash(curl -sS -m 30 -K - -X POST \"http://localhost:8080/api/queries\" *)",
       "mcp__redmine-mcp-api__get_details",
       "mcp__redmine-mcp-api__search_redmine",
       "mcp__redmine-mcp-api__list_recent_tickets",
@@ -116,6 +118,10 @@
       "Edit(.env*)",
       "Edit(**/secrets/**)",
       "Bash(mysql:*)",
+      "Bash(curl *api/query_results*)",
+      "Bash(curl *api/queries/*/refresh*)",
+      "Bash(curl * -X DELETE *)",
+      "Bash(curl *api_key=*)",
       "mcp__redmine-mcp-api__delete_note",
       "mcp__claude_ai_Google_Drive__share_file",
       "mcp__claude_ai_Google_Drive__trash_file",
@@ -127,7 +133,10 @@
       "mcp__claude_ai_Slack__slack_update_canvas"
     ],
     "ask": [
-      "mcp__claude_ai_Slack__slack_send_message_draft"
+      "mcp__claude_ai_Slack__slack_send_message_draft",
+      "Bash(curl * -X POST *localhost:8080/api/queries/*)",
+      "Bash(curl * --data-binary *localhost:8080/api/queries/*)",
+      "Bash(curl * -d *localhost:8080/api/queries/*)"
     ]
   },
   "model": "opus[1m]",
@@ -186,19 +195,72 @@
   },
   "enabledPlugins": {
     "feature-dev@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "prismantis@prismantis": true
   },
   "extraKnownMarketplaces": {
+    "prismantis": {
+      "source": {
+        "source": "github",
+        "repo": "NahumLitvin/prismantis"
+      }
+    }
   },
   "language": "Japanese",
+  "pluginConfigs": {
+    "prismantis@prismantis": {
+      "options": {
+        "enabled": true,
+        "theme": "nord",
+        "desktopColors": "off",
+        "headingStyle": "banner",
+        "tableStyle": "box",
+        "tableLayout": "classic",
+        "statusMatrix": "off",
+        "testMatrix": "off",
+        "benchTable": "off",
+        "schemaTable": "off",
+        "compareTable": "off",
+        "apiTable": "off",
+        "kvTable": "off",
+        "groupTable": "off",
+        "promptStyle": "framed",
+        "replyStyle": "framed",
+        "bubbleLabels": "large",
+        "clock": "off",
+        "toolStyle": "chat",
+        "runningDot": "ring",
+        "unreadPrompts": false,
+        "toolOutput": "quiet",
+        "taskStyle": "checks",
+        "listMarker": "dots",
+        "rtl": "auto",
+        "highlightNumbers": true,
+        "highlightPaths": true,
+        "mermaidAscii": false,
+        "toolRows": true,
+        "diffStyle": "card",
+        "codeStyle": "framed",
+        "pieStyle": "round",
+        "mermaid": true,
+        "folds": "closed",
+        "copyButtons": true,
+        "copyButtonStyle": "dim",
+        "textCopyButtons": true,
+        "sectionCopyButtons": false,
+        "issueHint": true,
+        "diagramHints": false,
+        "latex": false
+      }
+    }
+  },
   "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "theme": "custom:doienv",
-  "autoCompactEnabled": true,
+  "theme": "dark",
+  "autoCompactEnabled": false,
   "remoteControlAtStartup": false,
-  "agentPushNotifEnabled": true,
-  "cleanupPeriodDays": 365
+  "agentPushNotifEnabled": true
 }
