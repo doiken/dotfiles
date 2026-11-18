@@ -131,6 +131,9 @@
     ]
   },
   "model": "opus[1m]",
+  "attribution": {
+    "commit": ""
+  },
   "hooks": {
     "Stop": [
       {
