@@ -1,0 +1,23 @@
+{
+  "skill_name": "paper-skim-ja",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "/Users/doi_kenji/Downloads/Paper-2019-Optimal-Bidding.pdf をざっくり把握したいです。読む目的は手法の習得で、緩和からラグランジュ、双対、劣勾配更新までの流れを章ごとに追いたいです。記号の定義が本文に散らばっていて追いにくいので、先に表にまとめてから章ごとの要約を出してください。Redmine に貼るので textile でお願いします。",
+      "expected_output": "コードブロック内の textile。記号表（節ごと、注意点つき）と、各章 h3. + ref. + 矢印 4〜7 行の要約。導出の章で緩和→ラグランジュ→KKT→双対→劣勾配の鎖が切れていない",
+      "files": ["/Users/doi_kenji/Downloads/Paper-2019-Optimal-Bidding.pdf"]
+    },
+    {
+      "id": 1,
+      "prompt": "https://arxiv.org/abs/1905.10928 (Yang et al. Bid Optimization by Multivariable Control in Display Advertising) を読む前に、何をしている論文か章ごとに流れを掴みたいです。自分のタスクは CPC 課金で予算と上限 CPC の制約下で CV 数を最大化する入札の乗数制御で、この論文の PID による乗数更新が自分の問題設定と一致するか、あとで照合できる形で要点を残してください。",
+      "expected_output": "目的は比較（b）と判断し、記号表、章ごとの矢印要約、末尾に比較軸の表（目的関数・制約・意思決定単位・観測信号・データ出所・評価指標）を textile のコードブロックで出す。関連度 A/B/C を 2 行で示す",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "https://arxiv.org/abs/1802.08365 (Wu et al. Budget Constrained Bidding by Model-free Reinforcement Learning in Display Advertising) ってどんな論文ですか。自分のタスク（CPC 課金で予算と上限 CPC の制約下で CV 数を最大化する入札の乗数 λ を消化誤差で制御する）との関係を知りたいだけで、細かい比較はまだ要りません。章ごとに短く流れをまとめてください。",
+      "expected_output": "目的は概要（a）と判断し、章ごと 4〜5 行の矢印要約。記号表は最小限。比較軸の表は出さない。1 行要約と関連度を先頭に置く。Medium ブログは WebFetch が 403 を返すためテストから外した",
+      "files": []
+    }
+  ]
+}
