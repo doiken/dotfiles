@@ -24,6 +24,21 @@ which git >/dev/null || brew install git
 git -C $HOME/dotfiles remote set-url origin git@github.com:doiken/dotfiles.git
 
 ##
+## Get Other Repositories
+##
+## どのマシンでも持っておきたいリポジトリ。増やすときはこのリストに足す
+REPOSITORIES=(
+    git@github.com:doiken/dotfiles-private.git
+)
+mkdir -p $HOME/Repositories
+for repo in ${REPOSITORIES[@]}; do
+    dir=$HOME/Repositories/$(basename $repo .git)
+    [ -d $dir ] && continue
+    ## clone できないマシンでも終了コードを 1 にしないよう失敗は飛ばす
+    git clone $repo $dir || echo "skip: $repo の clone に失敗"
+done
+
+##
 ## Profile
 ##
 ## 会社(fout)か家(home)かの判定。.zshrc.d/common.zsh の $DOTFILES_PROFILE や
@@ -141,6 +156,7 @@ SCRIPTS=(
     $HOME/dotfiles/setup/defaults.pl
     $HOME/dotfiles/setup/podman_setup
     $HOME/dotfiles/setup/${PROFILE}_setup # 存在しないプロファイルは -x で弾かれる
+    $HOME/Repositories/dotfiles-private/setup.sh # clone されていなければ -x で弾かれる
 )
 for script in ${SCRIPTS[@]}; do
     ## プロファイル用スクリプトが無いマシンでも終了コードを 1 にしないよう continue で飛ばす
