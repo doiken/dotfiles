@@ -1,6 +1,8 @@
 .hammerspoon/Spoons/*
 
 # claude: 許可リスト方式。明示したものだけ track し、runtime データ・認証情報は構造的に除外する
+# ~/.gitignore_global の `.claude` を打ち消す。これが無いと新規ファイルが追跡されない
+!/.claude/
 /.claude/*
 !/.claude/CLAUDE.md
 !/.claude/settings.json
@@ -8,4 +10,9 @@
 !/.claude/agents/
 !/.claude/scripts/
 !/.claude/docs/
+!/.claude/mods/
 /.claude/skills/synced/
+# 他リポジトリの setup.sh が張る symlink (fout_sandbox: sandbox-, dotfiles-private: private-)
+/.claude/skills/sandbox-*
+/.claude/skills/private-*
+/.claude/agents/sandbox-*
