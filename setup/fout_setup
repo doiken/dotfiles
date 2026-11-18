@@ -58,7 +58,8 @@ docker_env=(
 ##
 ## claude
 ##
-# plugin (fout_sandbox/claude) は settings.json の extraKnownMarketplaces/enabledPlugins 宣言で自動導入されるためここでは扱わない
+# fout_sandbox/claude の skills/agents は ~/.claude 配下へ symlink する (plugin 方式は更新のたびに version 更新が要るため廃止)
+~/Repositories/fout_sandbox/claude/setup.sh
 # Redmine MCP。API キーは Keychain 由来の $REDMINE_API_KEY (.zshrc.d/fout.zsh) を実行時展開。
 # 新マシンでは初回のみ: security add-generic-password -s redmine-api-key -a $USER -w '<APIキー>'
 {

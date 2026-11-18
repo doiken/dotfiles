@@ -186,16 +186,9 @@
   },
   "enabledPlugins": {
     "feature-dev@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "fout@fout-sandbox": true
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "fout-sandbox": {
-      "source": {
-        "source": "directory",
-        "path": "~/Repositories/fout_sandbox/claude"
-      }
-    }
   },
   "language": "Japanese",
   "tui": "fullscreen",
