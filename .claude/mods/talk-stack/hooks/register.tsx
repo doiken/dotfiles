@@ -9,7 +9,7 @@ const items = atom({ plugin: 'talk-stack', key: 'items' } as const, [], {
   shape: 'items-1',
 })
 const last = atom({ plugin: 'talk-stack', key: 'last' } as const, null)
-// The first item the band shows, counted from the newest
+// How many of the newest items the band has scrolled past to the right
 const cursor = atom({ plugin: 'talk-stack', key: 'cursor' } as const, 0)
 
 const storeKey = (sessionId: string) => `stack:${sessionId}`
@@ -166,36 +166,42 @@ export const register: Register = on => {
     const hasArrows = list.length > 1
     // The round border and paddingX take 2 cells each side; "‹ " and " ›" 2 each
     const room = e.props.bodyColumns - 4 - title.length - (hasArrows ? 4 : 0)
-    const chips: Array<{ item: Item; text: string }> = []
+    // Oldest on the left, newest on the right; the window fills leftward from
+    // the newest item `first` steps back, so the newest shows by default
+    const ordered = [...list].reverse()
+    const end = ordered.length - 1 - first
+    const chips: Array<{ item: Item; text: string; no: number }> = []
     let used = 0
-    for (const [i, item] of list.slice(first).entries()) {
+    for (let at = end; at >= 0; at--) {
+      const item = ordered[at]
+      if (item === undefined) break
       const label = head(item.text)
       // "N " + "C:" + text + " ×" + the gap before the next chip
-      const width = String(first + i + 1).length + 1 + (item.isReply ? 2 : 0) + cellsOf(label) + 2 + 3
+      const width = String(at + 1).length + 1 + (item.isReply ? 2 : 0) + cellsOf(label) + 2 + 3
       if (chips.length > 0 && used + width > room) break
-      chips.push({ item, text: chips.length === 0 && width > room ? fit(label, room - 8) : label })
+      chips.unshift({ item, text: chips.length === 0 && width > room ? fit(label, room - 8) : label, no: at + 1 })
       used += width
     }
-    const isLast = first + chips.length >= list.length
+    const hasOlder = (chips[0]?.no ?? 1) > 1
     // One flat row: a Fragment lays its children out apart
     const row: RenderNode[] = [
       <Text key="title" dimColor>{title}</Text>,
     ]
     if (hasArrows) {
-      row.push(<Button key="prev" plain label={first === 0 ? ' ' : '‹'} onPress={() => step($, -1)} />, <Text> </Text>)
+      row.push(<Button key="prev" plain label={hasOlder ? '‹' : ' '} onPress={() => step($, 1)} />, <Text> </Text>)
     }
     // A dim number opens each item, so neighbours read as separate messages
-    chips.forEach(({ item, text }, i) => {
+    chips.forEach(({ item, text, no }, i) => {
       if (i > 0) row.push(<Text>   </Text>)
       row.push(
-        <Text dimColor>{first + i + 1} </Text>,
+        <Text dimColor>{no} </Text>,
         <Button key={`go:${item.id}`} plain label={`${item.isReply ? 'C:' : ''}${text}`} onPress={() => jump($, item)} />,
         <Text> </Text>,
         <Button key={`drop:${item.id}`} plain label="×" onPress={() => remove($, item.id)} />,
       )
     })
     if (hasArrows) {
-      row.push(<Text> </Text>, <Button key="next" plain label={isLast ? ' ' : '›'} onPress={() => step($, 1)} />)
+      row.push(<Text> </Text>, <Button key="next" plain label={first === 0 ? ' ' : '›'} onPress={() => step($, -1)} />)
     }
 
     // Sized to its items and kept to the right, as prismantis seats a prompt
