@@ -1,0 +1,6 @@
+{
+  "name": "chat-pins",
+  "version": "0.1.0",
+  "description": "Pin chat rows to read them in a side pane and jump back to them",
+  "types": "./types/index.d.ts"
+}

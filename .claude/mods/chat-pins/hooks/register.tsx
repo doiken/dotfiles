@@ -5,13 +5,13 @@ import type { Item } from '../types'
 
 // Change the tag when Item's fields change: it declines what an earlier
 // version stored, which outlives a reload.
-const items = atom({ plugin: 'talk-stack', key: 'items' } as const, [], {
+const items = atom({ plugin: 'chat-pins', key: 'items' } as const, [], {
   shape: 'items-1',
 })
-const last = atom({ plugin: 'talk-stack', key: 'last' } as const, null)
-const open = atom({ plugin: 'talk-stack', key: 'unfolded' } as const, [])
+const last = atom({ plugin: 'chat-pins', key: 'last' } as const, null)
+const open = atom({ plugin: 'chat-pins', key: 'unfolded' } as const, [])
 
-const storeKey = (sessionId: string) => `stack:${sessionId}`
+const storeKey = (sessionId: string) => `pins:${sessionId}`
 
 const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim()
 
@@ -83,11 +83,11 @@ async function save($: EngineInterface) {
 const PROMPT_BORDER = '#a3be8c'
 const REPLY_BORDER = 'claude'
 
-// The pane beside the transcript that shows each stacked row in full
-const PANE = 'talk-stack'
+// The pane beside the transcript that shows each pinned row in full
+const PANE = 'pins'
 
 async function openPane($: EngineInterface) {
-  await $.ui.open({ id: PANE, title: 'stack' })
+  await $.ui.open({ id: PANE, title: 'pins' })
 }
 
 async function push($: EngineInterface, item: Item) {
@@ -104,11 +104,11 @@ async function remove($: EngineInterface, id: string) {
 
 async function jump($: EngineInterface, item: Item) {
   const moved = await $.ui.scroll({ to: { requestId: item.id }, block: 'start' })
-  if ('deny' in moved && moved.deny) $.ui.toast(`stack: ${moved.deny}`)
+  if ('deny' in moved && moved.deny) $.ui.toast(`pin: ${moved.deny}`)
 }
 
-// A mark over the top-left of a transcript row: "+" on hover to stack it,
-// "●" while stacked, pressed again to take it off
+// A mark over the top-left of a transcript row: "+" on hover to pin it,
+// "●" while pinned, pressed again to take it off
 async function mark(
   $: EngineInterface,
   e: RenderInput<'UserMessage' | 'AssistantMessage'>,
@@ -117,8 +117,8 @@ async function mark(
   at: { left: number } | { right: number },
 ) {
   const { Box, Button } = $.ui.resolve(e)
-  const isStacked = (await read($, items)).some(one => one.id === item.id)
-  const reveal = isStacked ? {} : { display: 'none' as const, hover: { display: 'flex' as const } }
+  const isPinned = (await read($, items)).some(one => one.id === item.id)
+  const reveal = isPinned ? {} : { display: 'none' as const, hover: { display: 'flex' as const } }
 
   return (
     <Box key={`row:${item.id}`}>
@@ -127,8 +127,8 @@ async function mark(
         <Button
           key={`mark:${item.id}`}
           plain
-          label={isStacked ? '●' : '+'}
-          onPress={() => (isStacked ? remove($, item.id) : push($, item))}
+          label={isPinned ? '●' : '+'}
+          onPress={() => (isPinned ? remove($, item.id) : push($, item))}
         />
       </Box>
     </Box>
@@ -138,12 +138,12 @@ async function mark(
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     await $.command.register({
-      name: 'stack-pane',
-      description: 'Open the pane of stacked rows again',
+      name: 'pins',
+      description: 'Open the pane of pinned rows again',
     })
     await $.command.register({
-      name: 'stack',
-      description: 'Stack the last prompt to revisit later (args: a memo shown instead of the prompt)',
+      name: 'pin',
+      description: 'Pin the last prompt to revisit later (args: a memo shown instead of the prompt)',
       argumentHint: '[memo]',
     })
     const stored = await $.store.get(storeKey(await $.session.id()))
@@ -166,21 +166,21 @@ export const register: Register = on => {
     return kept
   }).catch(($, e, next) => next(e))
 
-  on('command.run', { command: 'stack-pane' }, async $ => {
+  on('command.run', { command: 'pins' }, async $ => {
     await openPane($)
 
     return {}
   })
 
-  on('command.run', { command: 'stack' }, async ($, e) => {
+  on('command.run', { command: 'pin' }, async ($, e) => {
     const prompt = await read($, last)
     if (prompt === null) {
-      $.ui.toast('stack: no prompt to stack yet')
+      $.ui.toast('pin: no prompt to pin yet')
       return {}
     }
     const item: Item = { ...prompt, text: oneLine(e.args) || prompt.text }
     await push($, item)
-    $.ui.toast(`stacked: ${fit(item.text, 40)}`)
+    $.ui.toast(`pinned: ${fit(item.text, 40)}`)
 
     return {}
   })
@@ -201,13 +201,13 @@ export const register: Register = on => {
     ),
   )
 
-  // Each stacked row in full, oldest first, drawn as the transcript draws it:
+  // Each pinned row in full, oldest first, drawn as the transcript draws it:
   // a reply through prismantis's markdown when it is loaded, a prompt in a
   // bubble like prismantis's own. The header row moves there or drops it
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Button, Markdown, Text } = $.ui.resolve(e)
     const list = [...(await read($, items))].reverse()
-    if (list.length === 0) return <Text dimColor>Nothing stacked.</Text>
+    if (list.length === 0) return <Text dimColor>Nothing pinned.</Text>
     const columns = e.props.bodyColumns
     const unfolded = await read($, open)
     const entries: RenderNode[] = []

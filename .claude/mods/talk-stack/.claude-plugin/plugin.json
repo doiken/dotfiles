@@ -1,6 +1,0 @@
-{
-  "name": "talk-stack",
-  "version": "0.1.0",
-  "description": "Stack prompts to revisit later and jump back to them from a band above the prompt",
-  "types": "./types/index.d.ts"
-}

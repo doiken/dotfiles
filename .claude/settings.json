@@ -2,7 +2,7 @@
   "cleanupPeriodDays": 365,
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
-    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/talk-stack"
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/chat-pins"
   },
   "permissions": {
     "allow": [
