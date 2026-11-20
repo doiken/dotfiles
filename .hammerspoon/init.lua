@@ -40,7 +40,7 @@ spoon.SpoonInstall:andUse("Snippet", {
       {
         text = "sleep",
         action = "shell",
-        contents = "sleep 3; /usr/bin/pmset displaysleepnow",
+        contents = "PATH=/opt/homebrew/bin:" .. HOME .. "/bin:$PATH tcs save >/dev/null; sleep 2; /usr/bin/pmset displaysleepnow",
       },
       {
         text = "join lines",
