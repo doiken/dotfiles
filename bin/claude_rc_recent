@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Remote Control(スマホ・web)発のセッションを一覧し、1つ選んで claude --resume する
+#   claude_rc_recent [N|all]      : $CLAUDE_SESSION_SELECTOR(fzf 等)で選んで resume
+#   claude_rc_recent list [N|all] : 一覧のみ(「日時  表示名 \t sessionId \t 最初の発言全文」の TSV)
+# N は表示件数(mtime 降順、既定 30)。all で全件。
+# 3 列目の全文は @tsv が改行・タブを \n \t に逃がした 1 行。selector が fzf なら
+# resume 時にこれを printf '%b' で戻して右側のプレビューに出す(他の selector では無視される)。
+#
+# claude --resume の選択画面は、最初の発言を Remote Control から行ったセッション
+# (transcript 先頭ユーザー行の entrypoint が sdk-cli)を出さず、本体の自動命名
+# (ai-title)も付けない。claude_recent はタイトル行が無い transcript を出さないので、
+# こちらは先頭ユーザー行の entrypoint で判定し、表示名は /rename の custom-title が
+# あればそれ、無ければ最初の発言文の先頭 40 字を使う。
+# 日時は transcript の mtime(最終書き込み)。
+# (transcript の構造は公式ドキュメントに記載がなく、実ファイルで確認した挙動)
+set -euo pipefail
+
+PROJECT_DIR="$HOME/.claude/projects/$(pwd -P | sed 's/[^A-Za-z0-9]/-/g')"
+LIMIT="${2:-30}"
+
+cmd_list() {
+  local mtimes files firsts picked rcfiles titles
+  [ -d "$PROJECT_DIR" ] || { echo "no transcripts for $PWD" >&2; exit 1; }
+  mtimes=$(stat -f '%m%t%N' "$PROJECT_DIR"/*.jsonl | sort -rn)
+  files=$(cut -f2 <<< "$mtimes")
+  # -m1 で各 transcript の先頭ユーザー行だけ読む(ファイル冒頭で止まるので軽い)。
+  # grep は該当なしで 1 を返すので pipefail に引っかからないよう握りつぶす
+  firsts=$({ xargs grep -H -m1 '"type":"user"' <<< "$files" || true; })
+  # Remote Control 発を mtime 順に N 件選び、1 行 1 JSON {id, prompt(先頭発言全文)} にする
+  picked=$(jq -Rrn --arg limit "$LIMIT" '
+      def sid: capture("(?<id>[^/]+)\\.jsonl").id;
+      [inputs | capture("^(?<f>[^:]*):(?<j>.*)$") | .r = (.j | fromjson)
+       | select(.r.type == "user" and .r.entrypoint == "sdk-cli")]
+      | if $limit == "all" then . else .[:($limit | tonumber)] end
+      | .[] | {id: (.f | sid),
+               prompt: (.r.message.content
+                        | if type == "string" then . else map(.text? // empty) | join(" ") end)}
+      | @json' <<< "$firsts")
+  [ -n "$picked" ] || return 0
+  rcfiles=$(jq -r '.id' <<< "$picked" | sed "s|^|$PROJECT_DIR/|; s|\$|.jsonl|")
+  titles=$({ xargs grep -H '"type":"custom-title"' <<< "$rcfiles" || true; })
+  jq -Rrn --arg mtimes "$mtimes" --arg titles "$titles" '
+      def sid: capture("(?<id>[^/]+)\\.jsonl").id;
+      ($mtimes | split("\n") | map(split("\t") | {(.[1] | sid): (.[0] | tonumber)}) | add) as $mt
+      | ($titles | split("\n") | map(select(. != "") | capture("^(?<f>[^:]*):(?<j>.*)$")
+           | {(.f | sid): (.j | fromjson | .customTitle)}) | add // {}) as $ct
+      | inputs | fromjson
+      | [($mt[.id] | strflocaltime("%Y-%m-%d %H:%M")) + "  "
+           + ($ct[.id] // (.prompt | gsub("\\s+"; " ") | .[:40])),
+         .id, .prompt] | @tsv' <<< "$picked"
+}
+
+cmd_resume() {
+  local selected selector="${CLAUDE_SESSION_SELECTOR:-}"
+  # fzf なら 3 列目(全文)を右側にプレビュー表示する
+  case "$selector" in
+    fzf*) selector="$selector --preview 'printf \"%b\" {3}' --preview-window=right,wrap" ;;
+  esac
+  selected=$(cmd_list | CLAUDE_SESSION_SELECTOR="$selector" claude_session select)
+  [ -n "$selected" ] || exit 1
+  exec claude --resume "$(cut -f2 <<< "$selected")"
+}
+
+case "${1:-resume}" in
+  list)      cmd_list ;;
+  resume|'') cmd_resume ;;
+  all|[0-9]*) LIMIT="$1"; cmd_resume ;;
+  *)         echo "usage: $(basename "$0") [list] [N|all]" >&2; exit 1 ;;
+esac
